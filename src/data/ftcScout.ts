@@ -1,0 +1,81 @@
+import { SeasonId } from './schema';
+
+export type ScoutStatValue = {
+  value: number;
+  rank: number | null;
+};
+
+export type ScoutQuickStats = {
+  season: number;
+  number: number;
+  tot: ScoutStatValue;
+  auto: ScoutStatValue;
+  dc: ScoutStatValue;
+  eg: ScoutStatValue;
+  count: number;
+};
+
+export type ScoutEventStats = {
+  rank: number | null;
+  rp: number | null;
+  wins: number;
+  losses: number;
+  ties: number;
+  qualMatchesPlayed: number | null;
+  opr: {
+    totalPoints: number | null;
+    autoPoints: number | null;
+    dcPoints: number | null;
+  } | null;
+  avg: {
+    totalPoints: number | null;
+  } | null;
+};
+
+export type ScoutEventParticipation = {
+  season: number;
+  eventCode: string;
+  teamNumber: number;
+  stats: ScoutEventStats | null;
+};
+
+export type TeamScoutData = {
+  fetchedAt: string;
+  season: SeasonId;
+  teamNumber: number;
+  quickStats: ScoutQuickStats | null;
+  events: ScoutEventParticipation[];
+};
+
+export const FTCSCOUT_BASE_URL = 'https://ftcscout.org';
+export const FTCSCOUT_API_BASE_URL = 'https://api.ftcscout.org/rest/v1';
+
+export function ftcScoutTeamUrl(teamNumber: number, season?: SeasonId): string {
+  const url = new URL(`${FTCSCOUT_BASE_URL}/teams/${teamNumber}`);
+
+  if (season) {
+    url.searchParams.set('season', String(season));
+  }
+
+  return url.toString();
+}
+
+export function ftcScoutEventUrl(season: SeasonId, eventCode: string): string {
+  return `${FTCSCOUT_BASE_URL}/events/${season}/${eventCode}`;
+}
+
+export function formatScoutNumber(value: number | null | undefined, digits = 1): string {
+  if (value === null || value === undefined || Number.isNaN(value)) {
+    return '-';
+  }
+
+  return value.toFixed(digits);
+}
+
+export function formatScoutRank(rank: number | null | undefined): string {
+  if (!rank) {
+    return '-';
+  }
+
+  return `#${rank.toLocaleString()}`;
+}
