@@ -268,6 +268,7 @@ function AppDirectory({ seedData }: { seedData: GeneratedData }) {
     refreshRegion,
     refreshSeason,
     refreshTeam,
+    ensureSeasonData,
   } = useFtcData(seedData);
   const {
     portfoliosByTeam,
@@ -515,6 +516,14 @@ function AppDirectory({ seedData }: { seedData: GeneratedData }) {
   }, [defaultSeason, regionCode]);
 
   useEffect(() => {
+    if (seasonFilter === ALL_SEASONS || liveStatus === 'refreshing') {
+      return;
+    }
+
+    void ensureSeasonData(seasonFilter);
+  }, [ensureSeasonData, liveStatus, seasonFilter]);
+
+  useEffect(() => {
     if (selectedSeason) {
       setDetailSeason(selectedSeason.season);
     }
@@ -578,11 +587,17 @@ function AppDirectory({ seedData }: { seedData: GeneratedData }) {
     <main className="app-shell">
       <header className="hero">
         <div>
-          <p className="eyebrow">Public FTC Events data</p>
+          <p className="eyebrow">
+            By{' '}
+            <a className="brand-link" href="https://www.theallsparks.org/" target="_blank" rel="noreferrer">
+              The Allsparks
+            </a>
+          </p>
           <h1>{regionName} FTC Team Analysis</h1>
           <p className="hero-copy">
-            Explore {regionName}-region FTC teams across seasons. Changing region automatically pulls the
-            current season from FTC Events. Nevada also keeps the checked-in multi-season snapshot.
+            Explore {regionName}-region FTC teams across seasons. Empty seasons (like a brand-new BIOBUZZ
+            snapshot) pull automatically from FTC Events. Nevada also keeps the checked-in multi-season
+            snapshot.
           </p>
         </div>
         <div className="source-card">
@@ -616,13 +631,13 @@ function AppDirectory({ seedData }: { seedData: GeneratedData }) {
               {liveProgress.label} ({liveProgress.completed}/{liveProgress.total})
             </p>
           )}
-          <a href={`https://ftc-events.firstinspires.org/2025/region/${regionCode}`} target="_blank">
+          <a href={`https://ftc-events.firstinspires.org/${defaultSeason}/region/${regionCode}`} target="_blank" rel="noreferrer">
             {regionName} region source
           </a>
-          <a href="https://www.ftcportfoliolab.org/portfolio" target="_blank">
+          <a href="https://www.ftcportfoliolab.org/portfolio" target="_blank" rel="noreferrer">
             FTC Portfolio Lab
           </a>
-          <a href="https://ftcscout.org" target="_blank">
+          <a href="https://ftcscout.org" target="_blank" rel="noreferrer">
             FTCScout
           </a>
           {portfolioMessage && (
@@ -1255,15 +1270,20 @@ function AppDirectory({ seedData }: { seedData: GeneratedData }) {
 
       <footer>
         <div>
+          <strong>Built by</strong>
+          <a href="https://www.theallsparks.org/" target="_blank" rel="noreferrer">
+            The Allsparks
+          </a>
           <strong>Sources</strong>
           {data.sources.map((source) => (
-            <a key={source.url} href={source.url} target="_blank" title={source.note}>
+            <a key={source.url} href={source.url} target="_blank" rel="noreferrer" title={source.note}>
               {source.label}
             </a>
           ))}
           <a
             href="https://www.ftcportfoliolab.org/portfolio"
             target="_blank"
+            rel="noreferrer"
             title="Rated benchmark engineering portfolios and community PDF submissions."
           >
             FTC Portfolio Lab
@@ -1271,13 +1291,18 @@ function AppDirectory({ seedData }: { seedData: GeneratedData }) {
           <a
             href="https://ftcscout.org/api"
             target="_blank"
+            rel="noreferrer"
             title="Community FTC statistics API used for OPR and event analytics."
           >
             FTCScout API
           </a>
         </div>
         <p>
-          {data.limitations.join(' ')} Portfolio Lab entries are loaded live from the public portfolio catalog and
+          A public FTC explorer from{' '}
+          <a href="https://www.theallsparks.org/" target="_blank" rel="noreferrer">
+            The Allsparks
+          </a>
+          . {data.limitations.join(' ')} Portfolio Lab entries are loaded live from the public portfolio catalog and
           cached in the browser for 24 hours. FTCScout OPR and event analytics are cached per team-season for 30
           minutes to 7 days.
         </p>

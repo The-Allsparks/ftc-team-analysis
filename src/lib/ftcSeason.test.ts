@@ -37,11 +37,11 @@ function installMemoryLocalStorage() {
 }
 
 describe('defaultSeasonWithData', () => {
-  it('returns the first season that any team has when the preferred current season is missing', () => {
+  it('prefers the newest listed season even when no team has that season yet', () => {
     const seasons = [2026, 2025, 2024] as SeasonId[];
     const teams = [{ seasons: { 2024: { name: 'Historical' } } }];
 
-    expect(defaultSeasonWithData(seasons, teams)).toBe(2024);
+    expect(defaultSeasonWithData(seasons, teams)).toBe(2026);
   });
 
   it('returns the first listed season when a team has that season', () => {
@@ -54,16 +54,8 @@ describe('defaultSeasonWithData', () => {
     expect(defaultSeasonWithData(seasons, teams)).toBe(2026);
   });
 
-  it('falls back to the first season <= 2025 when no team has any listed season', () => {
-    const seasons = [2026, 2025, 2024] as SeasonId[];
-    const teams = [{ seasons: {} }, { seasons: { 2018: { name: 'Out of range' } } }];
-
-    expect(defaultSeasonWithData(seasons, teams)).toBe(2025);
-  });
-
-  it('uses seasons[0] when nothing is <= 2025 and no team data matches', () => {
-    const seasons = [2026] as SeasonId[];
-    expect(defaultSeasonWithData(seasons, [])).toBe(2026);
+  it('falls back to TARGET_SEASONS[0] when the season list is empty', () => {
+    expect(defaultSeasonWithData([])).toBe(2026);
   });
 });
 

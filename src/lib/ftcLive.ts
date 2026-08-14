@@ -36,8 +36,13 @@ function regionEventsMap(regionEvents: RegionEvent[]): Map<string, RegionEvent> 
   return new Map(regionEvents.map((event) => [`${event.season}:${event.code}`, event]));
 }
 
-function latestConfiguredSeason(data: GeneratedData): SeasonId {
-  return data.targetSeasons[0] ?? TARGET_SEASONS[0];
+function latestConfiguredSeason(_data?: GeneratedData): SeasonId {
+  // Prefer the app's configured current season, not a stale seed targetSeasons[0].
+  return TARGET_SEASONS[0];
+}
+
+export function seasonHasTeamData(data: GeneratedData, season: SeasonId): boolean {
+  return data.teams.some((team) => Boolean(team.seasons?.[season]));
 }
 
 function mergeRegionEvents(existing: RegionEvent[], incoming: RegionEvent[]): RegionEvent[] {
@@ -383,6 +388,11 @@ export async function refreshSeasonDetails(
 }
 
 export function shouldAutoRefreshRegion(season: SeasonId, data: GeneratedData): boolean {
+  // Empty season datasets (e.g. seed still on DECODE while BIOBUZZ is published) must pull.
+  if (!seasonHasTeamData(data, season)) {
+    return true;
+  }
+
   const latestSeason = latestConfiguredSeason(data);
   const regionCacheKey = cacheKey('region', data.regionCode, String(season));
   const ttl = seasonTtl(

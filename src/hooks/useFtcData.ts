@@ -9,9 +9,10 @@ import {
   refreshSeasonDetails,
   refreshTeamAllSeasonsLive,
   refreshTeamSeasonLive,
+  seasonHasTeamData,
   shouldAutoRefreshRegion,
 } from '../lib/ftcLive';
-import { defaultSeasonWithData, resolvePublishedRegionSeason } from '../lib/ftcSeason';
+import { resolvePublishedRegionSeason } from '../lib/ftcSeason';
 import { refreshLatestFields } from '../lib/ftcParsers';
 
 type UseFtcDataResult = {
@@ -25,10 +26,11 @@ type UseFtcDataResult = {
   refreshRegion: (season: SeasonId, force?: boolean) => Promise<void>;
   refreshSeason: (season: SeasonId, force?: boolean) => Promise<void>;
   refreshTeam: (season: SeasonId, teamNumber: number, force?: boolean) => Promise<void>;
+  ensureSeasonData: (season: SeasonId) => Promise<void>;
 };
 
-function latestSeason(data: GeneratedData): SeasonId {
-  return data.targetSeasons[0] ?? TARGET_SEASONS[0];
+function preferredSeason(_data?: GeneratedData): SeasonId {
+  return TARGET_SEASONS[0];
 }
 
 function dataForRegion(seedData: GeneratedData, regionCode: string): GeneratedData {
@@ -50,6 +52,7 @@ export function useFtcData(seedData: GeneratedData): UseFtcDataResult {
   const [liveProgress, setLiveProgress] = useState<LiveRefreshProgress | null>(null);
   const dataRef = useRef(data);
   const regionRef = useRef(regionCode);
+  const autoPullKeysRef = useRef(new Set<string>());
   dataRef.current = data;
   regionRef.current = regionCode;
 
@@ -96,8 +99,8 @@ export function useFtcData(seedData: GeneratedData): UseFtcDataResult {
   }, []);
 
   const refreshSeason = useCallback(async (season: SeasonId, force = false, replace = false) => {
-      setLiveStatus('refreshing');
-      setLiveMessage(`Pulling ${season} data for ${regionLabel(regionRef.current)}...`);
+    setLiveStatus('refreshing');
+    setLiveMessage(`Pulling ${season} data for ${regionLabel(regionRef.current)}...`);
     setLiveProgress({ label: 'Starting season refresh', completed: 0, total: 1 });
 
     try {
@@ -130,6 +133,26 @@ export function useFtcData(seedData: GeneratedData): UseFtcDataResult {
       setLiveProgress(null);
     }
   }, []);
+
+  const ensureSeasonData = useCallback(
+    async (season: SeasonId) => {
+      const key = `${regionRef.current}:${season}`;
+      if (seasonHasTeamData(dataRef.current, season)) {
+        return;
+      }
+      if (autoPullKeysRef.current.has(key)) {
+        return;
+      }
+
+      autoPullKeysRef.current.add(key);
+      try {
+        await refreshSeason(season, true, false);
+      } catch {
+        autoPullKeysRef.current.delete(key);
+      }
+    },
+    [refreshSeason],
+  );
 
   const refreshTeam = useCallback(async (season: SeasonId, teamNumber: number, force = false) => {
     setLiveStatus('refreshing');
@@ -215,33 +238,44 @@ export function useFtcData(seedData: GeneratedData): UseFtcDataResult {
       storeRegionCode(nextRegionCode);
       setRegionCode(nextRegionCode);
       regionRef.current = nextRegionCode;
+      autoPullKeysRef.current.clear();
 
       const shell = {
         ...dataForRegion(seedData, nextRegionCode),
         regionCode: nextRegionCode,
       };
       const replace = nextRegionCode !== seedData.regionCode;
-      const season = latestSeason(shell);
+      const season = preferredSeason(shell);
 
       setData(shell);
       dataRef.current = shell;
 
       await refreshSeason(season, true, replace);
+      autoPullKeysRef.current.add(`${nextRegionCode}:${season}`);
     },
     [refreshSeason, seedData],
   );
 
   useEffect(() => {
     const storedRegion = loadStoredRegionCode(seedData.regionCode);
-    const season = latestSeason(dataForRegion(seedData, storedRegion));
+    const season = preferredSeason();
     const shell = { ...dataForRegion(seedData, storedRegion), regionCode: storedRegion };
+    const key = `${storedRegion}:${season}`;
 
     if (!shouldAutoRefreshRegion(season, shell)) {
       return;
     }
 
+    if (autoPullKeysRef.current.has(key)) {
+      return;
+    }
+
+    autoPullKeysRef.current.add(key);
     dataRef.current = shell;
-    void refreshSeason(season, false, storedRegion !== seedData.regionCode);
+    const force = !seasonHasTeamData(shell, season);
+    void refreshSeason(season, force, storedRegion !== seedData.regionCode).catch(() => {
+      autoPullKeysRef.current.delete(key);
+    });
   }, [refreshSeason, seedData]);
 
   return {
@@ -255,5 +289,6 @@ export function useFtcData(seedData: GeneratedData): UseFtcDataResult {
     refreshRegion,
     refreshSeason,
     refreshTeam,
+    ensureSeasonData,
   };
 }
