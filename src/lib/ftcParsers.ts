@@ -205,6 +205,44 @@ function formatSearchLocation(team: FirstSearchTeam): string {
   return parts.filter(Boolean).join(', ');
 }
 
+export function parseFirstSearchTeams(season: SeasonId, payload: unknown): RegionTeamSeed[] {
+  const results =
+    payload !== null &&
+    typeof payload === 'object' &&
+    'results' in payload &&
+    Array.isArray((payload as { results: unknown }).results)
+      ? (payload as { results: FirstSearchTeam[] }).results
+      : [];
+  const teams = new Map<number, RegionTeamSeed>();
+
+  for (const hit of results) {
+    const number = Number(hit.team_number_yearly);
+    const name = cleanText(hit.team_nickname || hit.team_name);
+
+    if (!number || !name) {
+      continue;
+    }
+
+    const location = formatSearchLocation(hit);
+    const locationParts = parseLocation(location);
+    const organization = normalizeOrganizationText(hit.team_name_calc ?? null);
+
+    teams.set(number, {
+      season,
+      number,
+      name,
+      location,
+      ...locationParts,
+      rookieYear: Number(hit.ff_team_rookieyear) || null,
+      organization,
+      sourceUrl: `${BASE_URL}/${season}/team/${number}`,
+      seedSource: 'first-search',
+    });
+  }
+
+  return [...teams.values()].sort((a, b) => a.number - b.number);
+}
+
 export async function fetchFirstSearchTeams(season: SeasonId, stateProv: string): Promise<RegionTeamSeed[]> {
   const response = await fetch(FIRST_SEARCH_URL, {
     method: 'POST',
@@ -233,35 +271,7 @@ export async function fetchFirstSearchTeams(season: SeasonId, stateProv: string)
     throw new Error(`FIRST Team Search failed with ${response.status}`);
   }
 
-  const payload = (await response.json()) as { results?: FirstSearchTeam[] };
-  const teams = new Map<number, RegionTeamSeed>();
-
-  for (const hit of payload.results ?? []) {
-    const number = Number(hit.team_number_yearly);
-    const name = cleanText(hit.team_nickname || hit.team_name);
-
-    if (!number || !name) {
-      continue;
-    }
-
-    const location = formatSearchLocation(hit);
-    const locationParts = parseLocation(location);
-    const organization = normalizeOrganizationText(hit.team_name_calc ?? null);
-
-    teams.set(number, {
-      season,
-      number,
-      name,
-      location,
-      ...locationParts,
-      rookieYear: Number(hit.ff_team_rookieyear) || null,
-      organization,
-      sourceUrl: `${BASE_URL}/${season}/team/${number}`,
-      seedSource: 'first-search',
-    });
-  }
-
-  return [...teams.values()].sort((a, b) => a.number - b.number);
+  return parseFirstSearchTeams(season, await response.json());
 }
 
 export function parseRegionPage(season: SeasonId, html: string, regionCode: string): ParsedRegion {
