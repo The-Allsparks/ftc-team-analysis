@@ -15,9 +15,20 @@ npm run pull:data
 npm run dev
 ```
 
-Future CI and Cloudflare Pages builds should consume `.nvmrc` and install with `npm ci`.
-
 The app reads `src/data/nv-ftc-teams.generated.json`. A current-season seed file is checked in so the interface has data immediately, and `npm run pull:data` refreshes it from public FTC Events pages. At startup the app validates that snapshot against runtime schema version `1` (`src/data/generatedSeedSchema.ts`). Invalid team records are quarantined with path/team-number diagnostics; a broken envelope (not an object, missing `teams`, empty or all-invalid teams) fails closed instead of showing an empty directory. `npm run validate:data` runs the same check from the CLI. The current seed omits `schemaVersion` and is treated as version 1. `npm test` runs Vitest against local parser fixtures in `src/lib/fixtures/` and does not hit live FTC Events or FIRST. Before overwriting the seed, `pull:data` refuses a candidate that is not an object with a `teams` array, has 0 teams, or drops below 50% of the previous team count when that previous snapshot had at least 10 teams.
+
+## CI
+
+GitHub Actions (`.github/workflows/ci.yml`) runs on pull requests to `main` and on pushes to `main`. The job uses Node from `.nvmrc` (24) and then:
+
+```bash
+npm ci
+npm test
+npm run build
+npm run validate:data
+```
+
+These checks are not yet required on `main` (branch protection remains a follow-up of [#10](https://github.com/The-Allsparks/ftc-team-analysis/issues/10)). Cloudflare Pages builds ([#38](https://github.com/The-Allsparks/ftc-team-analysis/issues/38)) should still consume `.nvmrc` and install with `npm ci` when that is implemented.
 
 ## Data Sources
 
