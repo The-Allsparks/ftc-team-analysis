@@ -103,12 +103,20 @@ export type DataSource = {
   note: string;
 };
 
+/**
+ * Generated snapshot envelope. Runtime validation lives in `generatedSeedSchema.ts`
+ * (`GENERATED_DATA_SCHEMA_VERSION` = 1). The checked-in Nevada JSON omits
+ * `schemaVersion` and is treated as version 1. `sources` is document-level
+ * provenance only; per-field evidence is out of scope.
+ */
 export type GeneratedData = {
   generatedAt: string;
   liveRefreshedAt?: string;
   targetSeasons: SeasonId[];
   regionCode: string;
   regionLabel?: string;
+  /** Present on future snapshots; omitted seed JSON is version 1. */
+  schemaVersion?: number;
   teams: Team[];
   regionEvents: RegionEvent[];
   sources: DataSource[];

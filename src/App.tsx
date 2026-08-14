@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import rawData from './data/nv-ftc-teams.generated.json';
+import { parseGeneratedSeed, SeedIssue } from './data/generatedSeedSchema';
 import {
   GeneratedData,
   SeasonId,
@@ -32,7 +33,12 @@ import { defaultSeasonWithData } from './lib/ftcSeason';
 import { useTeamAvatarCatalog } from './hooks/useTeamAvatarCatalog';
 import { TeamAvatar } from './components/TeamAvatar';
 
-const seedData = rawData as GeneratedData;
+const seedResult = parseGeneratedSeed(rawData);
+
+if (seedResult.ok && seedResult.quarantined.length > 0) {
+  console.warn('[generated-seed] quarantined invalid records', seedResult.quarantined);
+}
+
 const ALL_SEASONS = 'all';
 const ALL_FILTER = 'all';
 const SEASON_NAMES: Record<SeasonId, { years: string; game: string }> = {
@@ -222,7 +228,35 @@ function seasonMatchesCriteria(season: TeamSeason, criteria: FilterCriteria) {
   return !(criteria.awardsOnly && (season.awards?.length ?? 0) === 0);
 }
 
+function SeedEnvelopeError({ issues }: { issues: SeedIssue[] }) {
+  return (
+    <main className="app-shell">
+      <h1>Generated seed failed validation</h1>
+      <p className="live-status error">
+        The checked-in Nevada snapshot is not a valid GeneratedData envelope, so the team directory was not
+        loaded.
+      </p>
+      <ul>
+        {issues.map((issue) => (
+          <li key={`${issue.path}:${issue.message}:${issue.teamNumber ?? ''}`}>
+            {issue.path}: {issue.message}
+            {issue.teamNumber !== undefined ? ` (team ${issue.teamNumber})` : ''}
+          </li>
+        ))}
+      </ul>
+    </main>
+  );
+}
+
 export default function App() {
+  if (!seedResult.ok) {
+    return <SeedEnvelopeError issues={seedResult.issues} />;
+  }
+
+  return <AppDirectory seedData={seedResult.data} />;
+}
+
+function AppDirectory({ seedData }: { seedData: GeneratedData }) {
   const {
     data,
     regionCode,
