@@ -51,15 +51,13 @@ export async function resolvePublishedRegionSeason(
   );
 }
 
+/**
+ * Prefer the newest listed season even when the local dataset still has zero
+ * team-seasons for it (e.g. BIOBUZZ before the first live pull).
+ */
 export function defaultSeasonWithData(
   seasons: SeasonId[],
-  teams: { seasons?: Partial<Record<number, unknown>> }[],
+  _teams?: { seasons?: Partial<Record<number, unknown>> }[],
 ): SeasonId {
-  for (const season of seasons) {
-    if (teams.some((team) => team.seasons?.[season])) {
-      return season;
-    }
-  }
-
-  return seasons.find((season) => season <= 2025) ?? seasons[0] ?? 2025;
+  return seasons[0] ?? TARGET_SEASONS[0];
 }

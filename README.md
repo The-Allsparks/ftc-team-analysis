@@ -54,6 +54,8 @@ Local Vite (`npm run dev` / `npm run preview`) provides the same prefixes. Produ
 
 The official FTC Events API requires a username and token, so this project does not call it. Organization data is parsed from public sponsor text when available, and detailed event/award data is limited to what public FTC Events team pages expose.
 
+Built and maintained by [The Allsparks](https://www.theallsparks.org/).
+
 ## Team avatars
 
 Official FIRST team avatars (40×40 PNG uploads from [FTC Scoring](https://ftc-scoring.firstinspires.org)) are resolved at runtime from the same public composed stylesheet FTC Event Web uses (`/avatars/composed/{year}.css` on FTC Scoring, proxied in dev). Teams without an approved avatar show initials in the UI. Avatar availability varies by season and is not stored in the generated team JSON.

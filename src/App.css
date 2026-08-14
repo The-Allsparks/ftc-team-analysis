@@ -70,6 +70,18 @@ select {
   text-transform: uppercase;
 }
 
+.eyebrow .brand-link {
+  color: inherit;
+  font-weight: inherit;
+  letter-spacing: inherit;
+  text-decoration: underline;
+  text-underline-offset: 0.18em;
+}
+
+.eyebrow .brand-link:hover {
+  color: #1e3a8a;
+}
+
 .source-card,
 .stats-grid article,
 .controls,
