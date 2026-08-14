@@ -3,6 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
+  "engines": {
+    "node": "^20.19.0 || >=22.12.0",
+    "npm": ">=11"
+  },
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
@@ -13,19 +17,19 @@
     "discover:regions": "node scripts/discover-regions-full.mjs"
   },
   "dependencies": {
-    "node-html-parser": "latest",
-    "react": "latest",
-    "react-dom": "latest",
+    "node-html-parser": "^7.1.0",
+    "react": "^19.2.6",
+    "react-dom": "^19.2.6",
     "valibot": "1.4.2"
   },
   "devDependencies": {
-    "@types/node": "latest",
-    "@types/react": "latest",
-    "@types/react-dom": "latest",
-    "@vitejs/plugin-react": "latest",
-    "tsx": "latest",
-    "typescript": "latest",
-    "vite": "latest",
+    "@types/node": "^25.9.1",
+    "@types/react": "^19.2.15",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^6.0.2",
+    "tsx": "^4.22.3",
+    "typescript": "^6.0.3",
+    "vite": "^8.0.14",
     "vitest": "4.1.10"
   }
 }
