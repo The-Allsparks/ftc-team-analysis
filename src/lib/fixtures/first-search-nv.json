@@ -1,0 +1,44 @@
+{
+  "results": [
+    {
+      "team_number_yearly": "21535",
+      "team_nickname": "Royal Ghostbusters",
+      "team_name": "Royal Ghostbusters",
+      "team_name_calc": "Tesla&Helen C Cannon Middle School",
+      "team_city": "Las Vegas",
+      "team_stateprov": "NV",
+      "team_country": "USA",
+      "ff_team_rookieyear": "2022"
+    },
+    {
+      "team_number_yearly": "21535",
+      "team_nickname": "Royal Ghostbusters",
+      "team_name": "Royal Ghostbusters",
+      "team_name_calc": "Tesla&Helen C Cannon Middle School",
+      "team_city": "Las Vegas",
+      "team_stateprov": "NV",
+      "team_country": "USA",
+      "ff_team_rookieyear": "2022"
+    },
+    {
+      "team_number_yearly": "99999",
+      "team_nickname": "",
+      "team_name": ""
+    },
+    {
+      "team_city": "Reno",
+      "team_stateprov": "NV",
+      "team_nickname": "Missing Number"
+    },
+    {
+      "team_number_yearly": "12777",
+      "team_nickname": "Boulder City SuperBots",
+      "team_name": "Boulder City SuperBots",
+      "team_name_calc": "University of Nevada Cooperative Extension/TESLA&4-H Youth Development Organization",
+      "team_city": "Boulder City",
+      "team_stateprov": "NV",
+      "team_country": "USA",
+      "ff_team_rookieyear": "2017"
+    }
+  ]
+}
