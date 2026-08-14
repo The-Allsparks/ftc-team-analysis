@@ -11,6 +11,8 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
+    "deploy": "npm run build && wrangler deploy",
+    "preview:worker": "npm run build && wrangler dev",
     "test": "vitest run",
     "validate:data": "tsx scripts/validate-generated-data.ts",
     "pull:data": "tsx scripts/pull-public-ftc-data.ts",
@@ -30,6 +32,7 @@
     "tsx": "^4.22.3",
     "typescript": "^6.0.3",
     "vite": "^8.0.14",
-    "vitest": "4.1.10"
+    "vitest": "4.1.10",
+    "wrangler": "^4.123.0"
   }
 }
