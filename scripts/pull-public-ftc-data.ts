@@ -1,6 +1,7 @@
-import { mkdir, writeFile } from 'node:fs/promises';
+import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { assertSafeToPublishGeneratedData } from '../src/data/publishGuard';
 import { GeneratedData, RegionEvent, SeasonId, TARGET_SEASONS, Team, TeamLink, TeamSeason } from '../src/data/schema';
 import {
   applyLeagueRankings,
@@ -213,6 +214,15 @@ async function main() {
   };
 
   await mkdir(dirname(GENERATED_PATH), { recursive: true });
+
+  let previous: unknown = null;
+  try {
+    previous = JSON.parse(await readFile(GENERATED_PATH, 'utf8'));
+  } catch {
+    previous = null;
+  }
+
+  assertSafeToPublishGeneratedData(previous, data);
   await writeFile(GENERATED_PATH, `${JSON.stringify(data, null, 2)}\n`, 'utf8');
 
   console.log(`Wrote ${data.teams.length} teams to ${GENERATED_PATH}`);
