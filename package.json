@@ -8,13 +8,15 @@
     "build": "tsc && vite build",
     "preview": "vite preview",
     "test": "vitest run",
+    "validate:data": "tsx scripts/validate-generated-data.ts",
     "pull:data": "tsx scripts/pull-public-ftc-data.ts",
     "discover:regions": "node scripts/discover-regions-full.mjs"
   },
   "dependencies": {
     "node-html-parser": "latest",
     "react": "latest",
-    "react-dom": "latest"
+    "react-dom": "latest",
+    "valibot": "1.4.2"
   },
   "devDependencies": {
     "@types/node": "latest",
