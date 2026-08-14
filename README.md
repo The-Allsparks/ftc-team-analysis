@@ -28,7 +28,20 @@ npm run build
 npm run validate:data
 ```
 
-These checks are not yet required on `main` (branch protection remains a follow-up of [#10](https://github.com/The-Allsparks/ftc-team-analysis/issues/10)). Cloudflare Pages builds ([#38](https://github.com/The-Allsparks/ftc-team-analysis/issues/38)) should still consume `.nvmrc` and install with `npm ci` when that is implemented.
+These checks are not yet required on `main` (branch protection remains a follow-up of [#10](https://github.com/The-Allsparks/ftc-team-analysis/issues/10)).
+
+## Production (Cloudflare Workers)
+
+The app deploys as a Cloudflare Worker with Vite static assets plus a small allowlisted live-data proxy (`worker/proxy.ts`, `wrangler.jsonc`).
+
+| Browser prefix | Upstream |
+| --- | --- |
+| `/ftc-proxy` | `https://ftc-events.firstinspires.org` |
+| `/ftcscout-proxy` | `https://api.ftcscout.org` |
+| `/portfolio-lab-proxy` | `https://www.ftcportfoliolab.org` |
+| `/ftc-scoring-proxy` | `https://ftc-scoring.firstinspires.org` |
+
+Local Vite (`npm run dev` / `npm run preview`) provides the same prefixes. Production uses `npm run deploy` (`build` + `wrangler deploy`). The Worker only accepts `GET`/`HEAD` on those prefixes and never forwards arbitrary browser-supplied destinations. Static page views do not invoke the proxy Worker (`run_worker_first` is limited to the proxy paths).
 
 ## Data Sources
 
