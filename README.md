@@ -49,12 +49,13 @@ Local Vite (`npm run dev` / `npm run preview`) provides the same prefixes. Produ
 - FTC Events Nevada region pages: https://ftc-events.firstinspires.org/2025/region/USNV
 - FTC Events public team pages: https://ftc-events.firstinspires.org/2025/team/16158
 - FTC Events API information: https://ftc-events.firstinspires.org/services/API
+- FTC Portfolio Lab (optional enrichment): https://www.ftcportfoliolab.org/portfolio — rated public portfolio catalog; attribute [FTC Portfolio Lab](https://www.ftcportfoliolab.org/). The only known public JSON surface used here is `/api/search` (search hits). Full catalog fields are read from the public `/portfolio` HTML embedding. There is no documented full-catalog API; upstream HTML/RSC format changes and third-party terms are residual risks (not a legal clearance).
 
 ## Public-Only Limitation
 
 The official FTC Events API requires a username and token, so this project does not call it. Organization data is parsed from public sponsor text when available, and detailed event/award data is limited to what public FTC Events team pages expose.
 
-Live enrichments (FTC Events refresh, FTCScout, Portfolio Lab, team avatars) use a shared source-result model so proxy/network/rate-limit failures are not stored as empty successful data. FTCScout quick-stats and event payloads are validated with Valibot (`src/data/ftcScoutSchema.ts`) before normalize/cache/UI: invalid event rows are quarantined with path diagnostics, and envelope or quick-stats schema failures map to `parse_failure`. The UI shows calm availability messages for everyday use, with optional **Technical details** for diagnostics.
+Live enrichments (FTC Events refresh, FTCScout, Portfolio Lab, team avatars) use a shared source-result model so proxy/network/rate-limit failures are not stored as empty successful data. Portfolio Lab is **optional enrichment only** (not identity-critical): catalog HTML extraction is string-aware, entries and `/api/search` hits are validated with Valibot (`src/data/portfolioLabSchema.ts`), invalid catalog rows are quarantined, and extract/schema failures map to `parse_failure`. FTCScout quick-stats and event payloads are validated with Valibot (`src/data/ftcScoutSchema.ts`) before normalize/cache/UI: invalid event rows are quarantined with path diagnostics, and envelope or quick-stats schema failures map to `parse_failure`. The UI shows calm availability messages for everyday use, with optional **Technical details** for diagnostics.
 
 Built and maintained by [The Allsparks](https://www.theallsparks.org/).
 
