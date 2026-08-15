@@ -6,12 +6,15 @@ import {
   parseTeamAvatarPathFromCss,
   teamAvatarImageUrl,
 } from '../lib/teamAvatar';
+import { SourceState } from '../lib/sourceResult';
 
 type CatalogStatus = 'idle' | 'loading' | 'ready' | 'error';
 
 type UseTeamAvatarCatalogResult = {
   status: CatalogStatus;
+  sourceState: SourceState | null;
   message: string | null;
+  diagnostics: string | null;
   getAvatarUrl: (teamNumber: number) => string | null;
   refreshCatalog: (force?: boolean) => Promise<void>;
 };
@@ -19,7 +22,9 @@ type UseTeamAvatarCatalogResult = {
 export function useTeamAvatarCatalog(season: SeasonId | null): UseTeamAvatarCatalogResult {
   const [css, setCss] = useState<string | null>(null);
   const [status, setStatus] = useState<CatalogStatus>('idle');
+  const [sourceState, setSourceState] = useState<SourceState | null>(null);
   const [message, setMessage] = useState<string | null>(null);
+  const [diagnostics, setDiagnostics] = useState<string | null>(null);
   const composedYear = season ? avatarComposedYear(season) : null;
   const inFlight = useRef<number | null>(null);
 
@@ -28,7 +33,9 @@ export function useTeamAvatarCatalog(season: SeasonId | null): UseTeamAvatarCata
       if (composedYear === null) {
         setCss(null);
         setStatus('idle');
+        setSourceState(null);
         setMessage(null);
+        setDiagnostics(null);
         return;
       }
 
@@ -38,18 +45,36 @@ export function useTeamAvatarCatalog(season: SeasonId | null): UseTeamAvatarCata
 
       inFlight.current = composedYear;
       setStatus('loading');
+      setSourceState(null);
+      setDiagnostics(null);
       setMessage(`Loading FIRST team avatars for ${composedYear}...`);
 
       try {
-        const stylesheet = await fetchComposedAvatarCss(composedYear, { force });
-        setCss(stylesheet);
-        setStatus('ready');
-        setMessage('Team avatar catalog ready.');
+        const result = await fetchComposedAvatarCss(composedYear, { force });
+        setSourceState(result.state);
+        setDiagnostics(result.diagnostics ?? null);
+
+        if (result.ok) {
+          setCss(result.data);
+          setStatus('ready');
+          setMessage(
+            result.state === 'no_record'
+              ? 'Team avatar catalog is empty for this season.'
+              : 'Team avatar catalog ready.',
+          );
+          return;
+        }
+
+        setCss(null);
+        setStatus('error');
+        setMessage(result.userMessage);
       } catch (error) {
         const errorMessage = error instanceof Error ? error.message : String(error);
         setCss(null);
         setStatus('error');
-        setMessage(`Team avatars unavailable: ${errorMessage}`);
+        setSourceState('upstream_unavailable');
+        setMessage('Team avatars unavailable.');
+        setDiagnostics(errorMessage);
       } finally {
         inFlight.current = null;
       }
@@ -75,7 +100,9 @@ export function useTeamAvatarCatalog(season: SeasonId | null): UseTeamAvatarCata
 
   return {
     status,
+    sourceState,
     message,
+    diagnostics,
     getAvatarUrl,
     refreshCatalog,
   };

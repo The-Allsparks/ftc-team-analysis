@@ -33,6 +33,32 @@ import { defaultSeasonWithData } from './lib/ftcSeason';
 import { useTeamAvatarCatalog } from './hooks/useTeamAvatarCatalog';
 import { TeamAvatar } from './components/TeamAvatar';
 
+function SourceStatusBlock({
+  statusClass,
+  message,
+  diagnostics,
+}: {
+  statusClass: string;
+  message: string | null;
+  diagnostics?: string | null;
+}) {
+  if (!message) {
+    return null;
+  }
+
+  return (
+    <div className="source-status-block">
+      <p className={statusClass}>{message}</p>
+      {diagnostics ? (
+        <details className="source-diagnostics">
+          <summary>Technical details</summary>
+          <pre>{diagnostics}</pre>
+        </details>
+      ) : null}
+    </div>
+  );
+}
+
 const seedResult = parseGeneratedSeed(rawData);
 
 if (seedResult.ok && seedResult.quarantined.length > 0) {
@@ -263,6 +289,7 @@ function AppDirectory({ seedData }: { seedData: GeneratedData }) {
     regionName,
     liveStatus,
     liveMessage,
+    liveDiagnostics,
     liveProgress,
     changeRegion,
     refreshRegion,
@@ -274,9 +301,16 @@ function AppDirectory({ seedData }: { seedData: GeneratedData }) {
     portfoliosByTeam,
     status: portfolioStatus,
     message: portfolioMessage,
+    diagnostics: portfolioDiagnostics,
     refreshCatalog: refreshPortfolioCatalog,
   } = usePortfolioLab();
-  const { getTeamScoutData, scoutStatus, scoutMessage, loadTeamScout } = useFtcScout();
+  const {
+    getTeamScoutData,
+    scoutStatus,
+    scoutMessage,
+    scoutDiagnostics,
+    loadTeamScout,
+  } = useFtcScout();
   const seasons = useMemo(() => seasonOptions(data), [data]);
   const defaultSeason = useMemo(() => defaultSeasonWithData(seasons, data.teams), [data.teams, seasons]);
   const teamLineageMap = useMemo(() => buildTeamLineageMap(data.teams), [data.teams]);
@@ -465,7 +499,12 @@ function AppDirectory({ seedData }: { seedData: GeneratedData }) {
     selectedSeasons.find((season) => season.season === detailSeason) ?? selectedSeasons[0] ?? null;
   const avatarSeason: SeasonId | null =
     seasonFilter !== ALL_SEASONS ? seasonFilter : (selectedSeason?.season ?? detailSeason ?? defaultSeason);
-  const { getAvatarUrl } = useTeamAvatarCatalog(avatarSeason);
+  const {
+    getAvatarUrl,
+    status: avatarStatus,
+    message: avatarMessage,
+    diagnostics: avatarDiagnostics,
+  } = useTeamAvatarCatalog(avatarSeason);
   const selectedLineage = selectedTeam ? getTeamLineage(teamLineageMap, selectedTeam.number) : null;
   const selectedPortfolios = useMemo(() => {
     if (!selectedTeam) {
@@ -625,7 +664,13 @@ function AppDirectory({ seedData }: { seedData: GeneratedData }) {
               Refresh season
             </button>
           </div>
-          {liveMessage && <p className={`live-status ${liveStatus}`}>{liveMessage}</p>}
+          {liveMessage && (
+            <SourceStatusBlock
+              statusClass={`live-status ${liveStatus}`}
+              message={liveMessage}
+              diagnostics={liveDiagnostics}
+            />
+          )}
           {liveProgress && liveProgress.total > 1 && (
             <p className="live-progress">
               {liveProgress.label} ({liveProgress.completed}/{liveProgress.total})
@@ -641,7 +686,18 @@ function AppDirectory({ seedData }: { seedData: GeneratedData }) {
             FTCScout
           </a>
           {portfolioMessage && (
-            <p className={`portfolio-status ${portfolioStatus}`}>{portfolioMessage}</p>
+            <SourceStatusBlock
+              statusClass={`portfolio-status ${portfolioStatus}`}
+              message={portfolioMessage}
+              diagnostics={portfolioDiagnostics}
+            />
+          )}
+          {avatarStatus === 'error' && avatarMessage && (
+            <SourceStatusBlock
+              statusClass="avatar-status error"
+              message={avatarMessage}
+              diagnostics={avatarDiagnostics}
+            />
           )}
         </div>
       </header>
@@ -937,6 +993,16 @@ function AppDirectory({ seedData }: { seedData: GeneratedData }) {
               </div>
 
               {selectedSeason.summary && <p className="summary">{selectedSeason.summary}</p>}
+              {selectedSeason.liveSource && !selectedSeason.liveSource.ok && (
+                <SourceStatusBlock
+                  statusClass="live-status error"
+                  message={
+                    selectedSeason.liveSource.userMessage ??
+                    'Could not refresh the live FTC Events page. Showing the placeholder season row.'
+                  }
+                  diagnostics={selectedSeason.liveSource.diagnostics}
+                />
+              )}
 
               <section className="scout-panel">
                 <div className="section-heading">
@@ -945,6 +1011,10 @@ function AppDirectory({ seedData }: { seedData: GeneratedData }) {
                 </div>
                 {scoutStatus === 'loading' && !selectedScoutData ? (
                   <p className="empty-note">Loading OPR and event analytics from FTCScout...</p>
+                ) : scoutStatus === 'error' && !selectedScoutData?.quickStats ? (
+                  <p className="empty-note">
+                    FTCScout stats are temporarily unavailable for this team. Try refresh analytics again shortly.
+                  </p>
                 ) : selectedScoutData?.quickStats ? (
                   <div className="scout-quick-stats">
                     <article>
@@ -1034,7 +1104,13 @@ function AppDirectory({ seedData }: { seedData: GeneratedData }) {
                     Refresh analytics
                   </button>
                 </div>
-                {scoutMessage && <p className={`scout-status ${scoutStatus}`}>{scoutMessage}</p>}
+                {scoutMessage && (
+                  <SourceStatusBlock
+                    statusClass={`scout-status ${scoutStatus}`}
+                    message={scoutMessage}
+                    diagnostics={scoutDiagnostics}
+                  />
+                )}
               </section>
 
               {relatedTeams.length > 0 && selectedLineage && (
@@ -1159,6 +1235,10 @@ function AppDirectory({ seedData }: { seedData: GeneratedData }) {
                       );
                     })}
                   </div>
+                ) : portfolioStatus === 'error' ? (
+                  <p className="empty-note">
+                    Portfolio Lab is temporarily unavailable, so rated portfolios cannot be shown right now.
+                  </p>
                 ) : (
                   <p className="empty-note">
                     No rated engineering portfolios are listed for this team on{' '}

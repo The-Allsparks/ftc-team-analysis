@@ -1,3 +1,5 @@
+import { HttpStatusError } from './sourceResult';
+
 const FTC_PROXY_PREFIX = '/ftc-proxy';
 
 export function toFtcProxyUrl(path: string): string {
@@ -6,11 +8,17 @@ export function toFtcProxyUrl(path: string): string {
 }
 
 export async function fetchFtcHtml(path: string, attempt = 1): Promise<string> {
-  const response = await fetch(toFtcProxyUrl(path), {
-    headers: {
-      accept: 'text/html',
-    },
-  });
+  let response: Response;
+
+  try {
+    response = await fetch(toFtcProxyUrl(path), {
+      headers: {
+        accept: 'text/html',
+      },
+    });
+  } catch (error) {
+    throw error instanceof TypeError ? error : new TypeError(String(error));
+  }
 
   if (response.status === 429 && attempt < 4) {
     await new Promise((resolve) => setTimeout(resolve, attempt * 1500));
@@ -18,7 +26,7 @@ export async function fetchFtcHtml(path: string, attempt = 1): Promise<string> {
   }
 
   if (!response.ok) {
-    throw new Error(`GET ${path} failed with ${response.status}`);
+    throw new HttpStatusError(`GET ${path} failed with ${response.status}`, response.status);
   }
 
   return response.text();

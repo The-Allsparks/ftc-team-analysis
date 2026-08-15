@@ -6,10 +6,17 @@ import {
   portfolioSeasonId,
 } from '../data/portfolioLab';
 import { cacheKey, getCached, setCached } from './ftcCache';
+import {
+  failureFromHttpStatus,
+  failureFromUnknown,
+  isCacheableSuccess,
+  SourceResult,
+} from './sourceResult';
 
 const PORTFOLIO_CACHE_KEY = cacheKey('portfolio-lab', 'catalog');
 const PORTFOLIO_CACHE_TTL_MS = 24 * 60 * 60 * 1000;
 const PORTFOLIO_PROXY_PREFIX = '/portfolio-lab-proxy';
+const PORTFOLIO_SOURCE_LABEL = 'Portfolio Lab';
 
 export function toPortfolioLabProxyUrl(path: string): string {
   const normalized = path.startsWith('/') ? path : `/${path}`;
@@ -46,57 +53,127 @@ function extractPortfoliosFromHtml(html: string): PortfolioLabEntry[] {
   return JSON.parse(raw) as PortfolioLabEntry[];
 }
 
-export async function fetchPortfolioLabCatalog(options?: { force?: boolean }): Promise<PortfolioLabCatalog> {
+export async function fetchPortfolioLabCatalog(options?: { force?: boolean }): Promise<SourceResult<PortfolioLabCatalog>> {
   if (!options?.force) {
     const cached = getCached<PortfolioLabCatalog>(PORTFOLIO_CACHE_KEY, PORTFOLIO_CACHE_TTL_MS);
 
     if (cached) {
-      return cached;
+      return {
+        ok: true,
+        state: cached.portfolios.length > 0 ? 'available' : 'no_record',
+        data: cached,
+        diagnostics: 'Loaded from local cache.',
+      };
     }
   }
 
-  const response = await fetch(toPortfolioLabProxyUrl('/portfolio'), {
-    headers: {
-      accept: 'text/html',
-    },
-  });
+  let response: Response;
 
-  if (!response.ok) {
-    throw new Error(`Portfolio Lab catalog request failed with ${response.status}`);
+  try {
+    response = await fetch(toPortfolioLabProxyUrl('/portfolio'), {
+      headers: {
+        accept: 'text/html',
+      },
+    });
+  } catch (error) {
+    return failureFromUnknown(error instanceof TypeError ? error : new TypeError(String(error)), PORTFOLIO_SOURCE_LABEL);
   }
 
-  const html = await response.text();
-  const catalog: PortfolioLabCatalog = {
-    fetchedAt: new Date().toISOString(),
-    portfolios: extractPortfoliosFromHtml(html),
-  };
+  if (response.status === 404) {
+    const empty: PortfolioLabCatalog = {
+      fetchedAt: new Date().toISOString(),
+      portfolios: [],
+    };
+    const result: SourceResult<PortfolioLabCatalog> = {
+      ok: true,
+      state: 'no_record',
+      data: empty,
+      diagnostics: 'Portfolio Lab catalog request returned 404.',
+    };
+    setCached(PORTFOLIO_CACHE_KEY, empty);
+    return result;
+  }
 
-  setCached(PORTFOLIO_CACHE_KEY, catalog);
-  return catalog;
+  if (!response.ok) {
+    return failureFromHttpStatus(
+      response.status,
+      PORTFOLIO_SOURCE_LABEL,
+      `Portfolio Lab catalog request failed with ${response.status}`,
+    );
+  }
+
+  try {
+    const html = await response.text();
+    const catalog: PortfolioLabCatalog = {
+      fetchedAt: new Date().toISOString(),
+      portfolios: extractPortfoliosFromHtml(html),
+    };
+
+    const result: SourceResult<PortfolioLabCatalog> = {
+      ok: true,
+      state: catalog.portfolios.length > 0 ? 'available' : 'no_record',
+      data: catalog,
+    };
+
+    if (isCacheableSuccess(result)) {
+      setCached(PORTFOLIO_CACHE_KEY, catalog);
+    }
+
+    return result;
+  } catch (error) {
+    return failureFromUnknown(error, PORTFOLIO_SOURCE_LABEL);
+  }
 }
 
 export async function searchPortfolioLabTeams(query: string): Promise<
-  Array<{
-    id: string;
-    teamName: string;
-    teamNumber: number;
-    country: string;
-  }>
+  SourceResult<
+    Array<{
+      id: string;
+      teamName: string;
+      teamNumber: number;
+      country: string;
+    }>
+  >
 > {
-  const response = await fetch(
-    toPortfolioLabProxyUrl(`/api/search?q=${encodeURIComponent(query.trim())}`),
-    {
-      headers: {
-        accept: 'application/json',
-      },
-    },
-  );
+  let response: Response;
 
-  if (!response.ok) {
-    throw new Error(`Portfolio Lab search failed with ${response.status}`);
+  try {
+    response = await fetch(
+      toPortfolioLabProxyUrl(`/api/search?q=${encodeURIComponent(query.trim())}`),
+      {
+        headers: {
+          accept: 'application/json',
+        },
+      },
+    );
+  } catch (error) {
+    return failureFromUnknown(error instanceof TypeError ? error : new TypeError(String(error)), PORTFOLIO_SOURCE_LABEL);
   }
 
-  return response.json();
+  if (!response.ok) {
+    return failureFromHttpStatus(
+      response.status,
+      PORTFOLIO_SOURCE_LABEL,
+      `Portfolio Lab search failed with ${response.status}`,
+    );
+  }
+
+  try {
+    const data = (await response.json()) as Array<{
+      id: string;
+      teamName: string;
+      teamNumber: number;
+      country: string;
+    }>;
+
+    return {
+      ok: true,
+      state: data.length > 0 ? 'available' : 'no_record',
+      data,
+    };
+  } catch (error) {
+    return failureFromUnknown(error, PORTFOLIO_SOURCE_LABEL);
+  }
 }
 
 export function indexPortfoliosByTeam(portfolios: PortfolioLabEntry[]): Map<number, PortfolioLabEntry[]> {
@@ -128,4 +205,9 @@ export function portfolioLabAttributionUrl(): string {
 
 export function portfolioLabExternalUrl(path: string): string {
   return path.startsWith('http') ? path : `${PORTFOLIO_LAB_BASE_URL}${path}`;
+}
+
+/** Exported for tests — confirms failures do not write the catalog cache key. */
+export function portfolioLabCatalogCacheKeyForTests(): string {
+  return PORTFOLIO_CACHE_KEY;
 }

@@ -13,6 +13,7 @@ import {
   shouldAutoRefreshRegion,
 } from '../lib/ftcLive';
 import { resolvePublishedRegionSeason } from '../lib/ftcSeason';
+import { failureFromUnknown } from '../lib/sourceResult';
 import { refreshLatestFields } from '../lib/ftcParsers';
 
 type UseFtcDataResult = {
@@ -21,6 +22,7 @@ type UseFtcDataResult = {
   regionName: string;
   liveStatus: LiveRefreshStatus;
   liveMessage: string | null;
+  liveDiagnostics: string | null;
   liveProgress: LiveRefreshProgress | null;
   changeRegion: (regionCode: string) => Promise<void>;
   refreshRegion: (season: SeasonId, force?: boolean) => Promise<void>;
@@ -49,6 +51,7 @@ export function useFtcData(seedData: GeneratedData): UseFtcDataResult {
   const [data, setData] = useState(() => dataForRegion(seedData, loadStoredRegionCode(seedData.regionCode)));
   const [liveStatus, setLiveStatus] = useState<LiveRefreshStatus>('idle');
   const [liveMessage, setLiveMessage] = useState<string | null>(null);
+  const [liveDiagnostics, setLiveDiagnostics] = useState<string | null>(null);
   const [liveProgress, setLiveProgress] = useState<LiveRefreshProgress | null>(null);
   const dataRef = useRef(data);
   const regionRef = useRef(regionCode);
@@ -59,6 +62,7 @@ export function useFtcData(seedData: GeneratedData): UseFtcDataResult {
   const refreshRegion = useCallback(async (season: SeasonId, force = false, replace = false) => {
     setLiveStatus('refreshing');
     setLiveMessage(`Refreshing ${season} roster for ${regionLabel(regionRef.current)}...`);
+    setLiveDiagnostics(null);
     setLiveProgress(null);
 
     try {
@@ -89,10 +93,12 @@ export function useFtcData(seedData: GeneratedData): UseFtcDataResult {
           ? `Updated ${resolved.season} roster for ${result.regionLabel}. (${resolved.requestedSeason} is not published yet.)`
           : `Updated ${resolved.season} roster for ${result.regionLabel}.`,
       );
+      setLiveDiagnostics(null);
     } catch (error) {
-      const message = error instanceof Error ? error.message : String(error);
+      const failure = failureFromUnknown(error, 'FTC Events');
       setLiveStatus('error');
-      setLiveMessage(`Live refresh failed: ${message}`);
+      setLiveMessage(failure.userMessage);
+      setLiveDiagnostics(failure.diagnostics);
     } finally {
       setLiveProgress(null);
     }
@@ -101,6 +107,7 @@ export function useFtcData(seedData: GeneratedData): UseFtcDataResult {
   const refreshSeason = useCallback(async (season: SeasonId, force = false, replace = false) => {
     setLiveStatus('refreshing');
     setLiveMessage(`Pulling ${season} data for ${regionLabel(regionRef.current)}...`);
+    setLiveDiagnostics(null);
     setLiveProgress({ label: 'Starting season refresh', completed: 0, total: 1 });
 
     try {
@@ -125,10 +132,12 @@ export function useFtcData(seedData: GeneratedData): UseFtcDataResult {
           ? `Pulled ${resolved.season} data for ${refreshed.regionLabel ?? regionLabel(regionRef.current)}. (${resolved.requestedSeason} is not published yet.)`
           : `Pulled ${resolved.season} data for ${refreshed.regionLabel ?? regionLabel(regionRef.current)}.`,
       );
+      setLiveDiagnostics(null);
     } catch (error) {
-      const message = error instanceof Error ? error.message : String(error);
+      const failure = failureFromUnknown(error, 'FTC Events');
       setLiveStatus('error');
-      setLiveMessage(`Season refresh failed: ${message}`);
+      setLiveMessage(failure.userMessage);
+      setLiveDiagnostics(failure.diagnostics);
     } finally {
       setLiveProgress(null);
     }
@@ -159,6 +168,7 @@ export function useFtcData(seedData: GeneratedData): UseFtcDataResult {
     setLiveMessage(
       force ? `Refreshing all seasons for team ${teamNumber}...` : `Refreshing team ${teamNumber} (${season})...`,
     );
+    setLiveDiagnostics(null);
     setLiveProgress(force ? { label: `Checking seasons for team ${teamNumber}`, completed: 0, total: 1 } : null);
 
     try {
@@ -218,12 +228,21 @@ export function useFtcData(seedData: GeneratedData): UseFtcDataResult {
           })
           .sort((a, b) => a.number - b.number),
       }));
-      setLiveStatus('idle');
-      setLiveMessage(`Updated team ${teamNumber} for ${season}.`);
+
+      if (seasonData.liveSource && !seasonData.liveSource.ok) {
+        setLiveStatus('error');
+        setLiveMessage(seasonData.liveSource.userMessage ?? 'Could not refresh the live FTC Events page.');
+        setLiveDiagnostics(seasonData.liveSource.diagnostics ?? null);
+      } else {
+        setLiveStatus('idle');
+        setLiveMessage(`Updated team ${teamNumber} for ${season}.`);
+        setLiveDiagnostics(null);
+      }
     } catch (error) {
-      const message = error instanceof Error ? error.message : String(error);
+      const failure = failureFromUnknown(error, 'FTC Events');
       setLiveStatus('error');
-      setLiveMessage(`Team refresh failed: ${message}`);
+      setLiveMessage(failure.userMessage);
+      setLiveDiagnostics(failure.diagnostics);
     } finally {
       setLiveProgress(null);
     }
@@ -284,6 +303,7 @@ export function useFtcData(seedData: GeneratedData): UseFtcDataResult {
     regionName: data.regionLabel ?? regionLabel(regionCode),
     liveStatus,
     liveMessage,
+    liveDiagnostics,
     liveProgress,
     changeRegion,
     refreshRegion,

@@ -54,6 +54,8 @@ Local Vite (`npm run dev` / `npm run preview`) provides the same prefixes. Produ
 
 The official FTC Events API requires a username and token, so this project does not call it. Organization data is parsed from public sponsor text when available, and detailed event/award data is limited to what public FTC Events team pages expose.
 
+Live enrichments (FTC Events refresh, FTCScout, Portfolio Lab, team avatars) use a shared source-result model so proxy/network/rate-limit failures are not stored as empty successful data. The UI shows calm availability messages for everyday use, with optional **Technical details** for diagnostics.
+
 Built and maintained by [The Allsparks](https://www.theallsparks.org/).
 
 ## Team avatars
