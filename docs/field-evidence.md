@@ -56,7 +56,6 @@ Season `record`, and `qualificationRecord` / `playoffRecord` when present. Per-e
 
 - Canonical location/school/org IDs (#16)
 - Relationship graph (#28)
-- Lineage evidence rewrite (#6)
 - Full historical snapshot product (#29)
 - Team-submitted correction workflow (#32)
 - Paid services, secrets, or student PII
