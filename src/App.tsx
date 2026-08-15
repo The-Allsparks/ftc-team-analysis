@@ -1,38 +1,20 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
-import rawData from './data/nv-ftc-teams.generated.json';
-import { parseGeneratedSeed, SeedIssue } from './data/generatedSeedSchema';
+import { lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react';
+import { SeedIssue } from './data/generatedSeedSchema';
 import {
   GeneratedData,
   SeasonId,
   TARGET_SEASONS,
   Team,
-  TeamAward,
   TeamEvent,
   TeamSeason,
   seasonOptions,
 } from './data/schema';
-import {
-  buildTeamLineageMap,
-  formatRelationshipTypeLabel,
-  getTeamLineage,
-  visibleRelatedLinks,
-} from './teamLineage';
+import { loadGeneratedSeed, LoadGeneratedSeedResult } from './data/loadGeneratedSeed';
+import { buildTeamLineageMap, getTeamLineage } from './teamLineage';
 import { useFtcData } from './hooks/useFtcData';
 import { usePortfolioLab } from './hooks/usePortfolioLab';
-import {
-  portfolioCoverUrl,
-  portfolioLabSearchUrl,
-  portfolioMatchesSeason,
-  portfoliosForSeason,
-} from './data/portfolioLab';
-import { toPortfolioLabProxyUrl } from './lib/portfolioLab';
+import { portfolioMatchesSeason, portfoliosForSeason } from './data/portfolioLab';
 import { useFtcScout } from './hooks/useFtcScout';
-import {
-  formatScoutNumber,
-  formatScoutRank,
-  ftcScoutEventUrl,
-  ftcScoutTeamUrl,
-} from './data/ftcScout';
 import {
   getRegionByCode,
   groupRegions,
@@ -41,73 +23,12 @@ import {
 } from './data/regions';
 import { RegionIssue } from './data/regionCatalogSchema';
 import { defaultSeasonWithData } from './lib/ftcSeason';
-import {
-  affiliationsForSeason,
-  hostAffiliations,
-  sponsorAffiliations,
-} from './lib/organizationAffiliations';
-import {
-  evidenceForSeasonField,
-  formatProvenanceSummary,
-} from './lib/fieldEvidence';
-import type { TeamFactField } from './data/schema';
+import { affiliationsForSeason } from './lib/organizationAffiliations';
 import { useTeamAvatarCatalog } from './hooks/useTeamAvatarCatalog';
 import { TeamAvatar } from './components/TeamAvatar';
+import { SourceStatusBlock } from './components/SourceStatusBlock';
 
-function FactProvenance({ season, field }: { season: TeamSeason; field: TeamFactField }) {
-  const rows = evidenceForSeasonField(season, field);
-  if (rows.length === 0) {
-    return null;
-  }
-
-  const current = rows.find((row) => row.status === 'current') ?? rows[0];
-  const summary = formatProvenanceSummary(rows);
-
-  return (
-    <small className="fact-provenance">
-      <span className="fact-provenance-label">Source</span>
-      {current?.sourceUrl ? (
-        <a href={current.sourceUrl} target="_blank" rel="noreferrer">
-          {summary}
-        </a>
-      ) : (
-        <span>{summary}</span>
-      )}
-    </small>
-  );
-}
-
-function SourceStatusBlock({
-  statusClass,
-  message,
-  diagnostics,
-}: {
-  statusClass: string;
-  message: string | null;
-  diagnostics?: string | null;
-}) {
-  if (!message) {
-    return null;
-  }
-
-  return (
-    <div className="source-status-block">
-      <p className={statusClass}>{message}</p>
-      {diagnostics ? (
-        <details className="source-diagnostics">
-          <summary>Technical details</summary>
-          <pre>{diagnostics}</pre>
-        </details>
-      ) : null}
-    </div>
-  );
-}
-
-const seedResult = parseGeneratedSeed(rawData);
-
-if (seedResult.ok && seedResult.quarantined.length > 0) {
-  console.warn('[generated-seed] quarantined invalid records', seedResult.quarantined);
-}
+const TeamDetailPanel = lazy(() => import('./components/TeamDetailPanel'));
 
 const ALL_SEASONS = 'all';
 const ALL_FILTER = 'all';
@@ -195,10 +116,6 @@ function eventKey(event: Partial<TeamEvent>) {
   return event.code ?? event.name ?? 'unknown-event';
 }
 
-function awardKey(award: Partial<TeamAward>, index: number) {
-  return `${award.name ?? 'award'}-${award.eventName ?? 'event'}-${index}`;
-}
-
 function seasonsForFilter(team: Team, season: SeasonFilter): TeamSeason[] {
   if (season === ALL_SEASONS) {
     return seasonValues(team);
@@ -217,54 +134,6 @@ function teamTypeLabel(value: TeamSeason['teamType']) {
   }
 
   return 'Unknown team type';
-}
-
-function formatAffiliationNames(names: string[]): string {
-  return names.length > 0 ? names.join(', ') : 'Not listed';
-}
-
-function OrganizationIdentity({ season }: { season: TeamSeason }) {
-  const hosts = hostAffiliations(season);
-  const sponsors = sponsorAffiliations(season);
-  const hasStructured = hosts.length > 0 || sponsors.length > 0;
-
-  if (!season.organization && !hasStructured) {
-    return (
-      <div>
-        <span>Organization / Sponsors</span>
-        <strong>Not available publicly yet</strong>
-        <FactProvenance season={season} field="organization" />
-      </div>
-    );
-  }
-
-  if (!hasStructured) {
-    return (
-      <div>
-        <span>Organization / Sponsors</span>
-        <strong>{season.organization}</strong>
-        <FactProvenance season={season} field="organization" />
-      </div>
-    );
-  }
-
-  return (
-    <>
-      <div>
-        <span>School / Host</span>
-        <strong>{formatAffiliationNames(hosts.map((row) => row.name))}</strong>
-        {hosts.some((row) => row.confidence === 'low') && (
-          <small className="record-key">Parsed from public sponsor line; low confidence</small>
-        )}
-        <FactProvenance season={season} field="organization" />
-      </div>
-      <div>
-        <span>Sponsors</span>
-        <strong>{formatAffiliationNames(sponsors.map((row) => row.name))}</strong>
-        <FactProvenance season={season} field="organization" />
-      </div>
-    </>
-  );
 }
 
 function advancementStatus(season: TeamSeason, regionCode: string): AdvancementFilter {
@@ -352,8 +221,7 @@ function SeedEnvelopeError({ issues }: { issues: SeedIssue[] }) {
     <main className="app-shell">
       <h1>Generated seed failed validation</h1>
       <p className="live-status error">
-        The checked-in Nevada snapshot is not a valid GeneratedData envelope, so the team directory was not
-        loaded.
+        The Nevada snapshot is not a valid GeneratedData envelope, so the team directory was not loaded.
       </p>
       <ul>
         {issues.map((issue) => (
@@ -363,6 +231,46 @@ function SeedEnvelopeError({ issues }: { issues: SeedIssue[] }) {
           </li>
         ))}
       </ul>
+    </main>
+  );
+}
+
+function SeedLoadError({
+  message,
+  diagnostics,
+  issues,
+}: {
+  message: string;
+  diagnostics?: string;
+  issues?: SeedIssue[];
+}) {
+  return (
+    <main className="app-shell">
+      <h1>Nevada snapshot unavailable</h1>
+      <SourceStatusBlock statusClass="live-status error" message={message} diagnostics={diagnostics ?? null} />
+      {issues && issues.length > 0 ? (
+        <ul>
+          {issues.map((issue) => (
+            <li key={`${issue.path}:${issue.message}:${issue.teamNumber ?? ''}`}>
+              {issue.path}: {issue.message}
+              {issue.teamNumber !== undefined ? ` (team ${issue.teamNumber})` : ''}
+            </li>
+          ))}
+        </ul>
+      ) : null}
+      <p className="empty-note">
+        Check your network connection, then reload the page. The app serves the snapshot from{' '}
+        <code>/data/nv-ftc-teams.generated.json</code>.
+      </p>
+    </main>
+  );
+}
+
+function SeedLoading() {
+  return (
+    <main className="app-shell">
+      <h1>Loading Nevada FTC teams</h1>
+      <p className="empty-note">Downloading the region snapshot…</p>
     </main>
   );
 }
@@ -386,16 +294,62 @@ function RegionCatalogEnvelopeError({ issues }: { issues: RegionIssue[] }) {
   );
 }
 
+type SeedLoadState =
+  | { status: 'loading' }
+  | { status: 'ready'; data: GeneratedData }
+  | { status: 'error'; result: Extract<LoadGeneratedSeedResult, { ok: false }> };
+
 export default function App() {
-  if (!seedResult.ok) {
-    return <SeedEnvelopeError issues={seedResult.issues} />;
-  }
+  const [seedState, setSeedState] = useState<SeedLoadState>({ status: 'loading' });
+
+  useEffect(() => {
+    let cancelled = false;
+
+    void loadGeneratedSeed().then((result) => {
+      if (cancelled) {
+        return;
+      }
+
+      if (!result.ok) {
+        setSeedState({ status: 'error', result });
+        return;
+      }
+
+      if (result.quarantined.length > 0) {
+        console.warn('[generated-seed] quarantined invalid records', result.quarantined);
+      }
+
+      setSeedState({ status: 'ready', data: result.data });
+    });
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   if (!regionCatalogResult.ok) {
     return <RegionCatalogEnvelopeError issues={regionCatalogResult.issues} />;
   }
 
-  return <AppDirectory seedData={seedResult.data} />;
+  if (seedState.status === 'loading') {
+    return <SeedLoading />;
+  }
+
+  if (seedState.status === 'error') {
+    if (seedState.result.kind === 'invalid-envelope' && seedState.result.issues) {
+      return <SeedEnvelopeError issues={seedState.result.issues} />;
+    }
+
+    return (
+      <SeedLoadError
+        message={seedState.result.message}
+        diagnostics={seedState.result.diagnostics}
+        issues={seedState.result.issues}
+      />
+    );
+  }
+
+  return <AppDirectory seedData={seedState.data} />;
 }
 
 function AppDirectory({ seedData }: { seedData: GeneratedData }) {
@@ -643,18 +597,6 @@ function AppDirectory({ seedData }: { seedData: GeneratedData }) {
   const selectedScoutData = selectedTeam && selectedSeason
     ? getTeamScoutData(selectedSeason.season, selectedTeam.number)
     : null;
-  const relatedTeams = selectedLineage ? visibleRelatedLinks(selectedLineage) : [];
-  const sisterRelated = relatedTeams.filter((link) => link.relationshipType === 'sister_team');
-  const earlierRelated = selectedLineage
-    ? selectedLineage.priorTeams.filter(
-        (link) => link.confirmationState !== 'rejected' && link.relationshipType !== 'sister_team',
-      )
-    : [];
-  const laterRelated = selectedLineage
-    ? selectedLineage.successorTeams.filter(
-        (link) => link.confirmationState !== 'rejected' && link.relationshipType !== 'sister_team',
-      )
-    : [];
 
   useEffect(() => {
     if (selectedTeam && !filteredTeams.some((team) => team.number === selectedTeam.number)) {
@@ -1043,486 +985,35 @@ function AppDirectory({ seedData }: { seedData: GeneratedData }) {
           </div>
         </aside>
 
-        <section className="detail-panel" aria-label="Team details">
-          {selectedTeam && selectedSeason ? (
-            <>
-              <div className="detail-header">
-                <div className="detail-header-title">
-                  <TeamAvatar
-                    teamNumber={selectedTeam.number}
-                    name={selectedSeason.name}
-                    imageUrl={getAvatarUrl(selectedTeam.number)}
-                    size="md"
-                  />
-                  <div>
-                    <p className="eyebrow">Team {selectedTeam.number}</p>
-                    <h2>{selectedTeam.latestName}</h2>
-                    <FactProvenance season={selectedSeason} field="name" />
-                    <p>
-                      {selectedSeason.location}
-                      {selectedSeason.league ? ` - ${selectedSeason.league}` : ''}
-                    </p>
-                    <FactProvenance season={selectedSeason} field="location" />
-                  </div>
-                </div>
-                <div className="detail-actions">
-                  <button
-                    type="button"
-                    disabled={liveStatus === 'refreshing'}
-                    onClick={() => void refreshTeam(selectedSeason.season, selectedTeam.number, true)}
-                  >
-                    Refresh all seasons
-                  </button>
-                  <a className="source-link" href={selectedSeason.sourceUrl} target="_blank">
-                    Public team page
-                  </a>
-                </div>
-              </div>
-
-              <div className="season-tabs" aria-label="Team seasons">
-                {selectedSeasons.map((season) => (
-                  <button
-                    key={season.season}
-                    className={season.season === selectedSeason.season ? 'active' : ''}
-                    onClick={() => setDetailSeason(season.season)}
-                  >
-                    {seasonLabel(season.season)}
-                  </button>
-                ))}
-              </div>
-
-              <div className="identity-grid">
-                <OrganizationIdentity season={selectedSeason} />
-                <div>
-                  <span>Website</span>
-                  <strong>
-                    {selectedSeason.website ? (
-                      <a href={selectedSeason.website} target="_blank" rel="noreferrer">
-                        {selectedSeason.website.replace(/^https?:\/\//, '')}
-                      </a>
-                    ) : (
-                      'Not listed'
-                    )}
-                  </strong>
-                  <FactProvenance season={selectedSeason} field="website" />
-                </div>
-                <div>
-                  <span>Rookie Year</span>
-                  <strong>{selectedSeason.rookieYear ?? 'Unknown'}</strong>
-                </div>
-                <div>
-                  <span>Team Type</span>
-                  <strong>{teamTypeLabel(selectedSeason.teamType)}</strong>
-                  <FactProvenance season={selectedSeason} field="teamType" />
-                </div>
-                <div>
-                  <span>Advancement</span>
-                  <strong>{advancementLabel(advancementStatus(selectedSeason, regionCode))}</strong>
-                </div>
-                <div>
-                  <span>Season Record</span>
-                  <strong>{selectedSeason.record?.text ?? 'Not parsed yet'}</strong>
-                  {selectedSeason.record && <small className="record-key">W-L-T = wins-losses-ties</small>}
-                  <FactProvenance season={selectedSeason} field="record" />
-                </div>
-                <div>
-                  <span>Robot</span>
-                  <strong>{selectedSeason.robot ?? 'Not listed'}</strong>
-                </div>
-              </div>
-
-              {selectedSeason.summary && <p className="summary">{selectedSeason.summary}</p>}
-              {selectedSeason.liveSource && !selectedSeason.liveSource.ok && (
-                <SourceStatusBlock
-                  statusClass="live-status error"
-                  message={
-                    selectedSeason.liveSource.userMessage ??
-                    'Could not refresh the live FTC Events page. Showing the placeholder season row.'
-                  }
-                  diagnostics={selectedSeason.liveSource.diagnostics}
-                />
-              )}
-
-              <section className="scout-panel">
-                <div className="section-heading">
-                  <h3>FTCScout Analytics</h3>
-                  <span>{selectedScoutData?.events.length ?? 0}</span>
-                </div>
-                {scoutStatus === 'loading' && !selectedScoutData ? (
-                  <p className="empty-note">Loading OPR and event analytics from FTCScout...</p>
-                ) : scoutStatus === 'error' && !selectedScoutData?.quickStats ? (
-                  <p className="empty-note">
-                    FTCScout stats are temporarily unavailable for this team. Try refresh analytics again shortly.
-                  </p>
-                ) : selectedScoutData?.quickStats ? (
-                  <div className="scout-quick-stats">
-                    <article>
-                      <span>Total OPR</span>
-                      <strong>{formatScoutNumber(selectedScoutData.quickStats.tot.value)}</strong>
-                      <small>{formatScoutRank(selectedScoutData.quickStats.tot.rank)} world</small>
-                    </article>
-                    <article>
-                      <span>Auto OPR</span>
-                      <strong>{formatScoutNumber(selectedScoutData.quickStats.auto.value)}</strong>
-                      <small>{formatScoutRank(selectedScoutData.quickStats.auto.rank)} world</small>
-                    </article>
-                    <article>
-                      <span>TeleOp OPR</span>
-                      <strong>{formatScoutNumber(selectedScoutData.quickStats.dc.value)}</strong>
-                      <small>{formatScoutRank(selectedScoutData.quickStats.dc.rank)} world</small>
-                    </article>
-                    <article>
-                      <span>Endgame OPR</span>
-                      <strong>{formatScoutNumber(selectedScoutData.quickStats.eg.value)}</strong>
-                      <small>{formatScoutRank(selectedScoutData.quickStats.eg.rank)} world</small>
-                    </article>
-                  </div>
-                ) : (
-                  <p className="empty-note">
-                    FTCScout does not have season-level quick stats for this team yet.
-                  </p>
-                )}
-                {(selectedScoutData?.events.length ?? 0) > 0 && (
-                  <div className="table-wrap scout-event-table">
-                    <table>
-                      <thead>
-                        <tr>
-                          <th>Event</th>
-                          <th>Rank</th>
-                          <th>Record</th>
-                          <th>Event OPR</th>
-                          <th>Avg Points</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {selectedScoutData!.events.map((participation) => {
-                          const eventName =
-                            selectedSeason.events?.find((event) => event.code === participation.eventCode)?.name ??
-                            data.regionEvents.find(
-                              (event) =>
-                                event.season === selectedSeason.season && event.code === participation.eventCode,
-                            )?.name ??
-                            participation.eventCode;
-
-                          return (
-                            <tr key={`${participation.season}-${participation.eventCode}`}>
-                              <td>
-                                <a
-                                  href={ftcScoutEventUrl(selectedSeason.season, participation.eventCode)}
-                                  target="_blank"
-                                >
-                                  {eventName}
-                                </a>
-                              </td>
-                              <td>{participation.stats?.rank ?? '-'}</td>
-                              <td>
-                                {participation.stats
-                                  ? `${participation.stats.wins}-${participation.stats.losses}-${participation.stats.ties}`
-                                  : '-'}
-                              </td>
-                              <td>{formatScoutNumber(participation.stats?.opr?.totalPoints ?? null)}</td>
-                              <td>{formatScoutNumber(participation.stats?.avg?.totalPoints ?? null)}</td>
-                            </tr>
-                          );
-                        })}
-                      </tbody>
-                    </table>
-                  </div>
-                )}
-                <div className="scout-toolbar">
-                  <a href={ftcScoutTeamUrl(selectedTeam.number, selectedSeason.season)} target="_blank">
-                    Open on FTCScout
-                  </a>
-                  <button
-                    type="button"
-                    disabled={scoutStatus === 'loading'}
-                    onClick={() =>
-                      void loadTeamScout(selectedSeason.season, selectedTeam.number, true)
-                    }
-                  >
-                    Refresh analytics
-                  </button>
-                </div>
-                {scoutMessage && (
-                  <SourceStatusBlock
-                    statusClass={`scout-status ${scoutStatus}`}
-                    message={scoutMessage}
-                    diagnostics={scoutDiagnostics}
-                  />
-                )}
-              </section>
-
-              {relatedTeams.length > 0 && selectedLineage && (
-                <section className="lineage-panel">
-                  <div className="section-heading">
-                    <h3>Possible Related Teams</h3>
-                    <span>{relatedTeams.length}</span>
-                  </div>
-                  <p className="lineage-note">
-                    Inferred from shared school affiliations and season timing. These are evidence-backed
-                    relationship candidates, not confirmed predecessor/successor chains, unless a curator
-                    override marks them confirmed.
-                  </p>
-                  {sisterRelated.length > 0 && (
-                    <div className="lineage-group">
-                      <h4>Sister / concurrent teams</h4>
-                      <div className="lineage-list">
-                        {sisterRelated.map((link) => (
-                          <button
-                            key={`sister-${link.teamNumber}`}
-                            type="button"
-                            className="lineage-card"
-                            onClick={() => setSelectedTeamNumber(link.teamNumber)}
-                          >
-                            <span className="lineage-card-top">
-                              <strong>Team {link.teamNumber}</strong>
-                              <span className="lineage-badges">
-                                <span className="lineage-type">{formatRelationshipTypeLabel(link.relationshipType)}</span>
-                                <span className={`lineage-confidence ${link.confidence}`}>{link.confidence}</span>
-                              </span>
-                            </span>
-                            <span>{link.teamName}</span>
-                            <small>
-                              Seasons {link.seasonRange} — {link.matchReason}
-                            </small>
-                            <small className="lineage-explanation">{link.confidenceExplanation}</small>
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                  {earlierRelated.length > 0 && (
-                    <div className="lineage-group">
-                      <h4>Earlier team numbers</h4>
-                      <div className="lineage-list">
-                        {earlierRelated.map((link) => (
-                          <button
-                            key={`prior-${link.teamNumber}`}
-                            type="button"
-                            className="lineage-card"
-                            onClick={() => setSelectedTeamNumber(link.teamNumber)}
-                          >
-                            <span className="lineage-card-top">
-                              <strong>Team {link.teamNumber}</strong>
-                              <span className="lineage-badges">
-                                <span className="lineage-type">{formatRelationshipTypeLabel(link.relationshipType)}</span>
-                                <span className={`lineage-confidence ${link.confidence}`}>{link.confidence}</span>
-                              </span>
-                            </span>
-                            <span>{link.teamName}</span>
-                            <small>
-                              Seasons {link.seasonRange} — {link.matchReason}
-                            </small>
-                            <small className="lineage-explanation">{link.confidenceExplanation}</small>
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                  {laterRelated.length > 0 && (
-                    <div className="lineage-group">
-                      <h4>Later team numbers</h4>
-                      <div className="lineage-list">
-                        {laterRelated.map((link) => (
-                          <button
-                            key={`successor-${link.teamNumber}`}
-                            type="button"
-                            className="lineage-card"
-                            onClick={() => setSelectedTeamNumber(link.teamNumber)}
-                          >
-                            <span className="lineage-card-top">
-                              <strong>Team {link.teamNumber}</strong>
-                              <span className="lineage-badges">
-                                <span className="lineage-type">{formatRelationshipTypeLabel(link.relationshipType)}</span>
-                                <span className={`lineage-confidence ${link.confidence}`}>{link.confidence}</span>
-                              </span>
-                            </span>
-                            <span>{link.teamName}</span>
-                            <small>
-                              Seasons {link.seasonRange} — {link.matchReason}
-                            </small>
-                            <small className="lineage-explanation">{link.confidenceExplanation}</small>
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                </section>
-              )}
-
-              {(selectedTeam.links?.length ?? 0) > 0 && (
-                <section className="links-panel">
-                  <div className="section-heading">
-                    <h3>Useful Links</h3>
-                    <span>{selectedTeam.links.length}</span>
-                  </div>
-                  <div className="link-grid">
-                    {selectedTeam.links.map((link) => (
-                      <a key={link.url} href={link.url} target="_blank" title={link.source}>
-                        <strong>{link.label}</strong>
-                        <span>{new URL(link.url).hostname.replace(/^www\./, '')}</span>
-                      </a>
-                    ))}
-                  </div>
-                </section>
-              )}
-
-              <section className="portfolio-panel">
-                <div className="section-heading">
-                  <h3>FTC Portfolio Lab</h3>
-                  <span>{selectedPortfolios.length}</span>
-                </div>
-                {portfolioStatus === 'loading' && selectedPortfolios.length === 0 ? (
-                  <p className="empty-note">Loading rated engineering portfolios...</p>
-                ) : selectedPortfolios.length > 0 ? (
-                  <div className="portfolio-grid">
-                    {selectedPortfolios.map((portfolio) => {
-                      const cover = portfolioCoverUrl(portfolio);
-
-                      return (
-                        <article key={portfolio.id} className="portfolio-card">
-                          {cover && (
-                            <img
-                              className="portfolio-cover"
-                              src={toPortfolioLabProxyUrl(portfolio.cover!)}
-                              alt={`${portfolio.teamName} portfolio cover`}
-                              loading="lazy"
-                            />
-                          )}
-                          <div className="portfolio-body">
-                            <p className="portfolio-season">{portfolio.season}</p>
-                            <p className="portfolio-rating">
-                              <span>{portfolio.stars}</span>
-                              <span>{portfolio.score}</span>
-                            </p>
-                            <p className="portfolio-meta">
-                              {portfolio.level} · {portfolio.award}
-                            </p>
-                            <p className="portfolio-summary">{portfolio.summary}</p>
-                            <div className="portfolio-actions">
-                              <a href={portfolio.pdf} target="_blank">
-                                View PDF
-                              </a>
-                              <a href={portfolioLabSearchUrl(portfolio.teamNumber)} target="_blank">
-                                Open in Portfolio Lab
-                              </a>
-                            </div>
-                          </div>
-                        </article>
-                      );
-                    })}
-                  </div>
-                ) : portfolioStatus === 'error' ? (
-                  <p className="empty-note">
-                    Portfolio Lab is temporarily unavailable, so rated portfolios cannot be shown right now.
-                  </p>
-                ) : (
-                  <p className="empty-note">
-                    No rated engineering portfolios are listed for this team on{' '}
-                    <a href="https://www.ftcportfoliolab.org/portfolio" target="_blank">
-                      FTC Portfolio Lab
-                    </a>
-                    .
-                  </p>
-                )}
-                <div className="portfolio-toolbar">
-                  <button
-                    type="button"
-                    disabled={portfolioStatus === 'loading'}
-                    onClick={() => void refreshPortfolioCatalog(true)}
-                  >
-                    Refresh portfolios
-                  </button>
-                </div>
-              </section>
-
-              <div className="detail-columns">
-                <section>
-                  <div className="section-heading">
-                    <h3>Meets & Events</h3>
-                    <span>{selectedSeason.events?.length ?? 0}</span>
-                  </div>
-                  {(selectedSeason.events?.length ?? 0) > 0 ? (
-                    <div className="table-wrap">
-                      <table>
-                        <thead>
-                          <tr>
-                            <th>Code</th>
-                            <th>Event</th>
-                            <th>Event Rank</th>
-                            <th>Total Points</th>
-                            <th>Ranking Score</th>
-                            <th>League Rank</th>
-                            <th>Playoff</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {selectedSeason.events.map((event) => (
-                            <tr key={eventKey(event)}>
-                              <td>{event.code ?? '-'}</td>
-                              <td>
-                                {event.sourceUrl ? (
-                                  <a href={event.sourceUrl} target="_blank">
-                                    {event.name}
-                                  </a>
-                                ) : (
-                                  event.name
-                                )}
-                              </td>
-                              <td>{event.rank ?? '-'}</td>
-                              <td>{event.totalPoints ?? '-'}</td>
-                              <td>{event.rankingScore ?? '-'}</td>
-                              <td>
-                                {event.leagueSeasonRank && event.leagueSeasonRankTotal
-                                  ? `${event.leagueSeasonRank} of ${event.leagueSeasonRankTotal}`
-                                  : '-'}
-                              </td>
-                              <td>{event.playoffRecord ?? event.allianceSelection ?? '-'}</td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                    </div>
-                  ) : (
-                    <p className="empty-note">Event rows have not been parsed for this team-season yet.</p>
-                  )}
-                </section>
-
-                <section>
-                  <div className="section-heading">
-                    <h3>Awards</h3>
-                    <span>{selectedSeason.awards?.length ?? 0}</span>
-                  </div>
-                  {(selectedSeason.awards?.length ?? 0) > 0 ? (
-                    <ul className="award-list">
-                      {selectedSeason.awards.map((award, index) => (
-                        <li key={awardKey(award, index)}>
-                          <strong>{award.name}</strong>
-                          <span>
-                            {award.awardType} - {award.eventName}
-                          </span>
-                        </li>
-                      ))}
-                    </ul>
-                  ) : (
-                    <p className="empty-note">No awards are listed in the current generated data.</p>
-                  )}
-                </section>
-              </div>
-
-              {(selectedSeason.notes?.length ?? 0) > 0 && (
-                <section className="notes">
-                  <h3>Data Notes</h3>
-                  {selectedSeason.notes.map((note) => (
-                    <p key={note}>{note}</p>
-                  ))}
-                </section>
-              )}
-            </>
-          ) : (
-            <p className="empty-note">No team matches the current filters.</p>
-          )}
-        </section>
+        <Suspense
+          fallback={
+            <section className="detail-panel" aria-label="Team details">
+              <p className="empty-note">Loading team details…</p>
+            </section>
+          }
+        >
+          <TeamDetailPanel
+            selectedTeam={selectedTeam}
+            selectedSeason={selectedSeason}
+            selectedSeasons={selectedSeasons}
+            regionCode={regionCode}
+            regionEvents={data.regionEvents}
+            getAvatarUrl={getAvatarUrl}
+            liveStatus={liveStatus}
+            refreshTeam={refreshTeam}
+            setDetailSeason={setDetailSeason}
+            setSelectedTeamNumber={setSelectedTeamNumber}
+            selectedScoutData={selectedScoutData}
+            scoutStatus={scoutStatus}
+            scoutMessage={scoutMessage}
+            scoutDiagnostics={scoutDiagnostics}
+            loadTeamScout={loadTeamScout}
+            selectedLineage={selectedLineage}
+            selectedPortfolios={selectedPortfolios}
+            portfolioStatus={portfolioStatus}
+            refreshPortfolioCatalog={refreshPortfolioCatalog}
+          />
+        </Suspense>
       </section>
 
       <footer>

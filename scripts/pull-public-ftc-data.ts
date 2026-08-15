@@ -1,4 +1,4 @@
-import { mkdir, readFile, writeFile } from 'node:fs/promises';
+import { copyFile, mkdir, readFile, writeFile } from 'node:fs/promises';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { assertSafeToPublishGeneratedData } from '../src/data/publishGuard';
@@ -25,10 +25,15 @@ import {
 } from '../src/lib/ftcParsers';
 
 const TEAM_SEARCH_URL = `https://www.firstinspires.org/team-event-search?content=teams&season=${TARGET_SEASONS[0]}&country=United+States&state=NV&programs=FIRST+Tech+Challenge&indices=teams_*`;
-const GENERATED_PATH = resolve(
-  dirname(fileURLToPath(import.meta.url)),
-  '../src/data/nv-ftc-teams.generated.json',
-);
+const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
+const GENERATED_PATH = resolve(ROOT, 'src/data/nv-ftc-teams.generated.json');
+const PUBLIC_SEED_PATH = resolve(ROOT, 'public/data/nv-ftc-teams.generated.json');
+
+async function syncPublicSeed(): Promise<void> {
+  await mkdir(dirname(PUBLIC_SEED_PATH), { recursive: true });
+  await copyFile(GENERATED_PATH, PUBLIC_SEED_PATH);
+  console.log(`Synced public seed to ${PUBLIC_SEED_PATH}`);
+}
 
 async function enrichTeamLinks(teams: Team[]): Promise<void> {
   await mapLimit(teams, 4, async (team) => {
@@ -228,6 +233,7 @@ async function main() {
   await writeFile(GENERATED_PATH, `${JSON.stringify(data, null, 2)}\n`, 'utf8');
 
   console.log(`Wrote ${data.teams.length} teams to ${GENERATED_PATH}`);
+  await syncPublicSeed();
 }
 
 main().catch((error) => {

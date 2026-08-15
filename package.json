@@ -8,13 +8,15 @@
     "npm": ">=11"
   },
   "scripts": {
-    "dev": "vite",
-    "build": "tsc && vite build",
+    "sync:data": "tsx scripts/sync-public-data.ts",
+    "dev": "npm run sync:data && vite",
+    "build": "npm run sync:data && tsc && vite build",
     "preview": "vite preview",
     "deploy": "npm run build && wrangler deploy",
     "preview:worker": "npm run build && wrangler dev",
     "test": "vitest run",
     "validate:data": "tsx scripts/validate-generated-data.ts",
+    "check:bundle": "tsx scripts/check-bundle-budget.ts",
     "pull:data": "tsx scripts/pull-public-ftc-data.ts",
     "discover:regions": "node scripts/discover-regions-full.mjs"
   },
