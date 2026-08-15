@@ -669,11 +669,25 @@ button:focus-visible {
   gap: 12px;
 }
 
+.lineage-badges {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 6px;
+}
+
 .lineage-card small {
   color: #66758a;
   line-height: 1.45;
 }
 
+.lineage-explanation {
+  display: block;
+  margin-top: 2px;
+  color: #526072;
+}
+
+.lineage-type,
 .lineage-confidence {
   padding: 2px 8px;
   border-radius: 999px;
@@ -681,6 +695,11 @@ button:focus-visible {
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
+}
+
+.lineage-type {
+  background: #e8eef8;
+  color: #334155;
 }
 
 .lineage-confidence.high {
@@ -691,6 +710,11 @@ button:focus-visible {
 .lineage-confidence.medium {
   background: #fef3c7;
   color: #92400e;
+}
+
+.lineage-confidence.low {
+  background: #fee2e2;
+  color: #991b1b;
 }
 
 .links-panel {

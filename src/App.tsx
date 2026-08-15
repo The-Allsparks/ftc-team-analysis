@@ -11,7 +11,12 @@ import {
   TeamSeason,
   seasonOptions,
 } from './data/schema';
-import { buildTeamLineageMap, getTeamLineage } from './teamLineage';
+import {
+  buildTeamLineageMap,
+  formatRelationshipTypeLabel,
+  getTeamLineage,
+  visibleRelatedLinks,
+} from './teamLineage';
 import { useFtcData } from './hooks/useFtcData';
 import { usePortfolioLab } from './hooks/usePortfolioLab';
 import {
@@ -638,8 +643,17 @@ function AppDirectory({ seedData }: { seedData: GeneratedData }) {
   const selectedScoutData = selectedTeam && selectedSeason
     ? getTeamScoutData(selectedSeason.season, selectedTeam.number)
     : null;
-  const relatedTeams = selectedLineage
-    ? [...selectedLineage.priorTeams, ...selectedLineage.successorTeams]
+  const relatedTeams = selectedLineage ? visibleRelatedLinks(selectedLineage) : [];
+  const sisterRelated = relatedTeams.filter((link) => link.relationshipType === 'sister_team');
+  const earlierRelated = selectedLineage
+    ? selectedLineage.priorTeams.filter(
+        (link) => link.confirmationState !== 'rejected' && link.relationshipType !== 'sister_team',
+      )
+    : [];
+  const laterRelated = selectedLineage
+    ? selectedLineage.successorTeams.filter(
+        (link) => link.confirmationState !== 'rejected' && link.relationshipType !== 'sister_team',
+      )
     : [];
 
   useEffect(() => {
@@ -1241,17 +1255,47 @@ function AppDirectory({ seedData }: { seedData: GeneratedData }) {
               {relatedTeams.length > 0 && selectedLineage && (
                 <section className="lineage-panel">
                   <div className="section-heading">
-                    <h3>Related Team Numbers</h3>
+                    <h3>Possible Related Teams</h3>
                     <span>{relatedTeams.length}</span>
                   </div>
                   <p className="lineage-note">
-                    Likely the same school program under a different FTC team number when seasons do not overlap.
+                    Inferred from shared school affiliations and season timing. These are evidence-backed
+                    relationship candidates, not confirmed predecessor/successor chains, unless a curator
+                    override marks them confirmed.
                   </p>
-                  {selectedLineage.priorTeams.length > 0 && (
+                  {sisterRelated.length > 0 && (
+                    <div className="lineage-group">
+                      <h4>Sister / concurrent teams</h4>
+                      <div className="lineage-list">
+                        {sisterRelated.map((link) => (
+                          <button
+                            key={`sister-${link.teamNumber}`}
+                            type="button"
+                            className="lineage-card"
+                            onClick={() => setSelectedTeamNumber(link.teamNumber)}
+                          >
+                            <span className="lineage-card-top">
+                              <strong>Team {link.teamNumber}</strong>
+                              <span className="lineage-badges">
+                                <span className="lineage-type">{formatRelationshipTypeLabel(link.relationshipType)}</span>
+                                <span className={`lineage-confidence ${link.confidence}`}>{link.confidence}</span>
+                              </span>
+                            </span>
+                            <span>{link.teamName}</span>
+                            <small>
+                              Seasons {link.seasonRange} — {link.matchReason}
+                            </small>
+                            <small className="lineage-explanation">{link.confidenceExplanation}</small>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                  {earlierRelated.length > 0 && (
                     <div className="lineage-group">
                       <h4>Earlier team numbers</h4>
                       <div className="lineage-list">
-                        {selectedLineage.priorTeams.map((link) => (
+                        {earlierRelated.map((link) => (
                           <button
                             key={`prior-${link.teamNumber}`}
                             type="button"
@@ -1260,22 +1304,26 @@ function AppDirectory({ seedData }: { seedData: GeneratedData }) {
                           >
                             <span className="lineage-card-top">
                               <strong>Team {link.teamNumber}</strong>
-                              <span className={`lineage-confidence ${link.confidence}`}>{link.confidence}</span>
+                              <span className="lineage-badges">
+                                <span className="lineage-type">{formatRelationshipTypeLabel(link.relationshipType)}</span>
+                                <span className={`lineage-confidence ${link.confidence}`}>{link.confidence}</span>
+                              </span>
                             </span>
                             <span>{link.teamName}</span>
                             <small>
-                              Seasons {link.seasonRange} - {link.matchReason}
+                              Seasons {link.seasonRange} — {link.matchReason}
                             </small>
+                            <small className="lineage-explanation">{link.confidenceExplanation}</small>
                           </button>
                         ))}
                       </div>
                     </div>
                   )}
-                  {selectedLineage.successorTeams.length > 0 && (
+                  {laterRelated.length > 0 && (
                     <div className="lineage-group">
                       <h4>Later team numbers</h4>
                       <div className="lineage-list">
-                        {selectedLineage.successorTeams.map((link) => (
+                        {laterRelated.map((link) => (
                           <button
                             key={`successor-${link.teamNumber}`}
                             type="button"
@@ -1284,12 +1332,16 @@ function AppDirectory({ seedData }: { seedData: GeneratedData }) {
                           >
                             <span className="lineage-card-top">
                               <strong>Team {link.teamNumber}</strong>
-                              <span className={`lineage-confidence ${link.confidence}`}>{link.confidence}</span>
+                              <span className="lineage-badges">
+                                <span className="lineage-type">{formatRelationshipTypeLabel(link.relationshipType)}</span>
+                                <span className={`lineage-confidence ${link.confidence}`}>{link.confidence}</span>
+                              </span>
                             </span>
                             <span>{link.teamName}</span>
                             <small>
-                              Seasons {link.seasonRange} - {link.matchReason}
+                              Seasons {link.seasonRange} — {link.matchReason}
                             </small>
+                            <small className="lineage-explanation">{link.confidenceExplanation}</small>
                           </button>
                         ))}
                       </div>
