@@ -147,6 +147,40 @@ footer,
   color: #b42318;
 }
 
+.source-status-block {
+  display: grid;
+  gap: 4px;
+}
+
+.source-diagnostics {
+  margin: 0;
+  color: #526072;
+  font-size: 0.82rem;
+}
+
+.source-diagnostics summary {
+  cursor: pointer;
+}
+
+.source-diagnostics pre {
+  margin: 6px 0 0;
+  white-space: pre-wrap;
+  word-break: break-word;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.78rem;
+}
+
+.avatar-status {
+  margin: 0;
+  font-size: 0.9rem;
+  line-height: 1.4;
+  color: #526072;
+}
+
+.avatar-status.error {
+  color: #b42318;
+}
+
 .live-progress {
   margin: 0;
   color: #526072;

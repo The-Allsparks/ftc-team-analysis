@@ -16,6 +16,7 @@ import {
   RegionTeamSeed,
   seasonFromSeed,
 } from './ftcParsers';
+import { failureFromUnknown, toLiveSourceMeta } from './sourceResult';
 
 const TEAM_REFRESH_CONCURRENCY = 10;
 
@@ -316,11 +317,18 @@ export async function refreshTeamSeasonLive(
   try {
     const html = await fetchFtcHtml(`/${season}/team/${teamNumber}`);
     const parsedSeason = parseTeamSeason(seed, html, regionEvents);
-    setCached(teamCacheKey, parsedSeason);
-    return parsedSeason;
+    const withSource = {
+      ...parsedSeason,
+      liveSource: toLiveSourceMeta({ ok: true, state: 'available', data: parsedSeason }),
+    };
+    setCached(teamCacheKey, withSource);
+    return withSource;
   } catch (error) {
-    const message = error instanceof Error ? error.message : String(error);
-    return seasonFromSeed(seed, `Could not refresh public team page: ${message}`, regionName);
+    const failure = failureFromUnknown(error, 'FTC Events');
+    return {
+      ...seasonFromSeed(seed, failure.userMessage, regionName),
+      liveSource: toLiveSourceMeta({ ...failure, data: undefined }),
+    };
   }
 }
 

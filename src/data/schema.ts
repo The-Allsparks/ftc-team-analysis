@@ -45,6 +45,14 @@ export type TeamLink = {
   source: string;
 };
 
+/** Live refresh provenance for a team-season (runtime only; not in seed JSON). */
+export type LiveSourceMeta = {
+  ok: boolean;
+  state: string;
+  userMessage?: string;
+  diagnostics?: string;
+};
+
 export type TeamSeason = {
   season: SeasonId;
   active: boolean;
@@ -68,6 +76,8 @@ export type TeamSeason = {
   events: TeamEvent[];
   awards: TeamAward[];
   notes: string[];
+  /** Present on live refresh results only; omitted from checked-in seed JSON. */
+  liveSource?: LiveSourceMeta;
 };
 
 export type Team = {
