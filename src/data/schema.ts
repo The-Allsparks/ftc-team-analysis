@@ -45,6 +45,39 @@ export type TeamLink = {
   source: string;
 };
 
+/**
+ * Role for a parsed organization/sponsor segment.
+ * Auto-backfill typically fills school, sponsor, community_organization,
+ * team_affiliation, and host_organization. Other roles are schema-supported
+ * for future manual/enrichment use (see docs/organization-affiliations.md).
+ */
+export type OrganizationEntityType =
+  | 'school'
+  | 'school_district'
+  | 'host_organization'
+  | 'program_operator'
+  | 'community_organization'
+  | 'sponsor'
+  | 'funder'
+  | 'fiscal_sponsor'
+  | 'team_affiliation';
+
+export type AffiliationConfidence = 'high' | 'medium' | 'low';
+export type AffiliationConfirmation = 'unconfirmed' | 'confirmed' | 'rejected';
+
+/** Season-scoped org/sponsor relationship derived from public sponsor text. */
+export type TeamAffiliation = {
+  entityType: OrganizationEntityType;
+  name: string;
+  season: SeasonId;
+  source: string;
+  retrievedAt: string | null;
+  confidence: AffiliationConfidence;
+  confirmationState: AffiliationConfirmation;
+  /** Full unmodified organization source string for this season. */
+  sourceText: string;
+};
+
 /** Live refresh provenance for a team-season (runtime only; not in seed JSON). */
 export type LiveSourceMeta = {
   ok: boolean;
@@ -64,7 +97,13 @@ export type TeamSeason = {
   region: string | null;
   league: string | null;
   rookieYear: number | null;
+  /** Raw public sponsor/organization line; never discarded when affiliations exist. */
   organization: string | null;
+  /**
+   * Additive structured split of `organization`. Omitted on older seeds;
+   * derive with `affiliationsForSeason` when missing.
+   */
+  affiliations?: TeamAffiliation[];
   teamType: 'school' | 'non-school' | 'unknown';
   website: string | null;
   robot: string | null;

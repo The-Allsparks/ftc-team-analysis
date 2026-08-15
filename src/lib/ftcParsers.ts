@@ -10,6 +10,7 @@ import {
   TeamLink,
   TeamSeason,
 } from '../data/schema';
+import { parseOrganizationAffiliations } from './organizationAffiliations';
 
 export const BASE_URL = 'https://ftc-events.firstinspires.org';
 export const FIRST_SEARCH_URL = 'https://3dl2fnsh51.execute-api.us-east-1.amazonaws.com/prod/first-search';
@@ -927,6 +928,10 @@ export function parseTeamSeason(
       'To update listed skills',
     ]),
   );
+  const affiliations = parseOrganizationAffiliations(organization, {
+    season: seed.season,
+    source: 'ftc-events-sponsors',
+  });
 
   return {
     season: seed.season,
@@ -938,6 +943,7 @@ export function parseTeamSeason(
     league: extractField(text, 'League Membership:', ['Rookie Year:', 'On The Web:', `${seed.season} Robot:`, `${seed.season} Sponsors:`]),
     rookieYear: Number(extractField(text, 'Rookie Year:', ['On The Web:', `${seed.season} Robot:`, `${seed.season} Sponsors:`])) || seed.rookieYear,
     organization,
+    affiliations,
     teamType: classifyTeamType(name, organization),
     website: normalizeExternalUrl(
       extractField(text, 'On The Web:', [`${seed.season} Robot:`, `${seed.season} Sponsors:`, 'This team', 'Other Seasons']),
@@ -961,6 +967,11 @@ export function parseRegionTitle(html: string): string | null {
 
 export function seasonFromSeed(seed: RegionTeamSeed, note: string, regionLabel = 'Region'): TeamSeason {
   const organization = seed.organization;
+  const affiliationSource = seed.seedSource === 'first-search' ? 'first-search' : 'ftc-events-sponsors';
+  const affiliations = parseOrganizationAffiliations(organization, {
+    season: seed.season,
+    source: affiliationSource,
+  });
   const notes =
     seed.seedSource === 'first-search'
       ? [
@@ -981,6 +992,7 @@ export function seasonFromSeed(seed: RegionTeamSeed, note: string, regionLabel =
     league: null,
     rookieYear: seed.rookieYear,
     organization,
+    affiliations,
     teamType: classifyTeamType(seed.name, organization),
     website: null,
     robot: null,
