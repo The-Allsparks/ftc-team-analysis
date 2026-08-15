@@ -1,4 +1,5 @@
 import catalog from './regions.generated.json';
+import { parseRegionCatalog } from './regionCatalogSchema';
 
 export type RegionGroup = 'us' | 'us-sub' | 'canada' | 'international';
 
@@ -11,7 +12,14 @@ export type FtcRegion = {
 
 export const DEFAULT_REGION_CODE = 'USNV';
 
-export const FTC_REGIONS = catalog.regions as FtcRegion[];
+export const regionCatalogResult = parseRegionCatalog(catalog);
+
+if (regionCatalogResult.ok && regionCatalogResult.quarantined.length > 0) {
+  console.warn('[region-catalog] quarantined invalid records', regionCatalogResult.quarantined);
+}
+
+/** Validated region rows; empty when the catalog envelope failed (App fails closed). */
+export const FTC_REGIONS: FtcRegion[] = regionCatalogResult.ok ? regionCatalogResult.data.regions : [];
 
 export const FTC_REGION_GROUP_LABELS: Record<RegionGroup, string> = {
   us: 'United States',

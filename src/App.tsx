@@ -28,7 +28,13 @@ import {
   ftcScoutEventUrl,
   ftcScoutTeamUrl,
 } from './data/ftcScout';
-import { getRegionByCode, groupRegions, isRegionChampionshipEvent } from './data/regions';
+import {
+  getRegionByCode,
+  groupRegions,
+  isRegionChampionshipEvent,
+  regionCatalogResult,
+} from './data/regions';
+import { RegionIssue } from './data/regionCatalogSchema';
 import { defaultSeasonWithData } from './lib/ftcSeason';
 import { useTeamAvatarCatalog } from './hooks/useTeamAvatarCatalog';
 import { TeamAvatar } from './components/TeamAvatar';
@@ -274,9 +280,32 @@ function SeedEnvelopeError({ issues }: { issues: SeedIssue[] }) {
   );
 }
 
+function RegionCatalogEnvelopeError({ issues }: { issues: RegionIssue[] }) {
+  return (
+    <main className="app-shell">
+      <h1>Region catalog failed validation</h1>
+      <p className="live-status error">
+        The checked-in region catalog is not a valid envelope, so region switching was not loaded.
+      </p>
+      <ul>
+        {issues.map((issue) => (
+          <li key={`${issue.path}:${issue.message}:${issue.code ?? ''}`}>
+            {issue.path}: {issue.message}
+            {issue.code !== undefined ? ` (region ${issue.code})` : ''}
+          </li>
+        ))}
+      </ul>
+    </main>
+  );
+}
+
 export default function App() {
   if (!seedResult.ok) {
     return <SeedEnvelopeError issues={seedResult.issues} />;
+  }
+
+  if (!regionCatalogResult.ok) {
+    return <RegionCatalogEnvelopeError issues={regionCatalogResult.issues} />;
   }
 
   return <AppDirectory seedData={seedResult.data} />;
