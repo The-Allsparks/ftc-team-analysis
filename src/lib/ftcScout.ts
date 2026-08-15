@@ -4,6 +4,12 @@ import {
   ScoutQuickStats,
   TeamScoutData,
 } from '../data/ftcScout';
+import {
+  formatScoutIssues,
+  parseScoutEvents,
+  parseScoutQuickStats,
+  ScoutIssue,
+} from '../data/ftcScoutSchema';
 import { SeasonId, TARGET_SEASONS } from '../data/schema';
 import { CACHE_TTL, cacheKey, getCached, seasonTtl, setCached } from './ftcCache';
 import {
@@ -23,7 +29,7 @@ export function toFtcScoutProxyUrl(path: string): string {
 }
 
 function scoutCacheKey(season: SeasonId, teamNumber: number): string {
-  return cacheKey('ftcscout-v2', String(season), String(teamNumber));
+  return cacheKey('ftcscout-v3', String(season), String(teamNumber));
 }
 
 function scoutTtl(season: SeasonId): number {
@@ -35,7 +41,7 @@ function scoutTtl(season: SeasonId): number {
   );
 }
 
-async function fetchScoutJson<T>(path: string): Promise<T> {
+async function fetchScoutJson(path: string): Promise<unknown> {
   let response: Response;
 
   try {
@@ -57,7 +63,7 @@ async function fetchScoutJson<T>(path: string): Promise<T> {
   }
 
   try {
-    return (await response.json()) as T;
+    return await response.json();
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
     throw new Error(`FTCScout GET ${path} returned invalid JSON: ${message}`);
@@ -69,6 +75,34 @@ export class ScoutNotFoundError extends Error {
     super(`FTCScout resource not found: ${path}`);
     this.name = 'ScoutNotFoundError';
   }
+}
+
+type ParsedScoutEvents = {
+  events: ScoutEventParticipation[];
+  quarantined: ScoutIssue[];
+  quarantinedRecordCount: number;
+};
+
+async function fetchValidatedQuickStats(season: SeasonId, teamNumber: number): Promise<ScoutQuickStats> {
+  const raw = await fetchScoutJson(`/rest/v1/teams/${teamNumber}/quick-stats?season=${season}`);
+  const parsed = parseScoutQuickStats(raw);
+  if (!parsed.ok) {
+    throw new Error(`FTCScout quick-stats parse failure: ${formatScoutIssues(parsed.issues)}`);
+  }
+  return parsed.data;
+}
+
+async function fetchValidatedEvents(season: SeasonId, teamNumber: number): Promise<ParsedScoutEvents> {
+  const raw = await fetchScoutJson(`/rest/v1/teams/${teamNumber}/events/${season}`);
+  const parsed = parseScoutEvents(raw);
+  if (!parsed.ok) {
+    throw new Error(`FTCScout events parse failure: ${formatScoutIssues(parsed.issues)}`);
+  }
+  return {
+    events: parsed.data,
+    quarantined: parsed.quarantined,
+    quarantinedRecordCount: parsed.quarantinedRecordCount,
+  };
 }
 
 function normalizeQuickStats(payload: ScoutQuickStats): ScoutQuickStats {
@@ -171,19 +205,29 @@ export async function fetchTeamScoutData(
   }
 
   const [quickStatsSettled, eventsSettled] = await Promise.allSettled([
-    fetchScoutJson<ScoutQuickStats>(`/rest/v1/teams/${teamNumber}/quick-stats?season=${season}`),
-    fetchScoutJson<ScoutEventParticipation[]>(`/rest/v1/teams/${teamNumber}/events/${season}`),
+    fetchValidatedQuickStats(season, teamNumber),
+    fetchValidatedEvents(season, teamNumber),
   ]);
 
   const quickArm = settleScoutArm(quickStatsSettled, null);
-  const eventsArm = settleScoutArm(eventsSettled, [] as ScoutEventParticipation[]);
+  const eventsArm = settleScoutArm(eventsSettled, {
+    events: [],
+    quarantined: [],
+    quarantinedRecordCount: 0,
+  });
 
   const quickStats =
-    quickArm.ok && quickArm.data ? normalizeQuickStats(quickArm.data as ScoutQuickStats) : null;
+    quickArm.ok && quickArm.data ? normalizeQuickStats(quickArm.data) : null;
   const events =
-    eventsArm.ok && Array.isArray(eventsArm.data)
-      ? eventsArm.data.map(normalizeEventParticipation).sort((a, b) => a.eventCode.localeCompare(b.eventCode))
+    eventsArm.ok && eventsArm.data
+      ? eventsArm.data.events
+          .map(normalizeEventParticipation)
+          .sort((a, b) => a.eventCode.localeCompare(b.eventCode))
       : [];
+  const eventQuarantineDiagnostics =
+    eventsArm.ok && eventsArm.data && eventsArm.data.quarantinedRecordCount > 0
+      ? `Quarantined ${eventsArm.data.quarantinedRecordCount} invalid FTCScout event record(s): ${formatScoutIssues(eventsArm.data.quarantined)}`
+      : null;
 
   const data: TeamScoutData = {
     fetchedAt: new Date().toISOString(),
@@ -197,7 +241,11 @@ export async function fetchTeamScoutData(
 
   if (hardFailures.length > 0) {
     const primary = hardFailures[0]!;
-    const diagnostics = [quickArm.ok ? null : quickArm.diagnostics, eventsArm.ok ? null : eventsArm.diagnostics]
+    const diagnostics = [
+      quickArm.ok ? null : quickArm.diagnostics,
+      eventsArm.ok ? null : eventsArm.diagnostics,
+      eventQuarantineDiagnostics,
+    ]
       .filter(Boolean)
       .join(' | ');
 
@@ -215,6 +263,7 @@ export async function fetchTeamScoutData(
     ok: true,
     state,
     data,
+    ...(eventQuarantineDiagnostics ? { diagnostics: eventQuarantineDiagnostics } : {}),
   };
 
   if (isCacheableSuccess(result)) {
@@ -228,7 +277,7 @@ export function scoutApiDocsUrl(): string {
   return `${FTCSCOUT_API_BASE_URL.replace('/rest/v1', '')}/api`;
 }
 
-/** Test helper: current scout cache key namespace (v2 avoids pre-fix empty successes). */
+/** Test helper: current scout cache key namespace (v3 is schema-validated before cache). */
 export function scoutTeamCacheKeyForTests(season: SeasonId, teamNumber: number): string {
   return scoutCacheKey(season, teamNumber);
 }
