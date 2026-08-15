@@ -111,6 +111,38 @@ describe('parseGeneratedSeed', () => {
     expect(result.data.sources.length).toBeGreaterThan(0);
   });
 
+  it('accepts optional season evidence without requiring it on older shapes', () => {
+    const fixture = validSeed();
+    const season = fixture.teams[0].seasons['2025'] as Record<string, unknown>;
+    season.evidence = [
+      {
+        id: 'name|ftc-events-team-page|test robotics|null',
+        field: 'name',
+        value: 'Test Robotics',
+        kind: 'observed',
+        sourceType: 'ftc-events-team-page',
+        sourceUrl: 'https://ftc-events.firstinspires.org/2025/team/1',
+        retrievedAt: null,
+        observedSeason: 2025,
+        extractionMethod: 'offline-synthesize',
+        confidence: 'high',
+        confirmationState: 'unconfirmed',
+        status: 'current',
+        rawValue: null,
+        supersedesId: null,
+      },
+    ];
+
+    const withEvidence = parseGeneratedSeed(fixture);
+    expect(withEvidence.ok).toBe(true);
+    if (withEvidence.ok) {
+      expect(withEvidence.data.teams[0]?.seasons[2025]?.evidence?.[0]?.field).toBe('name');
+    }
+
+    const withoutEvidence = parseGeneratedSeed(validSeed());
+    expect(withoutEvidence.ok).toBe(true);
+  });
+
   it('quarantines one invalid team and keeps the rest', () => {
     const fixture = validSeed();
     (fixture.teams[0] as { latestName: unknown }).latestName = 123;

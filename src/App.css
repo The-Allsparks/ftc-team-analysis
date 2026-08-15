@@ -579,6 +579,32 @@ button:focus-visible {
   font-weight: 600;
 }
 
+.fact-provenance {
+  display: block;
+  color: #66758a;
+  font-size: 0.75rem;
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+.fact-provenance-label {
+  margin-right: 0.35rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-size: 0.68rem;
+  color: #94a3b8;
+}
+
+.fact-provenance a {
+  color: #334155;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.detail-header-title .fact-provenance {
+  margin: 2px 0 6px;
+}
+
 .summary {
   border-left: 4px solid #1d4ed8;
   margin: 0 0 22px;

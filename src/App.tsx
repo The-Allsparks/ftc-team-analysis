@@ -41,8 +41,36 @@ import {
   hostAffiliations,
   sponsorAffiliations,
 } from './lib/organizationAffiliations';
+import {
+  evidenceForSeasonField,
+  formatProvenanceSummary,
+} from './lib/fieldEvidence';
+import type { TeamFactField } from './data/schema';
 import { useTeamAvatarCatalog } from './hooks/useTeamAvatarCatalog';
 import { TeamAvatar } from './components/TeamAvatar';
+
+function FactProvenance({ season, field }: { season: TeamSeason; field: TeamFactField }) {
+  const rows = evidenceForSeasonField(season, field);
+  if (rows.length === 0) {
+    return null;
+  }
+
+  const current = rows.find((row) => row.status === 'current') ?? rows[0];
+  const summary = formatProvenanceSummary(rows);
+
+  return (
+    <small className="fact-provenance">
+      <span className="fact-provenance-label">Source</span>
+      {current?.sourceUrl ? (
+        <a href={current.sourceUrl} target="_blank" rel="noreferrer">
+          {summary}
+        </a>
+      ) : (
+        <span>{summary}</span>
+      )}
+    </small>
+  );
+}
 
 function SourceStatusBlock({
   statusClass,
@@ -200,6 +228,7 @@ function OrganizationIdentity({ season }: { season: TeamSeason }) {
       <div>
         <span>Organization / Sponsors</span>
         <strong>Not available publicly yet</strong>
+        <FactProvenance season={season} field="organization" />
       </div>
     );
   }
@@ -209,6 +238,7 @@ function OrganizationIdentity({ season }: { season: TeamSeason }) {
       <div>
         <span>Organization / Sponsors</span>
         <strong>{season.organization}</strong>
+        <FactProvenance season={season} field="organization" />
       </div>
     );
   }
@@ -221,10 +251,12 @@ function OrganizationIdentity({ season }: { season: TeamSeason }) {
         {hosts.some((row) => row.confidence === 'low') && (
           <small className="record-key">Parsed from public sponsor line; low confidence</small>
         )}
+        <FactProvenance season={season} field="organization" />
       </div>
       <div>
         <span>Sponsors</span>
         <strong>{formatAffiliationNames(sponsors.map((row) => row.name))}</strong>
+        <FactProvenance season={season} field="organization" />
       </div>
     </>
   );
@@ -1011,10 +1043,12 @@ function AppDirectory({ seedData }: { seedData: GeneratedData }) {
                   <div>
                     <p className="eyebrow">Team {selectedTeam.number}</p>
                     <h2>{selectedTeam.latestName}</h2>
+                    <FactProvenance season={selectedSeason} field="name" />
                     <p>
                       {selectedSeason.location}
                       {selectedSeason.league ? ` - ${selectedSeason.league}` : ''}
                     </p>
+                    <FactProvenance season={selectedSeason} field="location" />
                   </div>
                 </div>
                 <div className="detail-actions">
@@ -1046,12 +1080,26 @@ function AppDirectory({ seedData }: { seedData: GeneratedData }) {
               <div className="identity-grid">
                 <OrganizationIdentity season={selectedSeason} />
                 <div>
+                  <span>Website</span>
+                  <strong>
+                    {selectedSeason.website ? (
+                      <a href={selectedSeason.website} target="_blank" rel="noreferrer">
+                        {selectedSeason.website.replace(/^https?:\/\//, '')}
+                      </a>
+                    ) : (
+                      'Not listed'
+                    )}
+                  </strong>
+                  <FactProvenance season={selectedSeason} field="website" />
+                </div>
+                <div>
                   <span>Rookie Year</span>
                   <strong>{selectedSeason.rookieYear ?? 'Unknown'}</strong>
                 </div>
                 <div>
                   <span>Team Type</span>
                   <strong>{teamTypeLabel(selectedSeason.teamType)}</strong>
+                  <FactProvenance season={selectedSeason} field="teamType" />
                 </div>
                 <div>
                   <span>Advancement</span>
@@ -1061,6 +1109,7 @@ function AppDirectory({ seedData }: { seedData: GeneratedData }) {
                   <span>Season Record</span>
                   <strong>{selectedSeason.record?.text ?? 'Not parsed yet'}</strong>
                   {selectedSeason.record && <small className="record-key">W-L-T = wins-losses-ties</small>}
+                  <FactProvenance season={selectedSeason} field="record" />
                 </div>
                 <div>
                   <span>Robot</span>

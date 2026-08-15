@@ -5,8 +5,9 @@
  * and is treated as version 1. A present value other than 1 fails the envelope.
  *
  * Document-level provenance is the `sources` array already on the seed. Optional
- * season `affiliations` are additive under v1 (see docs/organization-affiliations.md).
- * This module does not invent per-field evidence records.
+ * season `affiliations` and optional `evidence` are additive under v1
+ * (see docs/organization-affiliations.md and docs/field-evidence.md).
+ * Checked-in seeds may omit `evidence`; UI derives display rows on read.
  */
 import * as v from 'valibot';
 import {
@@ -63,6 +64,22 @@ const organizationEntityTypeSchema = v.picklist([
 ]);
 const affiliationConfidenceSchema = v.picklist(['high', 'medium', 'low']);
 const affiliationConfirmationSchema = v.picklist(['unconfirmed', 'confirmed', 'rejected']);
+const teamFactFieldSchema = v.picklist([
+  'name',
+  'location',
+  'organization',
+  'website',
+  'record',
+  'qualificationRecord',
+  'playoffRecord',
+  'rookieYear',
+  'league',
+  'region',
+  'robot',
+  'teamType',
+]);
+const factKindSchema = v.picklist(['observed', 'derived']);
+const observationStatusSchema = v.picklist(['current', 'conflicting', 'superseded']);
 
 const nullableString = v.nullable(v.string());
 const nullableNumber = v.nullable(v.number());
@@ -76,6 +93,23 @@ const teamAffiliationSchema = v.looseObject({
   confidence: affiliationConfidenceSchema,
   confirmationState: affiliationConfirmationSchema,
   sourceText: v.string(),
+});
+
+const fieldEvidenceSchema = v.looseObject({
+  id: v.string(),
+  field: teamFactFieldSchema,
+  value: v.string(),
+  kind: factKindSchema,
+  sourceType: v.string(),
+  sourceUrl: nullableString,
+  retrievedAt: nullableString,
+  observedSeason: seasonIdSchema,
+  extractionMethod: v.string(),
+  confidence: affiliationConfidenceSchema,
+  confirmationState: affiliationConfirmationSchema,
+  status: observationStatusSchema,
+  rawValue: nullableString,
+  supersedesId: nullableString,
 });
 
 const recordSummarySchema = v.looseObject({
@@ -145,6 +179,7 @@ const teamSeasonSchema = v.looseObject({
   events: v.array(teamEventSchema),
   awards: v.array(teamAwardSchema),
   notes: v.array(v.string()),
+  evidence: v.optional(v.array(fieldEvidenceSchema)),
 });
 
 const teamSchema = v.looseObject({
