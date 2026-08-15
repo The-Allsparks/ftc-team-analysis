@@ -290,6 +290,37 @@ export function attachSynthesizedEvidence(season: TeamSeason, retrievedAt?: stri
   };
 }
 
+/**
+ * Prefer stored evidence; otherwise derive display rows from season scalars + sourceUrl
+ * (mirror of `affiliationsForSeason`). Does not mutate the season.
+ */
+export function evidenceForSeason(
+  season: Pick<
+    TeamSeason,
+    | 'season'
+    | 'name'
+    | 'location'
+    | 'organization'
+    | 'website'
+    | 'record'
+    | 'qualificationRecord'
+    | 'playoffRecord'
+    | 'rookieYear'
+    | 'league'
+    | 'region'
+    | 'robot'
+    | 'teamType'
+    | 'sourceUrl'
+    | 'notes'
+    | 'evidence'
+  >,
+): FieldEvidence[] {
+  if (season.evidence && season.evidence.length > 0) {
+    return season.evidence;
+  }
+  return synthesizeSeasonEvidence(season as TeamSeason);
+}
+
 /** Human-readable one-line provenance for UI. */
 export function formatProvenanceSummary(rows: FieldEvidence[]): string {
   const current = rows.filter((row) => row.status === 'current');
@@ -317,8 +348,26 @@ export function formatProvenanceSummary(rows: FieldEvidence[]): string {
 }
 
 export function evidenceForSeasonField(
-  season: Pick<TeamSeason, 'evidence'>,
+  season: Pick<
+    TeamSeason,
+    | 'season'
+    | 'name'
+    | 'location'
+    | 'organization'
+    | 'website'
+    | 'record'
+    | 'qualificationRecord'
+    | 'playoffRecord'
+    | 'rookieYear'
+    | 'league'
+    | 'region'
+    | 'robot'
+    | 'teamType'
+    | 'sourceUrl'
+    | 'notes'
+    | 'evidence'
+  >,
   field: TeamFactField,
 ): FieldEvidence[] {
-  return evidenceForField(season.evidence, field);
+  return evidenceForField(evidenceForSeason(season), field);
 }

@@ -5,8 +5,9 @@
  * and is treated as version 1. A present value other than 1 fails the envelope.
  *
  * Document-level provenance is the `sources` array already on the seed. Optional
- * season `affiliations` and `evidence` are additive under v1
+ * season `affiliations` and optional `evidence` are additive under v1
  * (see docs/organization-affiliations.md and docs/field-evidence.md).
+ * Checked-in seeds may omit `evidence`; UI derives display rows on read.
  */
 import * as v from 'valibot';
 import {

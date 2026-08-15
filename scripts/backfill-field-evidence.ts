@@ -1,6 +1,10 @@
 /**
- * Offline backfill: synthesize TeamSeason.evidence from existing season scalars
- * and sourceUrl. No network access. Does not modify affiliations (#4).
+ * OPTIONAL maintainer utility: persist synthesized TeamSeason.evidence into a
+ * local seed copy. Do NOT run this to rewrite the checked-in Nevada seed in PRs —
+ * it inflates the Vite bundle (~2×). Prefer derive-on-read (`evidenceForSeason`)
+ * for display, and let live refresh / `pull:data` write evidence going forward.
+ *
+ * Usage (local only): npx tsx scripts/backfill-field-evidence.ts
  */
 import { readFileSync, writeFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
@@ -32,23 +36,15 @@ const teams: Team[] = data.teams.map((team) => {
   return { ...team, seasons };
 });
 
-const limitations = [...(data.limitations ?? [])];
-const evidenceNote =
-  'Core season facts (name, location, organization, website, records, and related fields) carry optional per-field evidence (source type/URL, retrieval time, confidence, conflict/supersede status). Team.latest* fields remain derived profile projections. Organization affiliations stay a parallel model.';
-if (!limitations.some((line) => line.toLowerCase().includes('per-field evidence'))) {
-  const orgIdx = limitations.findIndex((line) => line.toLowerCase().includes('typed affiliations'));
-  if (orgIdx >= 0) {
-    limitations.splice(orgIdx + 1, 0, evidenceNote);
-  } else {
-    limitations.push(evidenceNote);
-  }
-}
-
 const next: GeneratedData = {
   ...data,
   teams,
-  limitations,
 };
 
 writeFileSync(SEED_PATH, `${JSON.stringify(next, null, 2)}\n`, 'utf8');
-console.log(`Backfilled evidence on ${seasonsTouched} seasons (${evidenceRows} evidence rows) -> ${SEED_PATH}`);
+console.log(
+  `Backfilled evidence on ${seasonsTouched} seasons (${evidenceRows} evidence rows) -> ${SEED_PATH}`,
+);
+console.warn(
+  'Warning: persisting evidence into the checked-in seed bloats the production JS bundle. Prefer evidenceForSeason derive-on-read; only keep this output for local experiments.',
+);

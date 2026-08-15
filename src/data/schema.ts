@@ -160,8 +160,9 @@ export type TeamSeason = {
   awards: TeamAward[];
   notes: string[];
   /**
-   * Additive per-field evidence for core season facts. Omitted on older seeds;
-   * synthesize with `synthesizeSeasonEvidence` / parsers when missing.
+   * Additive per-field evidence for core season facts. Omitted on older/checked-in
+   * seeds; derive display rows with `evidenceForSeason` when missing. Live refresh
+   * and `pull:data` write evidence going forward.
    */
   evidence?: FieldEvidence[];
   /** Present on live refresh results only; omitted from checked-in seed JSON. */

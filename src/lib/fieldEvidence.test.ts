@@ -5,6 +5,8 @@ import {
   createEvidence,
   currentEvidenceForField,
   evidenceForField,
+  evidenceForSeason,
+  evidenceForSeasonField,
   formatProvenanceSummary,
   mergeSeasonEvidence,
   recordObservation,
@@ -126,6 +128,61 @@ describe('fieldEvidence', () => {
     const rows = synthesizeSeasonEvidence(season);
     expect(currentEvidenceForField(rows, 'name')[0]?.sourceType).toBe('first-search');
     expect(currentEvidenceForField(rows, 'name')[0]?.extractionMethod).toBe('search-index');
+  });
+
+  it('evidenceForSeason derives on read when stored evidence is missing', () => {
+    const season = {
+      ...baseSeason,
+      active: true,
+      city: null,
+      state: 'NV',
+      country: 'USA',
+      affiliations: [],
+      summary: null,
+      events: [],
+      awards: [],
+      notes: [],
+    } satisfies TeamSeason;
+
+    const derived = evidenceForSeason(season);
+    expect(season.evidence).toBeUndefined();
+    expect(evidenceForSeasonField(season, 'name')[0]).toMatchObject({
+      field: 'name',
+      value: 'VC Silver Circuits',
+      status: 'current',
+      sourceUrl: baseSeason.sourceUrl,
+    });
+    expect(derived.some((row) => row.field === 'organization')).toBe(true);
+  });
+
+  it('evidenceForSeason prefers stored evidence over synthesize', () => {
+    const stored = [
+      createEvidence({
+        field: 'name',
+        value: 'Stored Name',
+        sourceType: 'ftc-events-team-page',
+        sourceUrl: baseSeason.sourceUrl,
+        retrievedAt: '2026-06-01T00:00:00.000Z',
+        observedSeason: 2025,
+        extractionMethod: 'html-title',
+      }),
+    ];
+    const season = {
+      ...baseSeason,
+      active: true,
+      city: null,
+      state: 'NV',
+      country: 'USA',
+      affiliations: [],
+      summary: null,
+      events: [],
+      awards: [],
+      notes: [],
+      evidence: stored,
+    } satisfies TeamSeason;
+
+    expect(evidenceForSeason(season)).toEqual(stored);
+    expect(evidenceForSeasonField(season, 'name')[0]?.value).toBe('Stored Name');
   });
 
   it('formatProvenanceSummary exposes source and conflict counts for UI smoke', () => {

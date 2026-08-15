@@ -209,7 +209,7 @@ async function main() {
       'FIRST Team/Event Search is used as a registration seed when FTC Events Nevada region pages are unavailable for a season.',
       'Organization is parsed from the public season sponsor line when available because the authenticated team API is not being used.',
       'Organization strings are also split into typed affiliations (school, sponsors, community/host) with confidence flags; the raw organization text is retained. Ambiguous parses stay unconfirmed/low confidence.',
-      'Core season facts (name, location, organization, website, records, and related fields) carry optional per-field evidence (source type/URL, retrieval time, confidence, conflict/supersede status). Team.latest* fields remain derived profile projections. Organization affiliations stay a parallel model.',
+      'Core season facts support optional per-field evidence written by live refresh and pull:data. The checked-in seed may omit evidence arrays; the UI derives display provenance on read from season scalars and sourceUrl. Organization affiliations remain a parallel model.',
       'Match-level details are limited to what appears on public team pages. The script stores event participation, ranks, records, playoff summaries, awards, per-event points, and official league RS/rank where visible.',
       'External team links are discovered from public FTC On The Web URLs and one crawl of each team website, so private or unlinked accounts will not appear.',
     ],
