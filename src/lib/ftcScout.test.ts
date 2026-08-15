@@ -148,4 +148,113 @@ describe('fetchTeamScoutData', () => {
     }
     expect(getCached(scoutTeamCacheKeyForTests(2025, 16158), 60_000)).toEqual(result.ok ? result.data : null);
   });
+
+  it('maps invalid quick-stats JSON shape to parse_failure without caching', async () => {
+    const fetchMock = vi.mocked(fetch);
+    fetchMock.mockImplementation(async (input) => {
+      const url = String(input);
+      if (url.includes('quick-stats')) {
+        return jsonResponse(200, { ...sampleQuickStats, tot: { value: 'not-a-number', rank: 1 } });
+      }
+      return jsonResponse(200, [
+        {
+          season: 2025,
+          eventCode: 'USNVCMP',
+          teamNumber: 16158,
+          stats: null,
+        },
+      ]);
+    });
+
+    const result = await fetchTeamScoutData(2025, 16158, { force: true });
+    expect(result.ok).toBe(false);
+    if (!result.ok) {
+      expect(result.state).toBe('parse_failure');
+      expect(result.diagnostics).toMatch(/quick-stats parse failure/i);
+      expect(result.data?.events).toHaveLength(1);
+    }
+    expect(getCached(scoutTeamCacheKeyForTests(2025, 16158), 60_000)).toBeNull();
+  });
+
+  it('maps non-array events envelope to parse_failure without caching', async () => {
+    const fetchMock = vi.mocked(fetch);
+    fetchMock.mockImplementation(async (input) => {
+      const url = String(input);
+      if (url.includes('quick-stats')) {
+        return jsonResponse(200, sampleQuickStats);
+      }
+      return jsonResponse(200, { events: [] });
+    });
+
+    const result = await fetchTeamScoutData(2025, 16158, { force: true });
+    expect(result.ok).toBe(false);
+    if (!result.ok) {
+      expect(result.state).toBe('parse_failure');
+      expect(result.diagnostics).toMatch(/events parse failure/i);
+      expect(result.data?.quickStats?.tot.value).toBe(100);
+    }
+    expect(getCached(scoutTeamCacheKeyForTests(2025, 16158), 60_000)).toBeNull();
+  });
+
+  it('quarantines invalid event rows, keeps valid ones, and caches cleaned data', async () => {
+    const fetchMock = vi.mocked(fetch);
+    fetchMock.mockImplementation(async (input) => {
+      const url = String(input);
+      if (url.includes('quick-stats')) {
+        return jsonResponse(200, sampleQuickStats);
+      }
+      return jsonResponse(200, [
+        {
+          season: 2025,
+          eventCode: 'USNVCMP',
+          teamNumber: 16158,
+          stats: null,
+        },
+        {
+          season: 2025,
+          eventCode: 999,
+          teamNumber: 16158,
+          stats: null,
+        },
+      ]);
+    });
+
+    const result = await fetchTeamScoutData(2025, 16158, { force: true });
+    expect(result.ok).toBe(true);
+    if (result.ok) {
+      expect(result.state).toBe('available');
+      expect(result.data.events).toHaveLength(1);
+      expect(result.data.events[0]?.eventCode).toBe('USNVCMP');
+      expect(result.diagnostics).toMatch(/Quarantined 1 invalid FTCScout event/i);
+    }
+    expect(getCached(scoutTeamCacheKeyForTests(2025, 16158), 60_000)).toEqual(result.ok ? result.data : null);
+  });
+
+  it('maps all-quarantined events to parse_failure without caching', async () => {
+    const fetchMock = vi.mocked(fetch);
+    fetchMock.mockImplementation(async (input) => {
+      const url = String(input);
+      if (url.includes('quick-stats')) {
+        return jsonResponse(200, sampleQuickStats);
+      }
+      return jsonResponse(200, [
+        {
+          season: '2025',
+          eventCode: 'USNVCMP',
+          teamNumber: 16158,
+          stats: null,
+        },
+      ]);
+    });
+
+    const result = await fetchTeamScoutData(2025, 16158, { force: true });
+    expect(result.ok).toBe(false);
+    if (!result.ok) {
+      expect(result.state).toBe('parse_failure');
+      expect(result.diagnostics).toMatch(/events parse failure/i);
+      expect(result.data?.quickStats?.tot.value).toBe(100);
+      expect(result.data?.events).toEqual([]);
+    }
+    expect(getCached(scoutTeamCacheKeyForTests(2025, 16158), 60_000)).toBeNull();
+  });
 });
