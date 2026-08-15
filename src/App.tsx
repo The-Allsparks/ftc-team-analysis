@@ -36,6 +36,11 @@ import {
 } from './data/regions';
 import { RegionIssue } from './data/regionCatalogSchema';
 import { defaultSeasonWithData } from './lib/ftcSeason';
+import {
+  affiliationsForSeason,
+  hostAffiliations,
+  sponsorAffiliations,
+} from './lib/organizationAffiliations';
 import { useTeamAvatarCatalog } from './hooks/useTeamAvatarCatalog';
 import { TeamAvatar } from './components/TeamAvatar';
 
@@ -128,6 +133,7 @@ function teamSearchText(team: Team): string {
       season.name,
       season.location,
       season.organization,
+      ...affiliationsForSeason(season).map((row) => row.name),
       season.league,
       season.rookieYear,
       season.teamType,
@@ -178,6 +184,50 @@ function teamTypeLabel(value: TeamSeason['teamType']) {
   }
 
   return 'Unknown team type';
+}
+
+function formatAffiliationNames(names: string[]): string {
+  return names.length > 0 ? names.join(', ') : 'Not listed';
+}
+
+function OrganizationIdentity({ season }: { season: TeamSeason }) {
+  const hosts = hostAffiliations(season);
+  const sponsors = sponsorAffiliations(season);
+  const hasStructured = hosts.length > 0 || sponsors.length > 0;
+
+  if (!season.organization && !hasStructured) {
+    return (
+      <div>
+        <span>Organization / Sponsors</span>
+        <strong>Not available publicly yet</strong>
+      </div>
+    );
+  }
+
+  if (!hasStructured) {
+    return (
+      <div>
+        <span>Organization / Sponsors</span>
+        <strong>{season.organization}</strong>
+      </div>
+    );
+  }
+
+  return (
+    <>
+      <div>
+        <span>School / Host</span>
+        <strong>{formatAffiliationNames(hosts.map((row) => row.name))}</strong>
+        {hosts.some((row) => row.confidence === 'low') && (
+          <small className="record-key">Parsed from public sponsor line; low confidence</small>
+        )}
+      </div>
+      <div>
+        <span>Sponsors</span>
+        <strong>{formatAffiliationNames(sponsors.map((row) => row.name))}</strong>
+      </div>
+    </>
+  );
 }
 
 function advancementStatus(season: TeamSeason, regionCode: string): AdvancementFilter {
@@ -994,10 +1044,7 @@ function AppDirectory({ seedData }: { seedData: GeneratedData }) {
               </div>
 
               <div className="identity-grid">
-                <div>
-                  <span>Organization / Sponsors</span>
-                  <strong>{selectedSeason.organization ?? 'Not available publicly yet'}</strong>
-                </div>
+                <OrganizationIdentity season={selectedSeason} />
                 <div>
                   <span>Rookie Year</span>
                   <strong>{selectedSeason.rookieYear ?? 'Unknown'}</strong>

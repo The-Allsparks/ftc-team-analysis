@@ -226,6 +226,21 @@ describe('parseTeamSeason', () => {
     expect(season.league).toBe('Southern Nevada');
     expect(season.rookieYear).toBe(2022);
     expect(season.organization).toBe('Tesla&Helen C Cannon Middle School');
+    expect(season.affiliations).toEqual([
+      expect.objectContaining({
+        entityType: 'sponsor',
+        name: 'Tesla',
+        sourceText: 'Tesla&Helen C Cannon Middle School',
+        confidence: 'high',
+        confirmationState: 'unconfirmed',
+        source: 'ftc-events-sponsors',
+      }),
+      expect.objectContaining({
+        entityType: 'school',
+        name: 'Helen C Cannon Middle School',
+        sourceText: 'Tesla&Helen C Cannon Middle School',
+      }),
+    ]);
     expect(season.teamType).toBe('school');
     expect(season.website).toBe('https://www.firstinspires.org');
     expect(season.robot).toBe('Phantom');

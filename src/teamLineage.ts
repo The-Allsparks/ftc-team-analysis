@@ -1,4 +1,5 @@
 import { SeasonId, Team, TeamSeason } from './data/schema';
+import { schoolAffiliations } from './lib/organizationAffiliations';
 
 export type TeamLineageLink = {
   teamNumber: number;
@@ -56,9 +57,18 @@ function splitOrganizationSegments(value: string | null | undefined): string[] {
 function extractSchoolKeys(season: TeamSeason): string[] {
   const keys = new Set<string>();
 
-  for (const segment of splitOrganizationSegments(season.organization)) {
-    if (isSchoolish(segment) && !GENERIC_KEYS.has(segment)) {
-      keys.add(segment);
+  for (const affiliation of schoolAffiliations(season)) {
+    const key = normalizeText(affiliation.name);
+    if (key.length >= 4 && isSchoolish(key) && !GENERIC_KEYS.has(key)) {
+      keys.add(key);
+    }
+  }
+
+  if (keys.size === 0) {
+    for (const segment of splitOrganizationSegments(season.organization)) {
+      if (isSchoolish(segment) && !GENERIC_KEYS.has(segment)) {
+        keys.add(segment);
+      }
     }
   }
 

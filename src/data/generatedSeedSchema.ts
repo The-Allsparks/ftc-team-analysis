@@ -4,8 +4,9 @@
  * `GENERATED_DATA_SCHEMA_VERSION` is 1. The current seed JSON omits `schemaVersion`
  * and is treated as version 1. A present value other than 1 fails the envelope.
  *
- * Document-level provenance is the `sources` array already on the seed. This
- * module does not invent per-field evidence records.
+ * Document-level provenance is the `sources` array already on the seed. Optional
+ * season `affiliations` are additive under v1 (see docs/organization-affiliations.md).
+ * This module does not invent per-field evidence records.
  */
 import * as v from 'valibot';
 import {
@@ -49,9 +50,33 @@ const teamLinkTypeSchema = v.picklist([
   'link-hub',
   'other',
 ]);
+const organizationEntityTypeSchema = v.picklist([
+  'school',
+  'school_district',
+  'host_organization',
+  'program_operator',
+  'community_organization',
+  'sponsor',
+  'funder',
+  'fiscal_sponsor',
+  'team_affiliation',
+]);
+const affiliationConfidenceSchema = v.picklist(['high', 'medium', 'low']);
+const affiliationConfirmationSchema = v.picklist(['unconfirmed', 'confirmed', 'rejected']);
 
 const nullableString = v.nullable(v.string());
 const nullableNumber = v.nullable(v.number());
+
+const teamAffiliationSchema = v.looseObject({
+  entityType: organizationEntityTypeSchema,
+  name: v.string(),
+  season: seasonIdSchema,
+  source: v.string(),
+  retrievedAt: nullableString,
+  confidence: affiliationConfidenceSchema,
+  confirmationState: affiliationConfirmationSchema,
+  sourceText: v.string(),
+});
 
 const recordSummarySchema = v.looseObject({
   wins: v.number(),
@@ -108,6 +133,7 @@ const teamSeasonSchema = v.looseObject({
   league: nullableString,
   rookieYear: nullableNumber,
   organization: nullableString,
+  affiliations: v.optional(v.array(teamAffiliationSchema)),
   teamType: teamTypeSchema,
   website: nullableString,
   robot: nullableString,
