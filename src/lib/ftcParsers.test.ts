@@ -244,6 +244,32 @@ describe('parseTeamSeason', () => {
     expect(season.teamType).toBe('school');
     expect(season.website).toBe('https://www.firstinspires.org');
     expect(season.robot).toBe('Phantom');
+    expect(season.evidence).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          field: 'name',
+          value: 'Royal Ghostbusters',
+          kind: 'observed',
+          sourceType: 'ftc-events-team-page',
+          status: 'current',
+        }),
+        expect.objectContaining({
+          field: 'organization',
+          value: 'Tesla&Helen C Cannon Middle School',
+          status: 'current',
+        }),
+        expect.objectContaining({
+          field: 'record',
+          value: '6-4-0',
+          status: 'current',
+        }),
+        expect.objectContaining({
+          field: 'teamType',
+          value: 'school',
+          kind: 'derived',
+        }),
+      ]),
+    );
     expect(season.summary).toContain('Team 21535 had a record of 6-4-0');
     expect(season.record).toEqual({ wins: 6, losses: 4, ties: 0, text: '6-4-0' });
     expect(season.qualificationRecord).toEqual({ wins: 5, losses: 3, ties: 0, text: '5-3-0' });

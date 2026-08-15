@@ -16,6 +16,7 @@ import {
   RegionTeamSeed,
   seasonFromSeed,
 } from './ftcParsers';
+import { mergeSeasonEvidence } from './fieldEvidence';
 import { failureFromUnknown, toLiveSourceMeta } from './sourceResult';
 
 const TEAM_REFRESH_CONCURRENCY = 10;
@@ -316,9 +317,12 @@ export async function refreshTeamSeasonLive(
 
   try {
     const html = await fetchFtcHtml(`/${season}/team/${teamNumber}`);
-    const parsedSeason = parseTeamSeason(seed, html, regionEvents);
+    const retrievedAt = new Date().toISOString();
+    const parsedSeason = parseTeamSeason(seed, html, regionEvents, { retrievedAt });
+    const existingSeason = team?.seasons[season];
     const withSource = {
       ...parsedSeason,
+      evidence: mergeSeasonEvidence(existingSeason?.evidence, parsedSeason.evidence),
       liveSource: toLiveSourceMeta({ ok: true, state: 'available', data: parsedSeason }),
     };
     setCached(teamCacheKey, withSource);

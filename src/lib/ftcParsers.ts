@@ -11,6 +11,7 @@ import {
   TeamSeason,
 } from '../data/schema';
 import { parseOrganizationAffiliations } from './organizationAffiliations';
+import { buildSeasonEvidence, mergeSeasonEvidence } from './fieldEvidence';
 
 export const BASE_URL = 'https://ftc-events.firstinspires.org';
 export const FIRST_SEARCH_URL = 'https://3dl2fnsh51.execute-api.us-east-1.amazonaws.com/prod/first-search';
@@ -899,6 +900,7 @@ export function parseTeamSeason(
   seed: RegionTeamSeed,
   html: string,
   regionEvents: Map<string, RegionEvent>,
+  options?: { retrievedAt?: string | null },
 ): TeamSeason {
   const root = parse(html);
   const text = cleanText(root.structuredText);
@@ -928,12 +930,14 @@ export function parseTeamSeason(
       'To update listed skills',
     ]),
   );
+  const retrievedAt = options?.retrievedAt ?? new Date().toISOString();
   const affiliations = parseOrganizationAffiliations(organization, {
     season: seed.season,
     source: 'ftc-events-sponsors',
+    retrievedAt,
   });
 
-  return {
+  const season: TeamSeason = {
     season: seed.season,
     active: true,
     name,
@@ -958,6 +962,17 @@ export function parseTeamSeason(
     awards,
     notes: events.length === 0 ? ['No public event rows were parsed from this season page.'] : [],
   };
+
+  season.evidence = buildSeasonEvidence(season, {
+    sourceType: 'ftc-events-team-page',
+    sourceUrl: seed.sourceUrl,
+    retrievedAt,
+    extractionMethod: 'html-field',
+    nameMethod: titleMatch ? 'html-title' : 'seed-fallback',
+    organizationMethod: 'html-field',
+  });
+
+  return season;
 }
 
 export function parseRegionTitle(html: string): string | null {
@@ -968,6 +983,7 @@ export function parseRegionTitle(html: string): string | null {
 export function seasonFromSeed(seed: RegionTeamSeed, note: string, regionLabel = 'Region'): TeamSeason {
   const organization = seed.organization;
   const affiliationSource = seed.seedSource === 'first-search' ? 'first-search' : 'ftc-events-sponsors';
+  const evidenceSourceType = seed.seedSource === 'first-search' ? 'first-search' : 'ftc-events-team-page';
   const affiliations = parseOrganizationAffiliations(organization, {
     season: seed.season,
     source: affiliationSource,
@@ -980,7 +996,7 @@ export function seasonFromSeed(seed: RegionTeamSeed, note: string, regionLabel =
         ]
       : [note];
 
-  return {
+  const season: TeamSeason = {
     season: seed.season,
     active: true,
     name: seed.name,
@@ -1005,13 +1021,30 @@ export function seasonFromSeed(seed: RegionTeamSeed, note: string, regionLabel =
     awards: [],
     notes,
   };
+
+  season.evidence = buildSeasonEvidence(season, {
+    sourceType: evidenceSourceType,
+    sourceUrl: seed.sourceUrl,
+    retrievedAt: null,
+    extractionMethod: seed.seedSource === 'first-search' ? 'search-index' : 'region-seed',
+    nameMethod: seed.seedSource === 'first-search' ? 'search-index' : 'region-seed',
+    organizationMethod: seed.seedSource === 'first-search' ? 'search-index' : 'region-seed',
+  });
+
+  return season;
 }
 
 export function mergeSeason(teamMap: Map<number, Team>, teamNumber: number, season: TeamSeason): void {
   const existing = teamMap.get(teamNumber);
 
   if (existing) {
-    existing.seasons[season.season] = season;
+    const prior = existing.seasons[season.season];
+    existing.seasons[season.season] = prior
+      ? {
+          ...season,
+          evidence: mergeSeasonEvidence(prior.evidence, season.evidence),
+        }
+      : season;
     return;
   }
 

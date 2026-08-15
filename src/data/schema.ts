@@ -78,6 +78,50 @@ export type TeamAffiliation = {
   sourceText: string;
 };
 
+/**
+ * Field-level provenance for season facts (additive; see docs/field-evidence.md).
+ * Parallel to TeamAffiliation provenance — affiliations are not replaced by this model.
+ */
+export type TeamFactField =
+  | 'name'
+  | 'location'
+  | 'organization'
+  | 'website'
+  | 'record'
+  | 'qualificationRecord'
+  | 'playoffRecord'
+  | 'rookieYear'
+  | 'league'
+  | 'region'
+  | 'robot'
+  | 'teamType';
+
+export type FactKind = 'observed' | 'derived';
+export type ObservationStatus = 'current' | 'conflicting' | 'superseded';
+export type EvidenceConfidence = AffiliationConfidence;
+export type EvidenceConfirmation = AffiliationConfirmation;
+
+export type FieldEvidence = {
+  /** Stable within a season for supersede / conflict links. */
+  id: string;
+  field: TeamFactField;
+  /** Normalized display/compare string for the observed or derived value. */
+  value: string;
+  kind: FactKind;
+  /** e.g. ftc-events-team-page, first-search, organization-parse, derived */
+  sourceType: string;
+  sourceUrl: string | null;
+  retrievedAt: string | null;
+  observedSeason: SeasonId;
+  /** e.g. html-field, html-title, search-index, heuristic, organization-split, offline-synthesize */
+  extractionMethod: string;
+  confidence: EvidenceConfidence;
+  confirmationState: EvidenceConfirmation;
+  status: ObservationStatus;
+  rawValue: string | null;
+  supersedesId: string | null;
+};
+
 /** Live refresh provenance for a team-season (runtime only; not in seed JSON). */
 export type LiveSourceMeta = {
   ok: boolean;
@@ -115,6 +159,11 @@ export type TeamSeason = {
   events: TeamEvent[];
   awards: TeamAward[];
   notes: string[];
+  /**
+   * Additive per-field evidence for core season facts. Omitted on older seeds;
+   * synthesize with `synthesizeSeasonEvidence` / parsers when missing.
+   */
+  evidence?: FieldEvidence[];
   /** Present on live refresh results only; omitted from checked-in seed JSON. */
   liveSource?: LiveSourceMeta;
 };
@@ -156,7 +205,7 @@ export type DataSource = {
  * Generated snapshot envelope. Runtime validation lives in `generatedSeedSchema.ts`
  * (`GENERATED_DATA_SCHEMA_VERSION` = 1). The checked-in Nevada JSON omits
  * `schemaVersion` and is treated as version 1. `sources` is document-level
- * provenance only; per-field evidence is out of scope.
+ * provenance; optional season `evidence` holds per-field observations (issue #5).
  */
 export type GeneratedData = {
   generatedAt: string;
