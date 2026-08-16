@@ -22,6 +22,7 @@ FTC Events / FTCScout / Portfolio Lab / FTC Scoring (public HTTP)
 | Seed schema | `src/data/*Schema.ts` | Valibot validation for seed, regions, live enrichments |
 | Canonical seed | `src/data/nv-ftc-teams.generated.json` | Checked-in Nevada snapshot (current scalars) |
 | Observations side store | `src/data/nv-ftc-team-observations.generated.json` | Append-only field change history (#29) |
+| Relationship graph | `src/data/relationshipGraph.ts`, `src/lib/relationshipGraphAdapters.ts` | Derived evidence-backed node/edge view over seed + lineage (#28); not a graph DB |
 | Public data copy | `public/data/` | Served as `/data/...` (via `npm run sync:data`) |
 | Ingestion | `scripts/pull-public-ftc-data.ts` | Public-page pull, publish guards |
 | Worker | `worker/proxy.ts`, `wrangler.jsonc` | Allowlisted live-data proxy + static assets |
@@ -50,4 +51,5 @@ When FTC Events has not published the current region page, the UI selects the la
 - [gm0.md](gm0.md) — optional Game Manual 0 gallery resource enrichment
 - [deployment.md](deployment.md) — deploy commands and proxy table
 - [attribution.md](attribution.md) — sources and residual risks
+- [relationship-graph.md](relationship-graph.md) — evidence-backed team relationship graph model (#28)
 - [v1-milestone.md](v1-milestone.md) — product scope

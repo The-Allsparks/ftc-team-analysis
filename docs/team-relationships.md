@@ -36,7 +36,7 @@ Heuristic “lineage” used to present shared-school matches as earlier/later t
 
 ## Non-goals
 
-- General relationship graph product (#28)
+- Graph explorer UI (core graph model: [relationship-graph.md](relationship-graph.md) / #28)
 - Canonical school/org IDs (#16)
 - Team-submitted confirmation UI (#32)
 - Persisting relationship evidence into `nv-ftc-teams.generated.json`
