@@ -202,11 +202,21 @@ export type DataSource = {
   note: string;
 };
 
+/** Per-source health stamp written by `pull:data` / scheduled refresh (#3). */
+export type SourceCheck = {
+  label: string;
+  url: string;
+  checkedAt: string;
+  ok: boolean;
+  detail?: string;
+};
+
 /**
  * Generated snapshot envelope. Runtime validation lives in `generatedSeedSchema.ts`
  * (`GENERATED_DATA_SCHEMA_VERSION` = 1). The checked-in Nevada JSON omits
  * `schemaVersion` and is treated as version 1. `sources` is document-level
  * provenance; optional season `evidence` holds per-field observations (issue #5).
+ * Optional `sourceChecks` records generation-time upstream probe results (#3).
  */
 export type GeneratedData = {
   generatedAt: string;
@@ -220,6 +230,8 @@ export type GeneratedData = {
   regionEvents: RegionEvent[];
   sources: DataSource[];
   limitations: string[];
+  /** Optional; omitted on older checked-in seeds. */
+  sourceChecks?: SourceCheck[];
 };
 
 export function seasonOptions(data?: Pick<GeneratedData, 'targetSeasons' | 'teams'>): SeasonId[] {

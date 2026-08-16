@@ -98,6 +98,26 @@ describe('parseGeneratedSeed', () => {
     expect(result.data.schemaVersion).toBeUndefined();
   });
 
+  it('accepts optional sourceChecks metadata', () => {
+    const seed = validSeed();
+    const sourceChecks = [
+      {
+        label: 'FTC Events region USNV 2026',
+        url: 'https://ftc-events.firstinspires.org/2026/region/USNV',
+        checkedAt: '2026-08-16T00:00:00.000Z',
+        ok: true,
+        detail: 'ok',
+      },
+    ];
+    (seed as { sourceChecks?: typeof sourceChecks }).sourceChecks = sourceChecks;
+    const result = parseGeneratedSeed(seed);
+    expect(result.ok).toBe(true);
+    if (!result.ok) {
+      return;
+    }
+    expect(result.data.sourceChecks).toEqual(sourceChecks);
+  });
+
   it('accepts the checked-in Nevada seed without rewriting it', () => {
     const raw: unknown = JSON.parse(readFileSync(SEED_PATH, 'utf8'));
     const result = parseGeneratedSeed(raw);

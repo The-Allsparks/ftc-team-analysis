@@ -1,0 +1,150 @@
+name: Data refresh
+
+on:
+  schedule:
+    # Weekly current-season merge refresh (Monday 16:00 UTC)
+    - cron: '0 16 * * 1'
+    # Monthly full rebuild (1st of month 16:00 UTC)
+    - cron: '0 16 1 * *'
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: Refresh mode
+        required: true
+        type: choice
+        options:
+          - current
+          - full
+        default: current
+      skip_link_enrichment:
+        description: Skip crawling team websites for links (recommended on schedule)
+        required: true
+        type: boolean
+        default: true
+      open_pr:
+        description: Open a PR when the seed changes (ignored when DATA_REFRESH_OPEN_PR=false)
+        required: true
+        type: boolean
+        default: true
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: data-refresh
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - run: npm ci
+
+      - name: Resolve refresh options
+        id: opts
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            MODE="${{ inputs.mode }}"
+            SKIP="${{ inputs.skip_link_enrichment }}"
+            OPEN_PR_INPUT="${{ inputs.open_pr }}"
+          elif [ "${{ github.event.schedule }}" = "0 16 * * 1" ]; then
+            MODE="current"
+            SKIP="true"
+            OPEN_PR_INPUT="true"
+          else
+            MODE="full"
+            SKIP="true"
+            OPEN_PR_INPUT="true"
+          fi
+
+          # Repo variable DATA_REFRESH_OPEN_PR defaults to on; set to "false" to disable.
+          if [ "${{ vars.DATA_REFRESH_OPEN_PR }}" = "false" ] || [ "${OPEN_PR_INPUT}" != "true" ]; then
+            OPEN_PR="false"
+          else
+            OPEN_PR="true"
+          fi
+
+          echo "mode=${MODE}" >> "$GITHUB_OUTPUT"
+          echo "skip_link_enrichment=${SKIP}" >> "$GITHUB_OUTPUT"
+          echo "open_pr=${OPEN_PR}" >> "$GITHUB_OUTPUT"
+          echo "Resolved mode=${MODE} skip_link_enrichment=${SKIP} open_pr=${OPEN_PR}"
+
+      - name: Pull public FTC data
+        run: |
+          set -euo pipefail
+          ARGS=(--mode="${{ steps.opts.outputs.mode }}")
+          if [ "${{ steps.opts.outputs.skip_link_enrichment }}" = "true" ]; then
+            ARGS+=(--skip-link-enrichment)
+          fi
+          npm run pull:data -- "${ARGS[@]}"
+
+      - name: Validate generated seed
+        run: npm run validate:data
+
+      - name: Upload refresh artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: data-refresh-${{ steps.opts.outputs.mode }}-${{ github.run_id }}
+          path: |
+            data-refresh-report.md
+            src/data/nv-ftc-teams.generated.json
+          if-no-files-found: warn
+
+      - name: Detect seed changes
+        id: changes
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git diff --quiet -- src/data/nv-ftc-teams.generated.json; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "No seed changes."
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+            echo "Seed files changed."
+            git diff --stat -- src/data/nv-ftc-teams.generated.json
+          fi
+
+      - name: Prepare pull request body
+        if: steps.changes.outputs.changed == 'true' && steps.opts.outputs.open_pr == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          {
+            echo "Automated data refresh (\`mode=${{ steps.opts.outputs.mode }}\`)."
+            echo
+            echo "Publish gates: \`publishGuard\` + \`npm run validate:data\`."
+            echo "This workflow never pushes directly to \`main\` and does not auto-merge."
+            echo
+            if [ -f data-refresh-report.md ]; then
+              cat data-refresh-report.md
+            else
+              echo "_No report file produced._"
+            fi
+          } > "$RUNNER_TEMP/data-refresh-pr-body.md"
+
+      - name: Create pull request
+        if: steps.changes.outputs.changed == 'true' && steps.opts.outputs.open_pr == 'true'
+        uses: peter-evans/create-pull-request@v7
+        with:
+          commit-message: "chore(data): refresh Nevada FTC snapshot (#3)"
+          title: "chore(data): refresh Nevada FTC snapshot"
+          body-path: ${{ runner.temp }}/data-refresh-pr-body.md
+          branch: data-refresh/${{ steps.opts.outputs.mode }}
+          delete-branch: true
+          add-paths: |
+            src/data/nv-ftc-teams.generated.json
+          labels: |
+            type: data
+            data-quality
