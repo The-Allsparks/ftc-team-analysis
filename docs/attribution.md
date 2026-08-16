@@ -25,6 +25,7 @@ Project code and original documentation are MIT-licensed ([LICENSE](../LICENSE))
 | GitHub (public repos) | Optional verification of already-discovered repo URLs | [GitHub REST docs](https://docs.github.com/en/rest) | Unauthenticated REST only when `--enrich-github` is set; prefer verifying known URLs. Ownership requires evidence beyond team number. Public repos only; no tokens committed. Rate limits / ToS are upstream residual risk. See [github-repos.md](github-repos.md). |
 | NCES CCD / EDGE / Census ACS | Deferred aggregate school/community context (#27) | [CCD](https://nces.ed.gov/ccd/) / [EDGE](https://nces.ed.gov/programs/edge/) / [ACS API](https://www.census.gov/programs-surveys/acs/data/data-via-api.html) | **Not fetched yet.** Policy allows institution/geography aggregates only; no student microdata, no paid APIs, no bulk dumps in git. See [school-community-context.md](school-community-context.md). |
 | The Orange Alliance (TOA) | Deferred optional corroboration / media-stream enrichment (#21) | [theorangealliance.org](https://theorangealliance.org/) | **Not fetched yet.** Account-gated REST (`X-TOA-Key` + `X-Application-Origin`). **FIRST remains canonical** for official scores/awards/ranks; TOA must never override. Terms/redistribution residual risk — not a legal clearance. See [orange-alliance.md](orange-alliance.md). |
+| Internet Archive / Wayback Machine | Deferred optional historical website reconstruction (#25) | [archive.org](https://archive.org/) / [web.archive.org](https://web.archive.org/) | **Not fetched in production.** Availability + CDX researched only; archived captures must be labeled archived (never current). Rate limits / ToS residual risk — not a legal clearance. See [internet-archive.md](internet-archive.md). |
 
 ## Source hierarchy (competitive vs enrichment)
 
@@ -33,11 +34,12 @@ Project code and original documentation are MIT-licensed ([LICENSE](../LICENSE))
 3. **FTCScout** — optional community-calculated stats (not official FIRST results).
 4. **The Orange Alliance** — future optional corroboration/enrichment only ([orange-alliance.md](orange-alliance.md)); never canonical where FIRST exists.
 5. **Link/resource enrichments** — Open Alliance, GM0, Portfolio Lab, GitHub verification.
+6. **Internet Archive / Wayback** — future optional **archived** website reconstruction only ([internet-archive.md](internet-archive.md)); never current live truth.
 
 ## What we claim (and do not)
 
 - We attribute Portfolio Lab and other enrichment sources in the UI/docs where used.
-- We do **not** claim ownership of FIRST, FTC Events, FTCScout, Portfolio Lab, or The Orange Alliance content.
+- We do **not** claim ownership of FIRST, FTC Events, FTCScout, Portfolio Lab, The Orange Alliance, or Internet Archive–hosted third-party page content.
 - We do **not** claim that scraping or republishing public pages has been reviewed by counsel.
 - Inferred team relationships are evidence-backed suggestions, not certified succession — see [team-relationships.md](team-relationships.md).
 

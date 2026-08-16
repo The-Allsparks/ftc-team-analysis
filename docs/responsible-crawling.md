@@ -44,6 +44,10 @@ GitHub enrichment is **opt-in** (`--enrich-github`) and defaults off on schedule
 
 TOA is **not crawled** by this project today (research only — [#21](https://github.com/The-Allsparks/ftc-team-analysis/issues/21)). A future optional integration would use the account-gated REST API (not HTML scrape-as-primary), fail soft, bound traffic, and never treat TOA as canonical for official FIRST results. See [orange-alliance.md](orange-alliance.md).
 
+## Internet Archive / Wayback Machine
+
+Internet Archive is **not crawled** by scheduled refresh or `pull:data` today (research only — [#25](https://github.com/The-Allsparks/ftc-team-analysis/issues/25)). A future optional job may use Availability/CDX for **known** Nevada team URLs only, with descriptive User-Agent, delays, `429` backoff, and archived-vs-current labeling. Do not bulk-download WARCs into git. See [internet-archive.md](internet-archive.md).
+
 ## Related
 
 - [ingestion.md](ingestion.md)

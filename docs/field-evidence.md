@@ -65,7 +65,7 @@ Season `record`, and `qualificationRecord` / `playoffRecord` when present (evide
 
 - Canonical location/school/org IDs (#16)
 - Relationship graph product / explorer (model landed in #28; visualization deferred)
-- Internet Archive reconstruction (#25)
+- Internet Archive reconstruction pipeline (#25 research landed in [internet-archive.md](internet-archive.md); not wired into seed/observations yet)
 - Cloudflare static snapshot tree / hosting (#38)
 - Team-submitted correction workflow (#32)
 - Paid services, secrets, or student PII

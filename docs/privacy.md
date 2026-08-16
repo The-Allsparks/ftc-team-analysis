@@ -29,6 +29,8 @@ Website and social-link collectors (`src/lib/linkDiscovery.ts`) enforce:
 
 Details: [link-discovery.md](link-discovery.md). Broader contributor expectations remain in [#31](https://github.com/The-Allsparks/ftc-team-analysis/issues/31) docs. Aggregate school/community context: [school-community-context.md](school-community-context.md).
 
+Future Internet Archive enrichment ([internet-archive.md](internet-archive.md), [#25](https://github.com/The-Allsparks/ftc-team-analysis/issues/25)) must apply the same PII filters: do not retain personal emails, phones, or student social accounts found only in archived page captures.
+
 ## Corrections and team claims (process only)
 
 There is no in-app claim/correction product yet (tracked in [#32](https://github.com/The-Allsparks/ftc-team-analysis/issues/32)). Until then:

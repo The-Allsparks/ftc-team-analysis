@@ -1,0 +1,35 @@
+{
+  "_fixtureNote": "SYNTHETIC Internet Archive Availability + CDX shapes for parser tests. Not a live capture. Do not treat as production Wayback data. Research only (#25).",
+  "availability": {
+    "url": "https://example-nv-ftc-16091.example/",
+    "archived_snapshots": {
+      "closest": {
+        "status": "200",
+        "available": true,
+        "url": "http://web.archive.org/web/20201101133314/https://example-nv-ftc-16091.example/",
+        "timestamp": "20201101133314"
+      }
+    }
+  },
+  "availabilityEmpty": {
+    "url": "https://example-nv-ftc-never-crawled.example/",
+    "archived_snapshots": {}
+  },
+  "cdx": [
+    ["timestamp", "original", "statuscode", "mimetype"],
+    ["20201101133314", "http://example-nv-ftc-16091.example/", "301", "text/html"],
+    ["20201101133314", "https://example-nv-ftc-16091.example/", "200", "text/html"],
+    ["20210616160335", "https://example-nv-ftc-16091.example/", "200", "text/html"]
+  ],
+  "proposedProvenance": {
+    "originalUrl": "https://example-nv-ftc-16091.example/",
+    "archiveUrl": "http://web.archive.org/web/20201101133314/https://example-nv-ftc-16091.example/",
+    "captureTimestamp": "20201101133314",
+    "archivedAt": "2026-08-16T18:00:00.000Z",
+    "sourceType": "internet-archive-availability",
+    "httpStatus": "200",
+    "mimeType": null,
+    "originalLiveness": "alive",
+    "factCurrency": "archived"
+  }
+}
