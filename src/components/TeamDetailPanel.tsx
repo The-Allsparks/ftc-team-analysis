@@ -11,7 +11,6 @@ import {
   SeasonId,
   Team,
   TeamAward,
-  TeamEvent,
   TeamFactField,
   TeamSeason,
 } from '../data/schema';
@@ -22,7 +21,13 @@ import {
   sponsorAffiliations,
 } from '../lib/organizationAffiliations';
 import { toPortfolioLabProxyUrl } from '../lib/portfolioLab';
-import { isRegionChampionshipEvent } from '../data/regions';
+import {
+  advancementLabel,
+  advancementStatus,
+  eventKey,
+  seasonLabel,
+  teamTypeLabel,
+} from '../lib/teamDirectory';
 import {
   formatRelationshipTypeLabel,
   TeamLineage,
@@ -31,19 +36,6 @@ import {
 } from '../teamLineage';
 import { TeamAvatar } from './TeamAvatar';
 import { SourceStatusBlock } from './SourceStatusBlock';
-
-const SEASON_NAMES: Record<SeasonId, { years: string; game: string }> = {
-  2026: { years: '2026-2027', game: 'BIOBUZZ' },
-  2025: { years: '2025-2026', game: 'DECODE' },
-  2024: { years: '2024-2025', game: 'INTO THE DEEP' },
-  2023: { years: '2023-2024', game: 'CENTERSTAGE' },
-  2022: { years: '2022-2023', game: 'POWERPLAY' },
-  2021: { years: '2021-2022', game: 'FREIGHT FRENZY' },
-  2020: { years: '2020-2021', game: 'ULTIMATE GOAL' },
-  2019: { years: '2019-2020', game: 'SKYSTONE' },
-};
-
-type AdvancementFilter = 'after-championship' | 'to-championship' | 'not-advancing';
 
 function FactProvenance({ season, field }: { season: TeamSeason; field: TeamFactField }) {
   const rows = evidenceForSeasonField(season, field);
@@ -68,29 +60,8 @@ function FactProvenance({ season, field }: { season: TeamSeason; field: TeamFact
   );
 }
 
-function seasonLabel(season: SeasonId) {
-  const metadata = SEASON_NAMES[season];
-  return metadata ? `${metadata.years}: ${metadata.game}` : String(season);
-}
-
-function eventKey(event: Partial<TeamEvent>) {
-  return event.code ?? event.name ?? 'unknown-event';
-}
-
 function awardKey(award: Partial<TeamAward>, index: number) {
   return `${award.name ?? 'award'}-${award.eventName ?? 'event'}-${index}`;
-}
-
-function teamTypeLabel(value: TeamSeason['teamType']) {
-  if (value === 'school') {
-    return 'School team';
-  }
-
-  if (value === 'non-school') {
-    return 'Non-school team';
-  }
-
-  return 'Unknown team type';
 }
 
 function formatAffiliationNames(names: string[]): string {
@@ -139,38 +110,6 @@ function OrganizationIdentity({ season }: { season: TeamSeason }) {
       </div>
     </>
   );
-}
-
-function advancementStatus(season: TeamSeason, regionCode: string): AdvancementFilter {
-  const advancedBeyondChampionship = (season.events ?? []).some(
-    (event) =>
-      event.code?.startsWith('FTCCMP') ||
-      event.code?.startsWith('FPE') ||
-      /FIRST Championship|Premier Event/i.test(event.name ?? ''),
-  );
-
-  if (advancedBeyondChampionship) {
-    return 'after-championship';
-  }
-
-  const reachedRegionChampionship = (season.events ?? []).some(
-    (event) =>
-      isRegionChampionshipEvent(event.code, regionCode) || /Championship/i.test(event.name ?? ''),
-  );
-
-  return reachedRegionChampionship ? 'to-championship' : 'not-advancing';
-}
-
-function advancementLabel(value: AdvancementFilter) {
-  if (value === 'after-championship') {
-    return 'After Championship';
-  }
-
-  if (value === 'to-championship') {
-    return 'To Championship';
-  }
-
-  return 'Not Advancing';
 }
 
 export type TeamDetailPanelProps = {
