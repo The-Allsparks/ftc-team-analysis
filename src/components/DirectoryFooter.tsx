@@ -1,5 +1,6 @@
 import { GeneratedData } from '../data/schema';
 import { DATA_HEALTH_HASH } from '../lib/sourceHealthReport';
+import { CORRECTIONS_HASH } from '../lib/teamCorrections';
 
 export type DirectoryFooterProps = {
   data: GeneratedData;
@@ -37,6 +38,9 @@ export function DirectoryFooter({ data }: DirectoryFooterProps) {
         </a>
         <a href={DATA_HEALTH_HASH} title="Maintainer snapshot and session source health">
           Data health
+        </a>
+        <a href={CORRECTIONS_HASH} title="Local team-correction moderation queue">
+          Corrections queue
         </a>
       </div>
       <p>

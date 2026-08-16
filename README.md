@@ -25,6 +25,7 @@ Built and maintained by [The Allsparks](https://www.theallsparks.org/). Licensed
 | [docs/orange-alliance.md](docs/orange-alliance.md) | The Orange Alliance research (#21; corroboration only; FIRST stays canonical) |
 | [docs/internet-archive.md](docs/internet-archive.md) | Internet Archive / Wayback research (#25; archived website reconstruction only) |
 | [docs/onshape.md](docs/onshape.md) | Onshape CAD research (#26; declared links only; no Public Documents crawl) |
+| [docs/team-corrections.md](docs/team-corrections.md) | Team-submitted corrections + moderation (#32; never auto-overwrite seed) |
 
 ## Product milestone
 

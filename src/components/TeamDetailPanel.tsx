@@ -59,6 +59,12 @@ import {
   TeamLineageLink,
   visibleRelatedLinks,
 } from '../teamLineage';
+import type { ModerationRecord } from '../data/teamCorrectionsSchema';
+import {
+  buildLineageModerationInput,
+  createSubmission,
+} from '../lib/teamCorrections';
+import { CorrectionSubmissionForm } from './CorrectionSubmissionForm';
 import { TeamAvatar } from './TeamAvatar';
 import { SourceStatusBlock } from './SourceStatusBlock';
 
@@ -212,6 +218,7 @@ export type TeamDetailPanelProps = {
   selectedPortfolios: PortfolioLabEntry[];
   portfolioStatus: 'idle' | 'loading' | 'ready' | 'error';
   refreshPortfolioCatalog: (force?: boolean) => Promise<unknown>;
+  onCorrectionSubmitted: (record: ModerationRecord) => void;
 };
 
 export default function TeamDetailPanel({
@@ -234,6 +241,7 @@ export default function TeamDetailPanel({
   selectedPortfolios,
   portfolioStatus,
   refreshPortfolioCatalog,
+  onCorrectionSubmitted,
 }: TeamDetailPanelProps) {
   const relatedTeams = selectedLineage ? visibleRelatedLinks(selectedLineage) : [];
   const sisterRelated = relatedTeams.filter((link) => link.relationshipType === 'sister_team');
@@ -525,7 +533,9 @@ export default function TeamDetailPanel({
                   title="Sister / concurrent teams"
                   links={sisterRelated}
                   keyPrefix="sister"
+                  fromTeamNumber={selectedTeam.number}
                   onSelect={setSelectedTeamNumber}
+                  onCorrectionSubmitted={onCorrectionSubmitted}
                 />
               )}
               {earlierRelated.length > 0 && (
@@ -533,7 +543,9 @@ export default function TeamDetailPanel({
                   title="Earlier team numbers"
                   links={earlierRelated}
                   keyPrefix="prior"
+                  fromTeamNumber={selectedTeam.number}
                   onSelect={setSelectedTeamNumber}
+                  onCorrectionSubmitted={onCorrectionSubmitted}
                 />
               )}
               {laterRelated.length > 0 && (
@@ -541,11 +553,18 @@ export default function TeamDetailPanel({
                   title="Later team numbers"
                   links={laterRelated}
                   keyPrefix="successor"
+                  fromTeamNumber={selectedTeam.number}
                   onSelect={setSelectedTeamNumber}
+                  onCorrectionSubmitted={onCorrectionSubmitted}
                 />
               )}
             </section>
           )}
+
+          <CorrectionSubmissionForm
+            teamNumber={selectedTeam.number}
+            onSubmitted={onCorrectionSubmitted}
+          />
 
           {(selectedTeam.links?.length ?? 0) > 0 && (
             <section className="links-panel">
@@ -868,37 +887,74 @@ function RelatedGroup({
   title,
   links,
   keyPrefix,
+  fromTeamNumber,
   onSelect,
+  onCorrectionSubmitted,
 }: {
   title: string;
   links: TeamLineageLink[];
   keyPrefix: string;
+  fromTeamNumber: number;
   onSelect: (teamNumber: number) => void;
+  onCorrectionSubmitted: (record: ModerationRecord) => void;
 }) {
+  function submitLineageAction(link: TeamLineageLink, action: 'confirm' | 'reject') {
+    const input = buildLineageModerationInput({
+      teamNumber: fromTeamNumber,
+      relatedTeamNumber: link.teamNumber,
+      relationshipType: link.relationshipType,
+      action,
+      evidenceUrls: link.evidence
+        .map((row) => row.sourceUrl)
+        .filter((url): url is string => Boolean(url)),
+    });
+    const result = createSubmission(input);
+    if (result.ok) {
+      onCorrectionSubmitted(result.data);
+    }
+  }
+
   return (
     <div className="lineage-group">
       <h4>{title}</h4>
       <div className="lineage-list">
         {links.map((link) => (
-          <button
-            key={`${keyPrefix}-${link.teamNumber}`}
-            type="button"
-            className="lineage-card"
-            onClick={() => onSelect(link.teamNumber)}
-          >
-            <span className="lineage-card-top">
-              <strong>Team {link.teamNumber}</strong>
-              <span className="lineage-badges">
-                <span className="lineage-type">{formatRelationshipTypeLabel(link.relationshipType)}</span>
-                <span className={`lineage-confidence ${link.confidence}`}>{link.confidence}</span>
+          <div key={`${keyPrefix}-${link.teamNumber}`} className="lineage-card-wrap">
+            <button
+              type="button"
+              className="lineage-card"
+              onClick={() => onSelect(link.teamNumber)}
+            >
+              <span className="lineage-card-top">
+                <strong>Team {link.teamNumber}</strong>
+                <span className="lineage-badges">
+                  <span className="lineage-type">{formatRelationshipTypeLabel(link.relationshipType)}</span>
+                  <span className={`lineage-confidence ${link.confidence}`}>{link.confidence}</span>
+                </span>
               </span>
-            </span>
-            <span>{link.teamName}</span>
-            <small>
-              Seasons {link.seasonRange} — {link.matchReason}
-            </small>
-            <small className="lineage-explanation">{link.confidenceExplanation}</small>
-          </button>
+              <span>{link.teamName}</span>
+              <small>
+                Seasons {link.seasonRange} — {link.matchReason}
+              </small>
+              <small className="lineage-explanation">{link.confidenceExplanation}</small>
+            </button>
+            <div className="lineage-moderation-actions">
+              <button
+                type="button"
+                onClick={() => submitLineageAction(link, 'confirm')}
+                title="Queue a confirm moderation record — does not flip live confirmation until approved and curated"
+              >
+                Confirm (review)
+              </button>
+              <button
+                type="button"
+                onClick={() => submitLineageAction(link, 'reject')}
+                title="Queue a reject moderation record — does not hide the link until approved and curated"
+              >
+                Reject (review)
+              </button>
+            </div>
+          </div>
         ))}
       </div>
     </div>
