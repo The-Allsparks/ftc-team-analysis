@@ -1,0 +1,18 @@
+{
+  "generatedAt": "2026-08-16T00:00:00.000Z",
+  "targetSeasons": [2026],
+  "regionCode": "USNV",
+  "teams": [],
+  "regionEvents": [],
+  "sources": [],
+  "limitations": ["Fixture used to verify empty publish rejection."],
+  "sourceChecks": [
+    {
+      "label": "fixture",
+      "url": "https://example.test/empty",
+      "checkedAt": "2026-08-16T00:00:00.000Z",
+      "ok": false,
+      "detail": "empty teams"
+    }
+  ]
+}

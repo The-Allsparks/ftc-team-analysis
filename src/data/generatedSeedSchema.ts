@@ -218,6 +218,14 @@ const dataSourceSchema = v.looseObject({
   note: v.string(),
 });
 
+const sourceCheckSchema = v.looseObject({
+  label: v.string(),
+  url: v.string(),
+  checkedAt: v.pipe(v.string(), v.minLength(1)),
+  ok: v.boolean(),
+  detail: v.optional(v.string()),
+});
+
 const envelopeSchema = v.looseObject({
   generatedAt: v.pipe(v.string(), v.minLength(1)),
   liveRefreshedAt: v.optional(v.string()),
@@ -234,6 +242,7 @@ const envelopeSchema = v.looseObject({
   regionEvents: v.array(v.unknown()),
   sources: v.array(v.unknown()),
   limitations: v.array(v.string()),
+  sourceChecks: v.optional(v.array(sourceCheckSchema)),
 });
 
 function isPlainObject(value: unknown): value is Record<string, unknown> {

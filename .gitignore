@@ -8,3 +8,4 @@ public/data/nv-ftc-teams.generated.json
 .vite
 .wrangler
 .dev.vars
+data-refresh-report.md

@@ -33,6 +33,26 @@ npm run validate:data
 
 These checks are not yet required on `main` (branch protection remains a follow-up of [#10](https://github.com/The-Allsparks/ftc-team-analysis/issues/10)).
 
+## Scheduled data refresh
+
+GitHub Actions (`.github/workflows/data-refresh.yml`) refreshes the checked-in Nevada snapshot from public FTC pages (no FIRST API secrets):
+
+| Trigger | Mode | Notes |
+| --- | --- | --- |
+| Cron Monday 16:00 UTC | `current` | Merges `TARGET_SEASONS[0]` into the existing seed |
+| Cron 1st of month 16:00 UTC | `full` | Rebuilds all configured seasons |
+| `workflow_dispatch` | `current` or `full` | Manual; link enrichment optional |
+
+Scheduled runs skip team-website link crawling to keep traffic modest. Before writing, `pull:data` reuses the empty/drop `publishGuard`, then the workflow runs `validate:data`. Each successful run writes a change report (`data-refresh-report.md`, also uploaded as an artifact) and records per-source `sourceChecks` timestamps on the snapshot. When the seed changes, the workflow opens a PR by default (never pushes directly to `main`, never auto-merges). Set repository variable `DATA_REFRESH_OPEN_PR=false` to disable PR creation (artifacts still upload). Local flags:
+
+```bash
+npm run pull:data -- --mode=current --skip-link-enrichment
+npm run pull:data -- --mode=full
+npm run pull:data -- --dry-run --candidate-fixture=src/data/fixtures/empty-generated-candidate.json
+```
+
+The empty-fixture dry-run is for gate testing only; it must exit non-zero against the real seed. Live upstream refresh is intended via Actions `workflow_dispatch` after this pipeline lands—not via unit tests.
+
 ## Production (Cloudflare Workers)
 
 The app deploys as a Cloudflare Worker with Vite static assets plus a small allowlisted live-data proxy (`worker/proxy.ts`, `wrangler.jsonc`).
