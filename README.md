@@ -24,6 +24,7 @@ Built and maintained by [The Allsparks](https://www.theallsparks.org/). Licensed
 | [docs/canonical-identifiers.md](docs/canonical-identifiers.md) | Location/school/org canonical IDs (#16; ISO + curated NCES, fail-soft) |
 | [docs/orange-alliance.md](docs/orange-alliance.md) | The Orange Alliance research (#21; corroboration only; FIRST stays canonical) |
 | [docs/internet-archive.md](docs/internet-archive.md) | Internet Archive / Wayback research (#25; archived website reconstruction only) |
+| [docs/onshape.md](docs/onshape.md) | Onshape CAD research (#26; declared links only; no Public Documents crawl) |
 
 ## Product milestone
 

@@ -26,7 +26,7 @@ Portfolio Lab is **optional enrichment**. Catalog fields come from public HTML e
 
 ## Link enrichment and discovery
 
-Optional team-website crawling (when enabled) should remain bounded (Nevada scope, low concurrency, respectful delays). Discovery may also read same-origin `robots.txt` / `sitemap.xml` and a small allowlist of common paths (About/Sponsors/Robots/Resources/Contact/Links), plus Linktree-style hubs linked from those pages. See [link-discovery.md](link-discovery.md). Broader research (Internet Archive, Onshape, school context beyond declared pages) belongs in dedicated issues and must not introduce student profiling.
+Optional team-website crawling (when enabled) should remain bounded (Nevada scope, low concurrency, respectful delays). Discovery may also read same-origin `robots.txt` / `sitemap.xml` and a small allowlist of common paths (About/Sponsors/Robots/Resources/Contact/Links), plus Linktree-style hubs linked from those pages. See [link-discovery.md](link-discovery.md). Broader research (Internet Archive, Onshape, school context beyond declared pages) belongs in dedicated issues and must not introduce student profiling. Onshape Public Documents must **not** be mined via API or scrape ([onshape.md](onshape.md)).
 
 ## Open Alliance
 
