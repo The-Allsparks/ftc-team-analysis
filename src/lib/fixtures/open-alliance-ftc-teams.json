@@ -1,0 +1,58 @@
+[
+  {
+    "TeamNumber": "16158",
+    "TeamID": "FTC16158",
+    "TeamName": "Fixture Nevada Match",
+    "Location": "Las Vegas, NV, USA",
+    "TeamWebsite": "https://example-oa-16158.example/",
+    "BuildThread": "https://www.chiefdelphi.com/t/ftc-16158-fixture-build-thread/999001",
+    "CAD": "https://cad.onshape.com/documents/fixture-oa-16158",
+    "Code": "https://github.com/example-oa/16158-code",
+    "Photo": "https://www.instagram.com/ftc16158/",
+    "Video": "https://www.youtube.com/@FTC16158",
+    "NewestAwardYear": 2025,
+    "NewestAward": "People's Choice"
+  },
+  {
+    "TeamNumber": "3188",
+    "TeamID": "FTC3188",
+    "TeamName": "Squiggle Splat Bang",
+    "Location": "Powell, WY, USA",
+    "TeamWebsite": "https://www.ssbrobotics.org/",
+    "BuildThread": "https://www.chiefdelphi.com/t/ftc-robotics-3188-build-thread/506191",
+    "CAD": "https://cad.onshape.com/documents/fixture-oa-3188",
+    "Code": "https://github.com/3188SSB/fixture-code",
+    "Photo": null,
+    "Video": null,
+    "NewestAwardYear": null,
+    "NewestAward": null
+  },
+  {
+    "TeamNumber": "not-a-number",
+    "TeamID": "FTC0",
+    "TeamName": "Royal Ghostbusters",
+    "Location": "Las Vegas, NV, USA",
+    "TeamWebsite": "https://name-only-should-not-match.example/",
+    "BuildThread": null,
+    "CAD": null,
+    "Code": "https://github.com/name-only/should-not-attach",
+    "Photo": null,
+    "Video": null,
+    "NewestAwardYear": null,
+    "NewestAward": null
+  },
+  {
+    "TeamNumber": "21535-B",
+    "TeamID": "FTC21535",
+    "TeamName": "Royal Ghostbusters",
+    "Location": "Las Vegas, NV, USA",
+    "Code": "https://github.com/fuzzy/should-not-attach",
+    "BuildThread": null,
+    "CAD": null,
+    "Photo": null,
+    "Video": null,
+    "TeamWebsite": null,
+    "NewestAwardYear": null,
+    "NewestAward": null
+  }
+]

@@ -457,6 +457,7 @@ export function classifyTeamLink(url: string): Pick<TeamLink, 'type' | 'label'> 
   if (hostname.includes('tiktok.com')) return { type: 'social', label: 'TikTok' };
   if (hostname.includes('linkedin.com')) return { type: 'social', label: 'LinkedIn' };
   if (hostname.includes('discord.')) return { type: 'community', label: 'Discord' };
+  if (hostname.includes('chiefdelphi.com')) return { type: 'community', label: 'Chief Delphi' };
   if (hostname.includes('onshape.com')) return { type: 'cad', label: 'Onshape CAD' };
   if (hostname.includes('grabcad.com')) return { type: 'cad', label: 'GrabCAD' };
   if (hostname.includes('thingiverse.com')) return { type: 'cad', label: 'Thingiverse' };

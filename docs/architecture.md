@@ -46,6 +46,7 @@ When FTC Events has not published the current region page, the UI selects the la
 
 - [ingestion.md](ingestion.md) — pull pipeline and guards
 - [link-discovery.md](link-discovery.md) — website/social link discovery, confidence, dead-link checks
+- [open-alliance.md](open-alliance.md) — optional Open Alliance team-declared resource enrichment
 - [deployment.md](deployment.md) — deploy commands and proxy table
 - [attribution.md](attribution.md) — sources and residual risks
 - [v1-milestone.md](v1-milestone.md) — product scope

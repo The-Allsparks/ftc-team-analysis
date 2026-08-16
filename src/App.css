@@ -741,6 +741,23 @@ button:focus-visible {
   margin: 0 0 22px;
 }
 
+.links-enrichment-note {
+  margin: 0 0 12px;
+  font-size: 0.86rem;
+  line-height: 1.4;
+  color: #526072;
+}
+
+.link-source {
+  color: #66758a;
+  font-size: 0.72rem;
+}
+
+.link-source-oa {
+  color: #0f4c5c;
+  font-weight: 600;
+}
+
 .portfolio-panel {
   margin: 0 0 22px;
 }

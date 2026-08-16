@@ -28,6 +28,10 @@ Portfolio Lab is **optional enrichment**. Catalog fields come from public HTML e
 
 Optional team-website crawling (when enabled) should remain bounded (Nevada scope, low concurrency, respectful delays). Discovery may also read same-origin `robots.txt` / `sitemap.xml` and a small allowlist of common paths (About/Sponsors/Robots/Resources/Contact/Links), plus Linktree-style hubs linked from those pages. See [link-discovery.md](link-discovery.md). Broader research (Internet Archive, Onshape, school context beyond declared pages) belongs in dedicated issues and must not introduce student profiling.
 
+## Open Alliance
+
+Open Alliance enrichment is **opt-in** (`--enrich-open-alliance`) and defaults off on scheduled Actions. When enabled it issues a single public list fetch (`GET /teams/ftc`), not per-team crawl storms. See [open-alliance.md](open-alliance.md).
+
 ## Related
 
 - [ingestion.md](ingestion.md)

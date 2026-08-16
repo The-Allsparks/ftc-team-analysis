@@ -44,6 +44,13 @@ import {
   sleep,
 } from '../src/lib/ftcParsers';
 import { discoverLinksForWebsite } from '../src/lib/linkDiscovery';
+import {
+  OPEN_ALLIANCE_API_BASE,
+  OPEN_ALLIANCE_FTC_LISTING_URL,
+  OPEN_ALLIANCE_SOURCE,
+  applyOpenAllianceEnrichment,
+  fetchOpenAllianceFtcTeamList,
+} from '../src/lib/openAlliance';
 
 const TEAM_SEARCH_URL = `https://www.firstinspires.org/team-event-search?content=teams&season=${CURRENT_SEASON}&country=United+States&state=NV&programs=FIRST+Tech+Challenge&indices=teams_*`;
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
@@ -74,6 +81,11 @@ const DEFAULT_SOURCES: GeneratedData['sources'] = [
     url: `${BASE_URL}/services/API`,
     note: 'The authenticated API remains the better source for complete structured data, but this project is public-only for now.',
   },
+  {
+    label: 'Open Alliance (FTC team-declared resources)',
+    url: 'https://theopenalliance.org/ftc',
+    note: 'Optional enrichment via public GET /teams/ftc. Exact team-number match only; original resource URLs preserved. Not used as official competitive results. Enabled with --enrich-open-alliance.',
+  },
 ];
 
 const DEFAULT_LIMITATIONS: string[] = [
@@ -83,6 +95,7 @@ const DEFAULT_LIMITATIONS: string[] = [
   'Core season facts support optional per-field evidence. Cross-refresh history is stored in nv-ftc-team-observations.generated.json (append-only side store); the checked-in mega seed omits evidence arrays and the UI derives or joins provenance on read. Organization affiliations remain a parallel model. Social/resource Team.links history is not yet tracked.',
   'Match-level details are limited to what appears on public team pages. The script stores event participation, ranks, records, playoff summaries, awards, per-event points, and official league RS/rank where visible.',
   'External team links are discovered from public FTC On The Web URLs plus a bounded crawl of each team website (homepage, robots/sitemap when present, and common About/Sponsors/Robots/Resources/Contact/Links paths, including Linktree-style hubs). URLs are normalized, checked for liveness, and stored with ownership confidence + evidence. Private student social accounts and personal contact info are filtered out (see docs/privacy.md and docs/link-discovery.md).',
+  'Open Alliance FTC team-declared resources (code, CAD, build threads, media, website) can be attached with --enrich-open-alliance via a single public GET to api.theopenalliance.org/teams/ftc. Matching requires an exact team number; OA awards/stats are not ingested as competitive results (see docs/open-alliance.md). Scheduled refreshes leave this off by default.',
 ];
 
 async function syncPublicAssets(): Promise<void> {
@@ -130,6 +143,37 @@ async function enrichTeamLinks(teams: Team[]): Promise<void> {
       (a, b) => linkPriority(a) - linkPriority(b) || a.label.localeCompare(b.label),
     );
   });
+}
+
+async function enrichOpenAllianceLinks(teams: Team[]): Promise<SourceCheck> {
+  const checkedAt = new Date().toISOString();
+  const listUrl = `${OPEN_ALLIANCE_API_BASE}/teams/ftc`;
+
+  try {
+    const { listings, skippedNonExact } = await fetchOpenAllianceFtcTeamList();
+    const result = applyOpenAllianceEnrichment(teams, listings, { retrievedAt: checkedAt });
+    console.log(
+      `Open Alliance: matched ${result.matchedTeams} teams, added ${result.linksAdded} links` +
+        (skippedNonExact ? ` (skipped ${skippedNonExact} non-exact listing rows)` : ''),
+    );
+    return {
+      label: OPEN_ALLIANCE_SOURCE,
+      url: listUrl,
+      checkedAt,
+      ok: true,
+      detail: `matched=${result.matchedTeams}; linksAdded=${result.linksAdded}; skippedNonExact=${skippedNonExact}; listing=${OPEN_ALLIANCE_FTC_LISTING_URL}`,
+    };
+  } catch (error) {
+    const detail = error instanceof Error ? error.message : String(error);
+    console.warn(`Open Alliance enrichment failed (continuing without OA links): ${detail}`);
+    return {
+      label: OPEN_ALLIANCE_SOURCE,
+      url: listUrl,
+      checkedAt,
+      ok: false,
+      detail,
+    };
+  }
 }
 
 type SeasonPullResult = {
@@ -315,7 +359,11 @@ async function loadPrevious(): Promise<GeneratedData | null> {
   }
 }
 
-async function buildFromNetwork(mode: 'current' | 'full', skipLinkEnrichment: boolean): Promise<GeneratedData> {
+async function buildFromNetwork(
+  mode: 'current' | 'full',
+  skipLinkEnrichment: boolean,
+  enrichOpenAlliance: boolean,
+): Promise<GeneratedData> {
   const seasonsToPull: readonly SeasonId[] = mode === 'current' ? [CURRENT_SEASON] : SUPPORTED_SEASONS;
   const catalog = await pullSeasonCatalog(seasonsToPull);
 
@@ -339,6 +387,14 @@ async function buildFromNetwork(mode: 'current' | 'full', skipLinkEnrichment: bo
   }
 
   const sourceChecks = [...catalog.sourceChecks, ...pulled.sourceChecks];
+
+  if (enrichOpenAlliance) {
+    console.log('Enriching with Open Alliance team-declared resources (exact team number only)');
+    sourceChecks.push(await enrichOpenAllianceLinks(pulled.teams));
+  } else {
+    console.log('Skipping Open Alliance enrichment (pass --enrich-open-alliance to enable)');
+  }
+
   const generatedAt = new Date().toISOString();
 
   if (mode === 'full') {
@@ -414,7 +470,7 @@ async function main() {
     }
     console.log(`Loaded candidate fixture from ${fixturePath}`);
   } else {
-    data = await buildFromNetwork(args.mode, args.skipLinkEnrichment);
+    data = await buildFromNetwork(args.mode, args.skipLinkEnrichment, args.enrichOpenAlliance);
   }
 
   assertSafeToPublishGeneratedData(previous, data);
