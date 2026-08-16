@@ -28,6 +28,7 @@ import {
   teamSeasonNodeId,
 } from '../data/relationshipGraph';
 import { affiliationsForSeason } from './organizationAffiliations';
+import { enrichAffiliationIdentity, buildRegisteredLocation } from './canonicalIdentity';
 import type { TeamLineage, TeamLineageLink } from '../teamLineage';
 
 export type TeamLineageMap = Map<number, TeamLineage>;
@@ -74,17 +75,32 @@ function projectAffiliation(
   nodes: Map<string, GraphNode>,
   edges: Map<string, GraphEdge>,
 ): void {
-  const orgId = organizationNodeId(affiliation.entityType, affiliation.name);
+  const enriched = enrichAffiliationIdentity(affiliation, {
+    stateCode: season.registeredLocation?.stateCode ?? season.state,
+  });
+  const orgId = organizationNodeId(enriched.entityType, enriched.normalizedName ?? enriched.name);
+  const ncesSch = enriched.identifiers?.find((row) => row.idNamespace === 'nces-sch')?.canonicalId;
+  const ncesPss = enriched.identifiers?.find((row) => row.idNamespace === 'nces-pss')?.canonicalId;
+  const ncesLea = enriched.identifiers?.find((row) => row.idNamespace === 'nces-lea')?.canonicalId;
+
   upsertNode(nodes, {
     id: orgId,
     type: 'organization',
-    label: affiliation.name,
+    label: enriched.name,
     refs: {
-      entityType: affiliation.entityType,
-      name: affiliation.name,
+      entityType: enriched.entityType,
+      name: enriched.name,
+      ...(enriched.normalizedName ? { normalizedName: enriched.normalizedName } : {}),
+      ...(enriched.slug ? { slug: enriched.slug } : {}),
+      ...(enriched.identityMatchStatus ? { identityMatchStatus: enriched.identityMatchStatus } : {}),
+      ...(ncesSch ? { ncesSch } : {}),
+      ...(ncesPss ? { ncesPss } : {}),
+      ...(ncesLea ? { ncesLea } : {}),
     },
     props: {
-      sourceText: affiliation.sourceText,
+      sourceText: enriched.sourceText,
+      ...(enriched.identifiers ? { identifiers: enriched.identifiers } : {}),
+      ...(enriched.aliases ? { aliases: enriched.aliases } : {}),
     },
   });
 
@@ -95,20 +111,21 @@ function projectAffiliation(
     to: orgId,
     type: 'affiliated_with',
     evidence: evidence({
-      source: affiliation.source,
-      retrievedAt: affiliation.retrievedAt,
-      confidence: affiliation.confidence,
-      confirmationState: affiliation.confirmationState,
-      notes: affiliation.sourceText,
+      source: enriched.source,
+      retrievedAt: enriched.retrievedAt,
+      confidence: enriched.confidence,
+      confirmationState: enriched.confirmationState,
+      notes: enriched.sourceText,
       url: season.sourceUrl,
-      kind: affiliation.entityType,
-      detail: `season ${affiliation.season}`,
-      validFrom: String(affiliation.season),
-      validTo: String(affiliation.season),
+      kind: enriched.entityType,
+      detail: `season ${enriched.season}`,
+      validFrom: String(enriched.season),
+      validTo: String(enriched.season),
     }),
     props: {
-      entityType: affiliation.entityType,
-      season: affiliation.season,
+      entityType: enriched.entityType,
+      season: enriched.season,
+      ...(enriched.identityMatchStatus ? { identityMatchStatus: enriched.identityMatchStatus } : {}),
     },
   });
 }
@@ -347,6 +364,7 @@ function projectSeason(
   edges: Map<string, GraphEdge>,
 ): void {
   const seasonId = teamSeasonNodeId(teamNumber, season.season);
+  const registeredLocation = buildRegisteredLocation(season);
   upsertNode(nodes, {
     id: seasonId,
     type: 'team_season',
@@ -356,9 +374,15 @@ function projectSeason(
       season: season.season,
       name: season.name,
       active: season.active,
+      ...(registeredLocation.stateCode ? { postalStateCode: registeredLocation.stateCode } : {}),
+      ...(registeredLocation.subdivisionCode
+        ? { subdivisionCode: registeredLocation.subdivisionCode }
+        : {}),
+      ...(season.region ? { eventRegion: season.region } : {}),
     },
     props: {
       location: season.location,
+      registeredLocation,
       organization: season.organization,
       website: season.website,
       robot: season.robot,

@@ -18,6 +18,7 @@ npm run pull:data -- --mode=full
 npm run pull:data -- --mode=current --skip-link-enrichment --enrich-open-alliance
 npm run pull:data -- --mode=current --skip-link-enrichment --enrich-gm0
 npm run pull:data -- --mode=current --skip-link-enrichment --enrich-github
+npm run pull:data -- --mode=current --skip-link-enrichment --enrich-canonical-ids
 npm run pull:data -- --dry-run --candidate-fixture=src/data/fixtures/empty-generated-candidate.json
 ```
 
@@ -69,6 +70,10 @@ Opt-in with `--enrich-gm0` (default **off** for CI/scheduled refresh). Performs 
 ## GitHub repository verification (#22)
 
 Opt-in with `--enrich-github` (default **off** for CI/scheduled refresh). Verifies public `github.com/owner/repo` URLs already present on `Team.links` (website / Open Alliance / GM0), stores additive `codeRepositories` with owner, languages, last activity, and evidence. Ownership is never inferred from team number alone. See [github-repos.md](github-repos.md).
+
+## Canonical location / organization identity (#16)
+
+Opt-in with `--enrich-canonical-ids` (default **off** for CI/scheduled refresh). Offline string normalization plus a curated NCES allowlist fills optional `registeredLocation` and affiliation identity fields. Registered postal location stays distinct from event-region membership (`regionCode` / `region`). External IDs are never invented; ambiguous names are quarantined. UI helpers can also derive-on-read without rewriting the seed. See [canonical-identifiers.md](canonical-identifiers.md).
 
 ## Tests
 

@@ -37,7 +37,7 @@ Schema-supported but **not** auto-filled in this release (no invented NLP/IDs):
 
 - `school_district`, `program_operator`, `funder`, `fiscal_sponsor`
 
-Canonical NCES / org IDs are out of scope (see issue #16). Field-level provenance for season facts lives in a parallel `evidence` model (see issue #5 / [field-evidence.md](./field-evidence.md)); affiliations keep their own provenance fields.
+Canonical NCES / org IDs are implemented fail-soft under issue #16 (see [canonical-identifiers.md](./canonical-identifiers.md)): internal slugs always; external NCES IDs only from a curated allowlist. Field-level provenance for season facts lives in a parallel `evidence` model (see issue #5 / [field-evidence.md](./field-evidence.md)); affiliations keep their own provenance fields.
 
 ## How prior records map
 
@@ -60,4 +60,4 @@ Offline backfill walks the checked-in Nevada seed and sets `affiliations` from e
 - Do not remove or rewrite historical raw `organization` text.
 - Do not call paid NLP/AI services.
 - Do not gather student PII.
-- Do not implement canonical org IDs (#16) or a general relationship graph (#28).
+- Do not implement a general relationship graph (#28) in this doc — see [relationship-graph.md](relationship-graph.md).

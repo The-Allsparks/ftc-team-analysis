@@ -126,6 +126,66 @@ export type OrganizationEntityType =
 export type AffiliationConfidence = 'high' | 'medium' | 'low';
 export type AffiliationConfirmation = 'unconfirmed' | 'confirmed' | 'rejected';
 
+/**
+ * Namespace for optional canonical / external identifiers (#16).
+ * Prefer free public schemes; never invent paid-API or guessed IDs.
+ */
+export type CanonicalIdNamespace =
+  | 'internal-slug'
+  | 'iso-3166-1'
+  | 'iso-3166-2'
+  | 'nces-sch'
+  | 'nces-lea'
+  | 'nces-pss'
+  | 'osm'
+  | 'other';
+
+/** External or internal identity token with optional match provenance. */
+export type CanonicalIdentifier = {
+  idNamespace: CanonicalIdNamespace | string;
+  canonicalId: string;
+  confidence?: AffiliationConfidence;
+  /** Public evidence URL or short attribution note. */
+  evidence?: string | null;
+  source?: string | null;
+};
+
+export type NameAliasKind = 'alias' | 'historical' | 'normalized';
+
+/** Alternate or historical organization/school display name. */
+export type NameAlias = {
+  name: string;
+  kind: NameAliasKind;
+  validFrom?: string | null;
+  validTo?: string | null;
+};
+
+export type IdentityMatchStatus = 'unmatched' | 'matched' | 'ambiguous' | 'quarantined';
+
+/**
+ * Registered / postal location — distinct from event-region membership
+ * (`GeneratedData.regionCode`, `TeamSeason.region` / `league`).
+ */
+export type NormalizedLocation = {
+  normalizedName?: string | null;
+  city?: string | null;
+  /** USPS / postal state abbreviation when known (e.g. NV). */
+  stateCode?: string | null;
+  /** ISO 3166-1 alpha-2 when confidently parsed (e.g. US). */
+  countryCode?: string | null;
+  /** ISO 3166-2 when confidently parsed (e.g. US-NV). */
+  subdivisionCode?: string | null;
+  rawLocation?: string | null;
+  /** Geo stubs only when confidently available — never invented offline. */
+  geo?: {
+    lat?: number | null;
+    lon?: number | null;
+    osmId?: string | null;
+    precision?: 'city' | 'state' | 'country' | 'point' | null;
+  } | null;
+  identifiers?: CanonicalIdentifier[];
+};
+
 /** Season-scoped org/sponsor relationship derived from public sponsor text. */
 export type TeamAffiliation = {
   entityType: OrganizationEntityType;
@@ -137,6 +197,14 @@ export type TeamAffiliation = {
   confirmationState: AffiliationConfirmation;
   /** Full unmodified organization source string for this season. */
   sourceText: string;
+  /** Additive identity fields (#16); omitted on older seeds. */
+  normalizedName?: string | null;
+  /** Stable internal slug derived from the display name. */
+  slug?: string | null;
+  /** External IDs only when confidently matched — never invented. */
+  identifiers?: CanonicalIdentifier[];
+  aliases?: NameAlias[];
+  identityMatchStatus?: IdentityMatchStatus;
 };
 
 /**
@@ -210,6 +278,12 @@ export type TeamSeason = {
    * derive with `affiliationsForSeason` when missing.
    */
   affiliations?: TeamAffiliation[];
+  /**
+   * Additive registered/postal location (#16). Distinct from `region` / envelope
+   * `regionCode` (event-region membership). Omitted on older seeds; derive with
+   * `enrichSeasonCanonicalIdentity` when missing.
+   */
+  registeredLocation?: NormalizedLocation | null;
   teamType: 'school' | 'non-school' | 'unknown';
   website: string | null;
   robot: string | null;

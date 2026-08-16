@@ -20,6 +20,7 @@ Built and maintained by [The Allsparks](https://www.theallsparks.org/). Licensed
 | [docs/link-discovery.md](docs/link-discovery.md) | Website/social link discovery, ownership confidence, privacy filters |
 | [docs/github-repos.md](docs/github-repos.md) | Public GitHub repo verification + ownership evidence (#22) |
 | [docs/relationship-graph.md](docs/relationship-graph.md) | Evidence-backed team relationship graph model (#28; derived view, not a graph DB) |
+| [docs/canonical-identifiers.md](docs/canonical-identifiers.md) | Location/school/org canonical IDs (#16; ISO + curated NCES, fail-soft) |
 
 ## Product milestone
 
@@ -74,6 +75,7 @@ npm run pull:data -- --mode=full
 npm run pull:data -- --mode=current --skip-link-enrichment --enrich-open-alliance
 npm run pull:data -- --mode=current --skip-link-enrichment --enrich-gm0
 npm run pull:data -- --mode=current --skip-link-enrichment --enrich-github
+npm run pull:data -- --mode=current --skip-link-enrichment --enrich-canonical-ids
 npm run pull:data -- --dry-run --candidate-fixture=src/data/fixtures/empty-generated-candidate.json
 ```
 
