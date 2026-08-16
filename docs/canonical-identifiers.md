@@ -60,4 +60,4 @@ Optional fields — older seeds without them still validate.
 - Live Nominatim bulk geocoding of all Nevada teams in CI
 - Paid Google Places
 - Rewriting seed JSON with guessed IDs
-- Student profiling (#27 remains blocked until aggregate context is designed carefully)
+- Student profiling (aggregate school/community context policy: [school-community-context.md](school-community-context.md), [#27](https://github.com/The-Allsparks/ftc-team-analysis/issues/27))

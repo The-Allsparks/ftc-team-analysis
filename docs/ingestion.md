@@ -75,6 +75,10 @@ Opt-in with `--enrich-github` (default **off** for CI/scheduled refresh). Verifi
 
 Opt-in with `--enrich-canonical-ids` (default **off** for CI/scheduled refresh). Offline string normalization plus a curated NCES allowlist fills optional `registeredLocation` and affiliation identity fields. Registered postal location stays distinct from event-region membership (`regionCode` / `region`). External IDs are never invented; ambiguous names are quarantined. UI helpers can also derive-on-read without rewriting the seed. See [canonical-identifiers.md](canonical-identifiers.md).
 
+## Aggregate school / community context (#27)
+
+**Not ingested yet.** Policy and allowlisted Valibot types exist for future CCD/EDGE/ACS aggregates keyed by #16 NCES IDs. No student-level paths; no bulk Census downloads in-repo. See [school-community-context.md](school-community-context.md).
+
 ## Tests
 
 `npm test` uses local fixtures under `src/lib/fixtures/` and does not hit live FTC Events or FIRST. Live refresh is for Actions `workflow_dispatch` / cron or intentional local pulls.
