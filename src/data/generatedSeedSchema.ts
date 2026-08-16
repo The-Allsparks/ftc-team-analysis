@@ -150,6 +150,12 @@ const teamAwardSchema = v.looseObject({
 });
 
 const linkLivenessSchema = v.picklist(['alive', 'dead', 'unknown']);
+const codeRepositoryEvidenceKindSchema = v.picklist([
+  'declared-link',
+  'open-alliance',
+  'gm0-gallery',
+  'search-corroborated',
+]);
 
 const teamLinkSchema = v.looseObject({
   type: teamLinkTypeSchema,
@@ -164,6 +170,24 @@ const teamLinkSchema = v.looseObject({
   lastCheckedAt: v.optional(nullableString),
   httpStatus: v.optional(nullableNumber),
   liveness: v.optional(linkLivenessSchema),
+});
+
+const teamCodeRepositorySchema = v.looseObject({
+  url: v.string(),
+  owner: v.string(),
+  name: v.string(),
+  fullName: v.string(),
+  seasons: v.optional(v.nullable(v.array(v.number()))),
+  robotControllerType: v.optional(nullableString),
+  languages: v.optional(v.nullable(v.array(v.string()))),
+  lastActivity: v.optional(nullableString),
+  description: v.optional(nullableString),
+  evidence: v.string(),
+  evidenceKind: codeRepositoryEvidenceKindSchema,
+  ownershipConfidence: affiliationConfidenceSchema,
+  confirmationState: v.optional(affiliationConfirmationSchema),
+  source: v.string(),
+  retrievedAt: v.optional(nullableString),
 });
 
 const teamSeasonSchema = v.looseObject({
@@ -207,6 +231,7 @@ const teamSchema = v.looseObject({
   latestLeague: nullableString,
   latestRegion: nullableString,
   links: v.array(teamLinkSchema),
+  codeRepositories: v.optional(v.array(teamCodeRepositorySchema)),
   seasons: v.pipe(
     v.record(seasonKeySchema, teamSeasonSchema),
     v.minEntries(1, 'Team must include at least one season.'),

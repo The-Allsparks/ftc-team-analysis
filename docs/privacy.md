@@ -25,6 +25,7 @@ Website and social-link collectors (`src/lib/linkDiscovery.ts`) enforce:
 - **No personal emails / phones** — `mailto:` and `tel:` are rejected during normalization.
 - **No personal/student social accounts** — handles that look like personal names (for example `first.last`, LinkedIn `/in/…`, Facebook `profile.php`) are filtered unless the URL clearly includes a team number or robotics/FTC signal.
 - **Public team pages only** — discovery stays on declared On The Web URLs and bounded crawls of public team/school robotics pages and link hubs.
+- **Public GitHub repos only** — `--enrich-github` verifies `owner/repo` URLs already discovered; private repos and profile-only URLs are skipped (see [github-repos.md](github-repos.md)).
 
 Details: [link-discovery.md](link-discovery.md). Broader contributor expectations remain in [#31](https://github.com/The-Allsparks/ftc-team-analysis/issues/31) docs.
 

@@ -1,0 +1,14 @@
+{
+  "repo": {
+    "full_name": "example-oa/16158-code",
+    "description": "FTC 16158 Allsparks robot code for REV Control Hub (2025 season)",
+    "private": false,
+    "archived": false,
+    "pushed_at": "2026-03-01T12:00:00Z",
+    "default_branch": "main"
+  },
+  "languages": {
+    "Java": 12000,
+    "Kotlin": 4000
+  }
+}

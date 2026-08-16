@@ -58,6 +58,11 @@ import {
   applyGm0GalleryEnrichment,
   fetchGm0GalleryRst,
 } from '../src/lib/gm0Gallery';
+import {
+  GITHUB_API_BASE,
+  GITHUB_SOURCE,
+  applyGithubRepoEnrichment,
+} from '../src/lib/githubRepos';
 
 const TEAM_SEARCH_URL = `https://www.firstinspires.org/team-event-search?content=teams&season=${CURRENT_SEASON}&country=United+States&state=NV&programs=FIRST+Tech+Challenge&indices=teams_*`;
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
@@ -98,6 +103,11 @@ const DEFAULT_SOURCES: GeneratedData['sources'] = [
     url: GM0_GALLERY_PAGE_URL,
     note: 'Optional enrichment via bounded gallery.rst fetch. Exact leading team-number match only; resource URLs and gallery page linked (prose not copied). Enabled with --enrich-gm0.',
   },
+  {
+    label: 'GitHub (verified public repos)',
+    url: 'https://docs.github.com/en/rest',
+    note: 'Optional verification of GitHub URLs already discovered (website / Open Alliance / GM0). Stores owner, languages, last activity, and evidence. Ownership never inferred from team number alone. Enabled with --enrich-github. Uses unauthenticated GitHub REST with strict rate limits — prefer verifying known URLs over broad search.',
+  },
 ];
 
 const DEFAULT_LIMITATIONS: string[] = [
@@ -109,6 +119,7 @@ const DEFAULT_LIMITATIONS: string[] = [
   'External team links are discovered from public FTC On The Web URLs plus a bounded crawl of each team website (homepage, robots/sitemap when present, and common About/Sponsors/Robots/Resources/Contact/Links paths, including Linktree-style hubs). URLs are normalized, checked for liveness, and stored with ownership confidence + evidence. Private student social accounts and personal contact info are filtered out (see docs/privacy.md and docs/link-discovery.md).',
   'Open Alliance FTC team-declared resources (code, CAD, build threads, media, website) can be attached with --enrich-open-alliance via a single public GET to api.theopenalliance.org/teams/ftc. Matching requires an exact team number; OA awards/stats are not ingested as competitive results (see docs/open-alliance.md). Scheduled refreshes leave this off by default.',
   'Game Manual 0 gallery resources can be attached with --enrich-gm0 via a single bounded fetch of gallery.rst. Matching requires an exact leading team number on the gallery heading; name-only headings are rejected. Copyrighted GM0 prose is linked (gallery page + outbound URLs), not copied (see docs/gm0.md). Scheduled refreshes leave this off by default.',
+  'Public GitHub repositories can be verified with --enrich-github from URLs already present on Team.links (website discovery, Open Alliance, GM0). Metadata (owner, languages, pushed_at, description hints) is fetched fail-soft via unauthenticated GitHub REST when available. Ownership requires evidence beyond the team number alone — number-only search hits are rejected (see docs/github-repos.md). Scheduled refreshes leave this off by default. Public org/team repos only; no private student-account scraping.',
 ];
 
 async function syncPublicAssets(): Promise<void> {
@@ -212,6 +223,35 @@ async function enrichGm0GalleryLinks(teams: Team[]): Promise<SourceCheck> {
     return {
       label: GM0_SOURCE,
       url: GM0_GALLERY_RST_URL,
+      checkedAt,
+      ok: false,
+      detail,
+    };
+  }
+}
+
+async function enrichGithubRepos(teams: Team[]): Promise<SourceCheck> {
+  const checkedAt = new Date().toISOString();
+
+  try {
+    const result = await applyGithubRepoEnrichment(teams, { retrievedAt: checkedAt });
+    console.log(
+      `GitHub repos: matched ${result.matchedTeams} teams, added ${result.reposAdded} repos` +
+        ` (candidates=${result.candidatesSeen}; rejectedNumberOnly=${result.rejectedNumberOnly}; skipped=${result.skippedPrivateOrInvalid})`,
+    );
+    return {
+      label: GITHUB_SOURCE,
+      url: GITHUB_API_BASE,
+      checkedAt,
+      ok: true,
+      detail: `matched=${result.matchedTeams}; reposAdded=${result.reposAdded}; candidates=${result.candidatesSeen}; rejectedNumberOnly=${result.rejectedNumberOnly}; skippedPrivateOrInvalid=${result.skippedPrivateOrInvalid}`,
+    };
+  } catch (error) {
+    const detail = error instanceof Error ? error.message : String(error);
+    console.warn(`GitHub repo enrichment failed (continuing without verified repos): ${detail}`);
+    return {
+      label: GITHUB_SOURCE,
+      url: GITHUB_API_BASE,
       checkedAt,
       ok: false,
       detail,
@@ -407,6 +447,7 @@ async function buildFromNetwork(
   skipLinkEnrichment: boolean,
   enrichOpenAlliance: boolean,
   enrichGm0: boolean,
+  enrichGithub: boolean,
 ): Promise<GeneratedData> {
   const seasonsToPull: readonly SeasonId[] = mode === 'current' ? [CURRENT_SEASON] : SUPPORTED_SEASONS;
   const catalog = await pullSeasonCatalog(seasonsToPull);
@@ -444,6 +485,15 @@ async function buildFromNetwork(
     sourceChecks.push(await enrichGm0GalleryLinks(pulled.teams));
   } else {
     console.log('Skipping GM0 gallery enrichment (pass --enrich-gm0 to enable)');
+  }
+
+  if (enrichGithub) {
+    console.log(
+      'Verifying public GitHub repos from declared links (ownership requires evidence beyond team number)',
+    );
+    sourceChecks.push(await enrichGithubRepos(pulled.teams));
+  } else {
+    console.log('Skipping GitHub repo verification (pass --enrich-github to enable)');
   }
 
   const generatedAt = new Date().toISOString();
@@ -526,6 +576,7 @@ async function main() {
       args.skipLinkEnrichment,
       args.enrichOpenAlliance,
       args.enrichGm0,
+      args.enrichGithub,
     );
   }
 

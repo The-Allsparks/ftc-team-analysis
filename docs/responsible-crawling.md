@@ -36,6 +36,10 @@ Open Alliance enrichment is **opt-in** (`--enrich-open-alliance`) and defaults o
 
 GM0 gallery enrichment is **opt-in** (`--enrich-gm0`) and defaults off on scheduled Actions. When enabled it issues a single bounded fetch of `gallery.rst` (not the whole GM0 book), matches exact leading team numbers only, and stores outbound resource URLs plus a link to the public gallery page. Copyrighted GM0 prose is not copied into the seed. See [gm0.md](gm0.md).
 
+## GitHub repository verification
+
+GitHub enrichment is **opt-in** (`--enrich-github`) and defaults off on scheduled Actions. When enabled it verifies `github.com/owner/repo` URLs already on team links (website / OA / GM0), optionally fetching public REST metadata. Ownership is never inferred from team number alone. Prefer verifying known URLs over broad search (unauthenticated rate limits). See [github-repos.md](github-repos.md).
+
 ## Related
 
 - [ingestion.md](ingestion.md)

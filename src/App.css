@@ -763,6 +763,11 @@ button:focus-visible {
   font-weight: 600;
 }
 
+.link-source-github {
+  color: #24292f;
+  font-weight: 600;
+}
+
 .portfolio-panel {
   margin: 0 0 22px;
 }
