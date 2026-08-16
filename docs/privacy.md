@@ -27,7 +27,7 @@ Website and social-link collectors (`src/lib/linkDiscovery.ts`) enforce:
 - **Public team pages only** — discovery stays on declared On The Web URLs and bounded crawls of public team/school robotics pages and link hubs.
 - **Public GitHub repos only** — `--enrich-github` verifies `owner/repo` URLs already discovered; private repos and profile-only URLs are skipped (see [github-repos.md](github-repos.md)).
 
-Details: [link-discovery.md](link-discovery.md). Broader contributor expectations remain in [#31](https://github.com/The-Allsparks/ftc-team-analysis/issues/31) docs.
+Details: [link-discovery.md](link-discovery.md). Broader contributor expectations remain in [#31](https://github.com/The-Allsparks/ftc-team-analysis/issues/31) docs. Aggregate school/community context: [school-community-context.md](school-community-context.md).
 
 ## Corrections and team claims (process only)
 
@@ -42,6 +42,10 @@ Maintainers may update the seed, fix parsers, or decline changes that cannot be 
 ## Inferred relationships
 
 Related-team suggestions are typed and evidence-backed, and remain unconfirmed by default. They are not implied legal succession or coaching claims. Details: [team-relationships.md](team-relationships.md).
+
+## Aggregate school / community context
+
+Optional future school and Census geography context is **aggregate-only** (school type, enrollment totals, locale, district, service-area ACS estimates such as broadband or educational attainment). It must never introduce student records, individual demographic inference, PII, or ranking teams on protected characteristics. Policy, allowlisted fields, and schema guardrails: [school-community-context.md](school-community-context.md) ([#27](https://github.com/The-Allsparks/ftc-team-analysis/issues/27)). Depends on school identity from [canonical-identifiers.md](canonical-identifiers.md) ([#16](https://github.com/The-Allsparks/ftc-team-analysis/issues/16)).
 
 ## Contact for privacy concerns
 

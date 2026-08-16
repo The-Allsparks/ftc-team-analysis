@@ -24,6 +24,7 @@ FTC Events / FTCScout / Portfolio Lab / FTC Scoring (public HTTP)
 | Observations side store | `src/data/nv-ftc-team-observations.generated.json` | Append-only field change history (#29) |
 | Relationship graph | `src/data/relationshipGraph.ts`, `src/lib/relationshipGraphAdapters.ts` | Derived evidence-backed node/edge view over seed + lineage (#28); not a graph DB |
 | Canonical identity | `src/lib/canonicalNormalization.ts`, `src/lib/canonicalIdentity.ts`, `src/data/ncesSchoolCatalog.ts` | Optional registered-location + org/school IDs (#16); derive-on-read or `--enrich-canonical-ids` |
+| Aggregate school context | `src/data/aggregateSchoolContext.ts` | Allowlisted institution/geography fields only (#27); no live Census seed; fetch pipeline deferred |
 | Public data copy | `public/data/` | Served as `/data/...` (via `npm run sync:data`) |
 | Ingestion | `scripts/pull-public-ftc-data.ts` | Public-page pull, publish guards |
 | Worker | `worker/proxy.ts`, `wrangler.jsonc` | Allowlisted live-data proxy + static assets |
@@ -54,4 +55,5 @@ When FTC Events has not published the current region page, the UI selects the la
 - [attribution.md](attribution.md) — sources and residual risks
 - [relationship-graph.md](relationship-graph.md) — evidence-backed team relationship graph model (#28)
 - [canonical-identifiers.md](canonical-identifiers.md) — location/school/org canonical IDs (#16)
+- [school-community-context.md](school-community-context.md) — aggregate school/community context policy (#27)
 - [v1-milestone.md](v1-milestone.md) — product scope

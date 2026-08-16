@@ -13,6 +13,7 @@ Built and maintained by [The Allsparks](https://www.theallsparks.org/). Licensed
 | [SECURITY.md](SECURITY.md) | Vulnerability reporting |
 | [docs/attribution.md](docs/attribution.md) | Data-source attribution and residual terms/scrape risk |
 | [docs/privacy.md](docs/privacy.md) | Public-data stance; correction/claim via GitHub issues |
+| [docs/school-community-context.md](docs/school-community-context.md) | Aggregate school/community context policy (#27; no student profiling) |
 | [docs/architecture.md](docs/architecture.md) | System layout |
 | [docs/ingestion.md](docs/ingestion.md) | Seed pull and publish guards |
 | [docs/deployment.md](docs/deployment.md) | Deploy overview (Cloudflare runbooks → [#38](https://github.com/The-Allsparks/ftc-team-analysis/issues/38)) |
