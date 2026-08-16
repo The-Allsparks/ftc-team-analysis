@@ -1,11 +1,18 @@
 import { lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react';
 import { portfolioMatchesSeason } from '../data/portfolioLab';
-import { GeneratedData, SeasonId, seasonOptions } from '../data/schema';
+import {
+  CURRENT_SEASON,
+  GeneratedData,
+  SeasonId,
+  availableSeasons,
+  isCurrentSeason,
+  seasonOptions,
+} from '../data/schema';
 import { useFtcData } from '../hooks/useFtcData';
 import { useFtcScout } from '../hooks/useFtcScout';
 import { usePortfolioLab } from '../hooks/usePortfolioLab';
 import { useTeamAvatarCatalog } from '../hooks/useTeamAvatarCatalog';
-import { defaultSeasonWithData } from '../lib/ftcSeason';
+import { defaultSeasonWithData, initialSeasonFilter } from '../lib/ftcSeason';
 import {
   buildSourceHealthReport,
   isDataHealthHash,
@@ -49,6 +56,7 @@ export function AppDirectory({ seedData }: { seedData: GeneratedData }) {
     liveMessage,
     liveDiagnostics,
     liveProgress,
+    seasonFallback,
     changeRegion,
     refreshRegion,
     refreshSeason,
@@ -72,6 +80,7 @@ export function AppDirectory({ seedData }: { seedData: GeneratedData }) {
     loadTeamScout,
   } = useFtcScout();
   const seasons = useMemo(() => seasonOptions(data), [data]);
+  const ingestedSeasons = useMemo(() => availableSeasons(data), [data]);
   const defaultSeason = useMemo(() => defaultSeasonWithData(seasons, data.teams), [data.teams, seasons]);
   const teamLineageMap = useMemo(() => buildTeamLineageMap(data.teams), [data.teams]);
   const [showDataHealth, setShowDataHealth] = useState(
@@ -80,7 +89,7 @@ export function AppDirectory({ seedData }: { seedData: GeneratedData }) {
   const [lastSeenTeamCount, setLastSeenTeamCount] = useState<number | null>(null);
   const [lastSeenAt, setLastSeenAt] = useState<string | null>(null);
   const [query, setQuery] = useState('');
-  const [seasonFilter, setSeasonFilter] = useState<SeasonFilter>(defaultSeason);
+  const [seasonFilter, setSeasonFilter] = useState<SeasonFilter>(() => initialSeasonFilter(seedData));
   const [leagueFilter, setLeagueFilter] = useState('all');
   const [cityFilters, setCityFilters] = useState<string[]>([]);
   const [rookieYearFilter, setRookieYearFilter] = useState('all');
@@ -90,9 +99,17 @@ export function AppDirectory({ seedData }: { seedData: GeneratedData }) {
   const [awardsOnly, setAwardsOnly] = useState(false);
   const [portfoliosOnly, setPortfoliosOnly] = useState(false);
   const [selectedTeamNumber, setSelectedTeamNumber] = useState<number | null>(data.teams[0]?.number ?? null);
-  const [detailSeason, setDetailSeason] = useState<SeasonId | null>(defaultSeason);
+  const [detailSeason, setDetailSeason] = useState<SeasonId | null>(() => initialSeasonFilter(seedData));
   const lastTeamRefreshKey = useRef<string | null>(null);
   const lastScoutRefreshKey = useRef<string | null>(null);
+
+  useEffect(() => {
+    if (!seasonFallback) {
+      return;
+    }
+    setSeasonFilter(seasonFallback.activeSeason);
+    setDetailSeason(seasonFallback.activeSeason);
+  }, [seasonFallback]);
 
   const seasonScopedSeasons = useMemo(
     () => data.teams.flatMap((team) => seasonsForFilter(team, seasonFilter)),
@@ -469,6 +486,7 @@ export function AppDirectory({ seedData }: { seedData: GeneratedData }) {
         liveMessage={liveMessage}
         liveDiagnostics={liveDiagnostics}
         liveProgress={liveProgress}
+        seasonFallback={seasonFallback}
         refreshRegion={refreshRegion}
         refreshSeason={refreshSeason}
         portfolioStatus={portfolioStatus}
@@ -496,6 +514,11 @@ export function AppDirectory({ seedData }: { seedData: GeneratedData }) {
         seasonFilter={seasonFilter}
         setSeasonFilter={setSeasonFilter}
         seasons={seasons}
+        currentSeason={CURRENT_SEASON}
+        availableSeasons={ingestedSeasons}
+        unpublishedCurrent={
+          Boolean(seasonFallback && isCurrentSeason(seasonFallback.requestedSeason))
+        }
         leagueFilter={leagueFilter}
         setLeagueFilter={setLeagueFilter}
         leagues={leagues}

@@ -9,7 +9,8 @@ import {
   RegionEvent,
   SeasonId,
   SourceCheck,
-  TARGET_SEASONS,
+  CURRENT_SEASON,
+  SUPPORTED_SEASONS,
   Team,
   TeamLink,
   TeamSeason,
@@ -36,7 +37,7 @@ import {
   sleep,
 } from '../src/lib/ftcParsers';
 
-const TEAM_SEARCH_URL = `https://www.firstinspires.org/team-event-search?content=teams&season=${TARGET_SEASONS[0]}&country=United+States&state=NV&programs=FIRST+Tech+Challenge&indices=teams_*`;
+const TEAM_SEARCH_URL = `https://www.firstinspires.org/team-event-search?content=teams&season=${CURRENT_SEASON}&country=United+States&state=NV&programs=FIRST+Tech+Challenge&indices=teams_*`;
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const GENERATED_PATH = resolve(ROOT, 'src/data/nv-ftc-teams.generated.json');
 const PUBLIC_SEED_PATH = resolve(ROOT, 'public/data/nv-ftc-teams.generated.json');
@@ -181,7 +182,7 @@ async function pullSeasonCatalog(seasons: readonly SeasonId[]): Promise<SeasonPu
         if (searchTeams.length === 0) {
           sourceChecks.push({
             label: `FIRST Team Search ${season}`,
-            url: TEAM_SEARCH_URL.replace(`season=${TARGET_SEASONS[0]}`, `season=${season}`),
+            url: TEAM_SEARCH_URL.replace(`season=${CURRENT_SEASON}`, `season=${season}`),
             checkedAt: searchCheckedAt,
             ok: false,
             detail: `Region failed (${message}); search returned 0 Nevada teams`,
@@ -194,7 +195,7 @@ async function pullSeasonCatalog(seasons: readonly SeasonId[]): Promise<SeasonPu
         seeds.push(...searchTeams);
         sourceChecks.push({
           label: `FIRST Team Search ${season}`,
-          url: TEAM_SEARCH_URL.replace(`season=${TARGET_SEASONS[0]}`, `season=${season}`),
+          url: TEAM_SEARCH_URL.replace(`season=${CURRENT_SEASON}`, `season=${season}`),
           checkedAt: searchCheckedAt,
           ok: true,
           detail: `${searchTeams.length} teams (region fallback after: ${message})`,
@@ -278,7 +279,7 @@ async function pullTeamSeasons(
 
   sourceChecks.push({
     label: 'FTC Events public team pages',
-    url: `${BASE_URL}/${TARGET_SEASONS[0]}/team/16158`,
+    url: `${BASE_URL}/${CURRENT_SEASON}/team/16158`,
     checkedAt: new Date().toISOString(),
     ok: teamPageFailures === 0,
     detail:
@@ -311,16 +312,16 @@ async function loadPrevious(): Promise<GeneratedData | null> {
 }
 
 async function buildFromNetwork(mode: 'current' | 'full', skipLinkEnrichment: boolean): Promise<GeneratedData> {
-  const seasonsToPull: readonly SeasonId[] = mode === 'current' ? [TARGET_SEASONS[0]] : TARGET_SEASONS;
+  const seasonsToPull: readonly SeasonId[] = mode === 'current' ? [CURRENT_SEASON] : SUPPORTED_SEASONS;
   const catalog = await pullSeasonCatalog(seasonsToPull);
 
   if (catalog.seasonsPulled.length === 0) {
     throw new Error('No public FTC Events region pages were available for the configured seasons.');
   }
 
-  if (mode === 'current' && !catalog.seasonsPulled.includes(TARGET_SEASONS[0])) {
+  if (mode === 'current' && !catalog.seasonsPulled.includes(CURRENT_SEASON)) {
     throw new Error(
-      `Current-season refresh failed: ${TARGET_SEASONS[0]} was not available from FTC Events or FIRST Team Search.`,
+      `Current-season refresh failed: ${CURRENT_SEASON} was not available from FTC Events or FIRST Team Search.`,
     );
   }
 
@@ -356,7 +357,7 @@ async function buildFromNetwork(mode: 'current' | 'full', skipLinkEnrichment: bo
     throw new Error('Current-season merge requires an existing seed at src/data/nv-ftc-teams.generated.json');
   }
 
-  const currentSeason = TARGET_SEASONS[0];
+  const currentSeason = CURRENT_SEASON;
   const merged = mergeSeasonRefresh(
     previous,
     currentSeason,

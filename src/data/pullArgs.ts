@@ -89,7 +89,7 @@ export function parsePullArgs(argv: string[]): PullArgs {
 export const PULL_DATA_HELP = `Usage: npm run pull:data -- [options]
 
 Options:
-  --mode=current|full       current = refresh TARGET_SEASONS[0] and merge; full = rebuild all (default)
+  --mode=current|full       current = refresh CURRENT_SEASON and merge; full = rebuild all supported (default)
   --skip-link-enrichment    skip crawling team websites for links
   --dry-run                 run guards/report but do not write the seed
   --candidate-fixture=PATH  load candidate JSON from PATH (no network); for gate tests

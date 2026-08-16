@@ -1,4 +1,4 @@
-import { SeasonId, TARGET_SEASONS } from '../data/schema';
+import { CURRENT_SEASON, SeasonId } from '../data/schema';
 import { CACHE_TTL, cacheKey, getCached, seasonTtl, setCached } from './ftcCache';
 import {
   failureFromHttpStatus,
@@ -30,7 +30,7 @@ function cssCacheKey(composedYear: number): string {
 }
 
 function cssTtl(composedYear: number): number {
-  const latestSeason = TARGET_SEASONS[0];
+  const latestSeason = CURRENT_SEASON;
   const impliedSeason = (composedYear - 1) as SeasonId;
   return seasonTtl(
     impliedSeason,

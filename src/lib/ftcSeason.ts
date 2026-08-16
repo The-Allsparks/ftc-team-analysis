@@ -1,4 +1,10 @@
-import { SeasonId, TARGET_SEASONS } from '../data/schema';
+import {
+  CURRENT_SEASON,
+  SeasonId,
+  SUPPORTED_SEASONS,
+  availableSeasons,
+  lastAvailableSeason,
+} from '../data/schema';
 import { cacheKey, getCached, setCached } from './ftcCache';
 import { fetchFtcOk } from './ftcFetch';
 
@@ -21,27 +27,41 @@ export async function isRegionSeasonPublished(regionCode: string, season: Season
   return published;
 }
 
+export type SeasonPublishStatus = 'published' | 'fallback' | 'unpublished';
+
 export type ResolvedRegionSeason = {
   season: SeasonId;
   requestedSeason: SeasonId;
   usedFallback: boolean;
+  status: SeasonPublishStatus;
 };
 
+/**
+ * Prefer the requested season when published; otherwise fall back through
+ * available then supported seasons. Callers must surface usedFallback in the UI.
+ */
 export async function resolvePublishedRegionSeason(
   regionCode: string,
   preferredSeason: SeasonId,
+  data?: { targetSeasons?: number[]; teams?: { seasons?: Partial<Record<number, unknown>> }[] },
 ): Promise<ResolvedRegionSeason> {
+  const available = availableSeasons(data);
   const orderedSeasons = [
     preferredSeason,
-    ...TARGET_SEASONS.filter((season) => season !== preferredSeason),
+    ...available.filter((season) => season !== preferredSeason),
+    ...SUPPORTED_SEASONS.filter(
+      (season) => season !== preferredSeason && !available.includes(season),
+    ),
   ];
 
   for (const season of orderedSeasons) {
     if (await isRegionSeasonPublished(regionCode, season)) {
+      const usedFallback = season !== preferredSeason;
       return {
         season,
         requestedSeason: preferredSeason,
-        usedFallback: season !== preferredSeason,
+        usedFallback,
+        status: usedFallback ? 'fallback' : 'published',
       };
     }
   }
@@ -54,10 +74,21 @@ export async function resolvePublishedRegionSeason(
 /**
  * Prefer the newest listed season even when the local dataset still has zero
  * team-seasons for it (e.g. BIOBUZZ before the first live pull).
+ * When the list is empty, fall back to CURRENT_SEASON.
  */
 export function defaultSeasonWithData(
   seasons: SeasonId[],
   _teams?: { seasons?: Partial<Record<number, unknown>> }[],
 ): SeasonId {
-  return seasons[0] ?? TARGET_SEASONS[0];
+  return seasons[0] ?? CURRENT_SEASON;
+}
+
+/**
+ * Initial directory filter when current may be unpublished:
+ * prefer last available ingested season (banner handled separately).
+ */
+export function initialSeasonFilter(
+  data?: { targetSeasons?: number[]; teams?: { seasons?: Partial<Record<number, unknown>> }[] },
+): SeasonId {
+  return lastAvailableSeason(data);
 }

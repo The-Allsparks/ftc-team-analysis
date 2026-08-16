@@ -1,4 +1,4 @@
-import { GeneratedData, RegionEvent, SeasonId, TARGET_SEASONS, Team, TeamSeason } from '../data/schema';
+import { CURRENT_SEASON, GeneratedData, RegionEvent, SeasonId, SUPPORTED_SEASONS, Team, TeamSeason } from '../data/schema';
 import { regionLabel as lookupRegionLabel, regionStateProv } from '../data/regions';
 import { CACHE_TTL, cacheKey, getCached, seasonTtl, setCached } from './ftcCache';
 import { fetchFtcHtml, fetchFtcOk } from './ftcFetch';
@@ -40,7 +40,7 @@ function regionEventsMap(regionEvents: RegionEvent[]): Map<string, RegionEvent> 
 
 function latestConfiguredSeason(_data?: GeneratedData): SeasonId {
   // Prefer the app's configured current season, not a stale seed targetSeasons[0].
-  return TARGET_SEASONS[0];
+  return CURRENT_SEASON;
 }
 
 export function seasonHasTeamData(data: GeneratedData, season: SeasonId): boolean {
@@ -127,7 +127,7 @@ function seedFromTeam(
 export function createEmptyRegionData(regionCode: string, regionName?: string): GeneratedData {
   return {
     generatedAt: new Date().toISOString(),
-    targetSeasons: [...TARGET_SEASONS],
+    targetSeasons: [CURRENT_SEASON],
     regionCode,
     regionLabel: regionName ?? lookupRegionLabel(regionCode),
     teams: [],
@@ -266,7 +266,7 @@ export async function refreshTeamAllSeasonsLive(
   onProgress?: (progress: LiveRefreshProgress) => void,
   options?: { force?: boolean },
 ): Promise<TeamSeason[]> {
-  const seasons = data.targetSeasons.length > 0 ? data.targetSeasons : [...TARGET_SEASONS];
+  const seasons = data.targetSeasons.length > 0 ? data.targetSeasons : [...SUPPORTED_SEASONS];
   const availableSeasons: SeasonId[] = [];
 
   for (const season of seasons) {

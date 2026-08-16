@@ -59,7 +59,7 @@ GitHub Actions (`.github/workflows/data-refresh.yml`) refreshes the checked-in N
 
 | Trigger | Mode | Notes |
 | --- | --- | --- |
-| Cron Monday 16:00 UTC | `current` | Merges `TARGET_SEASONS[0]` into the existing seed |
+| Cron Monday 16:00 UTC | `current` | Merges `CURRENT_SEASON` into the existing seed |
 | Cron 1st of month 16:00 UTC | `full` | Rebuilds all configured seasons |
 | `workflow_dispatch` | `current` or `full` | Manual; link enrichment optional |
 
