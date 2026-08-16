@@ -19,6 +19,9 @@ export type DirectoryFiltersProps = {
   seasonFilter: SeasonFilter;
   setSeasonFilter: (value: SeasonFilter) => void;
   seasons: SeasonId[];
+  currentSeason: SeasonId;
+  availableSeasons: SeasonId[];
+  unpublishedCurrent: boolean;
   leagueFilter: string;
   setLeagueFilter: (value: string) => void;
   leagues: string[];
@@ -52,6 +55,9 @@ export function DirectoryFilters({
   seasonFilter,
   setSeasonFilter,
   seasons,
+  currentSeason,
+  availableSeasons,
+  unpublishedCurrent,
   leagueFilter,
   setLeagueFilter,
   leagues,
@@ -115,7 +121,14 @@ export function DirectoryFilters({
           <option value={ALL_SEASONS}>All seasons</option>
           {seasons.map((season) => (
             <option key={season} value={season}>
-              {seasonLabel(season)}
+              {seasonLabel(season, {
+                current: season === currentSeason,
+                available:
+                  season === currentSeason &&
+                  (unpublishedCurrent || !availableSeasons.includes(season))
+                    ? false
+                    : undefined,
+              })}
             </option>
           ))}
         </select>

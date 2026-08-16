@@ -9,7 +9,11 @@ vi.mock('./ftcFetch', () => ({
   fetchFtcOk: fetchFtcOkMock,
 }));
 
-import { defaultSeasonWithData, resolvePublishedRegionSeason } from './ftcSeason';
+import {
+  defaultSeasonWithData,
+  initialSeasonFilter,
+  resolvePublishedRegionSeason,
+} from './ftcSeason';
 
 function installMemoryLocalStorage() {
   const store = new Map<string, string>();
@@ -54,8 +58,19 @@ describe('defaultSeasonWithData', () => {
     expect(defaultSeasonWithData(seasons, teams)).toBe(2026);
   });
 
-  it('falls back to TARGET_SEASONS[0] when the season list is empty', () => {
+  it('falls back to CURRENT_SEASON when the season list is empty', () => {
     expect(defaultSeasonWithData([])).toBe(2026);
+  });
+});
+
+describe('initialSeasonFilter', () => {
+  it('selects the newest season that already has team data', () => {
+    expect(
+      initialSeasonFilter({
+        targetSeasons: [2026, 2025],
+        teams: [{ seasons: { 2025: {}, 2024: {} } }],
+      }),
+    ).toBe(2025);
   });
 });
 
@@ -76,6 +91,7 @@ describe('resolvePublishedRegionSeason', () => {
       season: 2026,
       requestedSeason: 2026,
       usedFallback: false,
+      status: 'published',
     });
     expect(fetchFtcOkMock).toHaveBeenCalledWith('/2026/region/USNV');
   });
@@ -83,15 +99,37 @@ describe('resolvePublishedRegionSeason', () => {
   it('falls back to a published historical season when the preferred season is missing', async () => {
     fetchFtcOkMock.mockImplementation(async (path) => path === '/2025/region/USNV');
 
-    await expect(resolvePublishedRegionSeason('USNV', 2026)).resolves.toEqual({
+    await expect(
+      resolvePublishedRegionSeason('USNV', 2026, {
+        targetSeasons: [2026, 2025],
+        teams: [{ seasons: { 2025: {} } }],
+      }),
+    ).resolves.toEqual({
       season: 2025,
       requestedSeason: 2026,
       usedFallback: true,
+      status: 'fallback',
     });
     expect(fetchFtcOkMock.mock.calls.map(([path]) => path)).toEqual([
       '/2026/region/USNV',
       '/2025/region/USNV',
     ]);
+  });
+
+  it('labels unpublished current via usedFallback rather than inventing empty success', async () => {
+    fetchFtcOkMock.mockImplementation(async (path) => path === '/2024/region/USNV');
+
+    const resolved = await resolvePublishedRegionSeason('USNV', 2026, {
+      targetSeasons: [2025, 2024],
+      teams: [{ seasons: { 2024: {} } }],
+    });
+
+    expect(resolved).toMatchObject({
+      season: 2024,
+      requestedSeason: 2026,
+      usedFallback: true,
+      status: 'fallback',
+    });
   });
 
   it('throws when no region season pages are published', async () => {
@@ -112,6 +150,7 @@ describe('resolvePublishedRegionSeason', () => {
       season: 2026,
       requestedSeason: 2026,
       usedFallback: false,
+      status: 'published',
     });
     expect(fetchFtcOkMock).not.toHaveBeenCalled();
   });

@@ -1,4 +1,4 @@
-import { SeasonId, TARGET_SEASONS } from './schema';
+import { SeasonId, isSupportedSeason } from './schema';
 
 const PORTFOLIO_GAME_TO_SEASON: Array<[string, SeasonId]> = [
   ['decode', 2025],
@@ -56,7 +56,7 @@ export function portfolioSeasonId(entry: PortfolioLabEntry): SeasonId | null {
   }
 
   const year = portfolioSeasonYear(entry);
-  return year !== null && (TARGET_SEASONS as readonly number[]).includes(year) ? (year as SeasonId) : null;
+  return year !== null && isSupportedSeason(year) ? year : null;
 }
 
 export function portfolioMatchesSeason(entry: PortfolioLabEntry, season: SeasonId): boolean {

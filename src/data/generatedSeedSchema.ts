@@ -14,7 +14,7 @@ import {
   DataSource,
   GeneratedData,
   RegionEvent,
-  TARGET_SEASONS,
+  SUPPORTED_SEASONS,
   Team,
 } from './schema';
 
@@ -37,8 +37,8 @@ export type ParseGeneratedSeedResult =
   | { ok: true; data: GeneratedData; quarantined: SeedIssue[] }
   | { ok: false; kind: 'invalid-envelope'; issues: SeedIssue[] };
 
-const seasonIdSchema = v.picklist(TARGET_SEASONS);
-const seasonKeySchema = v.picklist(TARGET_SEASONS.map(String));
+const seasonIdSchema = v.picklist(SUPPORTED_SEASONS);
+const seasonKeySchema = v.picklist(SUPPORTED_SEASONS.map(String));
 const teamTypeSchema = v.picklist(['school', 'non-school', 'unknown']);
 const teamLinkTypeSchema = v.picklist([
   'website',

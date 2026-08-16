@@ -117,6 +117,10 @@ function makePortfolio(overrides: Partial<PortfolioLabEntry> & Pick<PortfolioLab
 describe('teamDirectory labels and keys', () => {
   it('formats season, team type, advancement, and stat labels', () => {
     expect(seasonLabel(2025)).toBe('2025-2026: DECODE');
+    expect(seasonLabel(2026, { current: true })).toBe('2026-2027: BIOBUZZ (current)');
+    expect(seasonLabel(2026, { current: true, available: false })).toBe(
+      '2026-2027: BIOBUZZ (current, not yet published)',
+    );
     expect(teamTypeLabel('school')).toBe('School team');
     expect(teamTypeLabel('non-school')).toBe('Non-school team');
     expect(teamTypeLabel('unknown')).toBe('Unknown team type');

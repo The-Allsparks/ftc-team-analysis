@@ -34,7 +34,7 @@ Document-level `GeneratedData.sources` and a single `TeamSeason.sourceUrl` are n
 
 - Season facts from FTC Events / FIRST Search → `kind: observed`.
 - `teamType` → `kind: derived`.
-- `Team.latest*` remain convenience projections from the newest present `TARGET_SEASONS` season (not stored as evidence rows on `Team`).
+- `Team.latest*` remain convenience projections from the newest present supported season (not stored as evidence rows on `Team`).
 
 ### Affiliations (#4) stay parallel
 

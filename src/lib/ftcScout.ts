@@ -10,7 +10,7 @@ import {
   parseScoutQuickStats,
   ScoutIssue,
 } from '../data/ftcScoutSchema';
-import { SeasonId, TARGET_SEASONS } from '../data/schema';
+import { CURRENT_SEASON, SeasonId } from '../data/schema';
 import { CACHE_TTL, cacheKey, getCached, seasonTtl, setCached } from './ftcCache';
 import {
   failureFromUnknown,
@@ -35,7 +35,7 @@ function scoutCacheKey(season: SeasonId, teamNumber: number): string {
 function scoutTtl(season: SeasonId): number {
   return seasonTtl(
     season,
-    TARGET_SEASONS[0],
+    CURRENT_SEASON,
     CACHE_TTL.currentSeasonTeamMs,
     CACHE_TTL.olderSeasonTeamMs,
   );

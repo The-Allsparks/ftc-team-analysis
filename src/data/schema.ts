@@ -1,6 +1,17 @@
-export const TARGET_SEASONS = [2026, 2025, 2024, 2023, 2022, 2021, 2020, 2019] as const;
+export {
+  CURRENT_SEASON,
+  SUPPORTED_SEASONS,
+  TARGET_SEASONS,
+  availableSeasons,
+  currentSeason,
+  isCurrentSeason,
+  isSupportedSeason,
+  lastAvailableSeason,
+  seasonFilterOptions,
+  type SeasonId,
+} from './seasons';
 
-export type SeasonId = (typeof TARGET_SEASONS)[number];
+import { SeasonId, availableSeasons, seasonFilterOptions } from './seasons';
 
 export type RecordSummary = {
   wins: number;
@@ -234,14 +245,17 @@ export type GeneratedData = {
   sourceChecks?: SourceCheck[];
 };
 
+/**
+ * Seasons shown in the directory filter: available from data plus current.
+ * Unsupported years are hidden. Prefer seasonFilterOptions / availableSeasons for new code.
+ */
 export function seasonOptions(data?: Pick<GeneratedData, 'targetSeasons' | 'teams'>): SeasonId[] {
-  const fromTeams =
-    data?.teams.flatMap((team) =>
-      Object.keys(team.seasons ?? {}).map((season) => Number(season) as SeasonId),
-    ) ?? [];
-  const fromTarget = data?.targetSeasons ?? [];
+  return seasonFilterOptions(data);
+}
 
-  return [...new Set([...TARGET_SEASONS, ...fromTarget, ...fromTeams])]
-    .filter((season): season is SeasonId => (TARGET_SEASONS as readonly number[]).includes(season))
-    .sort((a, b) => b - a);
+export function seasonHasIngestedData(
+  data: Pick<GeneratedData, 'targetSeasons' | 'teams'>,
+  season: SeasonId,
+): boolean {
+  return availableSeasons(data).includes(season);
 }

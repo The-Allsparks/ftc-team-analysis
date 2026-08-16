@@ -3,7 +3,7 @@ import {
   RecordSummary,
   RegionEvent,
   SeasonId,
-  TARGET_SEASONS,
+  SUPPORTED_SEASONS,
   Team,
   TeamAward,
   TeamEvent,
@@ -1069,7 +1069,7 @@ export function mergeSeason(teamMap: Map<number, Team>, teamNumber: number, seas
 }
 
 export function refreshLatestFields(team: Team): Team {
-  const latestSeason = TARGET_SEASONS.find((season) => team.seasons[season]);
+  const latestSeason = SUPPORTED_SEASONS.find((season) => team.seasons[season]);
   const season = latestSeason ? team.seasons[latestSeason] : undefined;
 
   if (!season) {
@@ -1099,7 +1099,7 @@ export function applyLeagueRankings(
 ): void {
   const eventOrder = new Map<string, number>();
 
-  for (const season of TARGET_SEASONS) {
+  for (const season of SUPPORTED_SEASONS) {
     [...regionEvents.values()]
       .filter((event) => event.season === season)
       .forEach((event, index) => {

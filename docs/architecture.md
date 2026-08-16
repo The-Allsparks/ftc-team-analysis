@@ -18,6 +18,7 @@ FTC Events / FTCScout / Portfolio Lab / FTC Scoring (public HTTP)
 | Piece | Location | Role |
 | --- | --- | --- |
 | UI | `src/` | Directory, season history, qualified Scout/lineage previews |
+| Season model | `src/data/seasons.ts` | `SUPPORTED_SEASONS` (validate/name), explicit `CURRENT_SEASON`, `availableSeasons` from seed |
 | Seed schema | `src/data/*Schema.ts` | Valibot validation for seed, regions, live enrichments |
 | Canonical seed | `src/data/nv-ftc-teams.generated.json` | Checked-in Nevada snapshot |
 | Public seed copy | `public/data/` | Served as `/data/...` (via `npm run sync:data`) |
@@ -28,7 +29,17 @@ FTC Events / FTCScout / Portfolio Lab / FTC Scoring (public HTTP)
 
 - **Identity-critical path:** public FTC Events–backed seed + runtime schema validation; fail closed on broken envelopes.
 - **Optional enrichment:** FTCScout, Portfolio Lab, avatars — failures surface as availability states, not empty “success” caches.
-- **No credentialed FIRST API** in the current design.
+- **No credentialed FIRST API** in the current design (season discovery stays config + ingested data; see #14 / #17).
+
+## Season model
+
+| Layer | Source of truth | Role |
+| --- | --- | --- |
+| Supported | `SUPPORTED_SEASONS` + `SEASON_NAMES` | Years the app can validate and label |
+| Current | `CURRENT_SEASON` (explicit constant) | Pull `--mode=current`, UI “current” tag, cache TTL “latest” |
+| Available | Seed `targetSeasons` ∪ team season keys | Directory filter options (unsupported years hidden) |
+
+When FTC Events has not published the current region page, the UI selects the last available season and shows a persistent fallback banner—never a silent empty “success” for the unpublished year.
 
 ## Related docs
 

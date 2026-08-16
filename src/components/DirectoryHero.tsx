@@ -1,6 +1,7 @@
 import { GeneratedData, SeasonId } from '../data/schema';
+import { SeasonFallbackState } from '../hooks/useFtcData';
 import { LiveRefreshProgress, LiveRefreshStatus } from '../lib/ftcLive';
-import { ALL_SEASONS, SeasonFilter } from '../lib/teamDirectory';
+import { ALL_SEASONS, SeasonFilter, seasonLabel } from '../lib/teamDirectory';
 import { SourceStatusBlock } from './SourceStatusBlock';
 
 export type DirectoryHeroProps = {
@@ -13,6 +14,7 @@ export type DirectoryHeroProps = {
   liveMessage: string | null;
   liveDiagnostics: string | null;
   liveProgress: LiveRefreshProgress | null;
+  seasonFallback: SeasonFallbackState | null;
   refreshRegion: (season: SeasonId, force?: boolean) => Promise<void>;
   refreshSeason: (season: SeasonId, force?: boolean) => Promise<void>;
   portfolioStatus: 'idle' | 'loading' | 'ready' | 'error';
@@ -33,6 +35,7 @@ export function DirectoryHero({
   liveMessage,
   liveDiagnostics,
   liveProgress,
+  seasonFallback,
   refreshRegion,
   refreshSeason,
   portfolioStatus,
@@ -82,6 +85,12 @@ export function DirectoryHero({
             Refresh season
           </button>
         </div>
+        {seasonFallback && (
+          <p className="season-fallback-banner" role="status">
+            {seasonLabel(seasonFallback.requestedSeason)} is not yet published on FTC Events. Showing{' '}
+            {seasonLabel(seasonFallback.activeSeason)} instead.
+          </p>
+        )}
         {liveMessage && (
           <SourceStatusBlock
             statusClass={`live-status ${liveStatus}`}

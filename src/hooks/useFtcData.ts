@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { loadStoredRegionCode, regionLabel, storeRegionCode } from '../data/regions';
-import { GeneratedData, SeasonId, TARGET_SEASONS } from '../data/schema';
+import { CURRENT_SEASON, GeneratedData, SeasonId } from '../data/schema';
 import {
   createEmptyRegionData,
   LiveRefreshProgress,
@@ -16,6 +16,11 @@ import { resolvePublishedRegionSeason } from '../lib/ftcSeason';
 import { failureFromUnknown } from '../lib/sourceResult';
 import { refreshLatestFields } from '../lib/ftcParsers';
 
+export type SeasonFallbackState = {
+  requestedSeason: SeasonId;
+  activeSeason: SeasonId;
+};
+
 type UseFtcDataResult = {
   data: GeneratedData;
   regionCode: string;
@@ -24,15 +29,18 @@ type UseFtcDataResult = {
   liveMessage: string | null;
   liveDiagnostics: string | null;
   liveProgress: LiveRefreshProgress | null;
+  /** Persistent when current (or requested) season is unpublished and a prior season is shown. */
+  seasonFallback: SeasonFallbackState | null;
   changeRegion: (regionCode: string) => Promise<void>;
   refreshRegion: (season: SeasonId, force?: boolean) => Promise<void>;
   refreshSeason: (season: SeasonId, force?: boolean) => Promise<void>;
   refreshTeam: (season: SeasonId, teamNumber: number, force?: boolean) => Promise<void>;
   ensureSeasonData: (season: SeasonId) => Promise<void>;
+  clearSeasonFallback: () => void;
 };
 
-function preferredSeason(_data?: GeneratedData): SeasonId {
-  return TARGET_SEASONS[0];
+function preferredSeason(): SeasonId {
+  return CURRENT_SEASON;
 }
 
 function dataForRegion(seedData: GeneratedData, regionCode: string): GeneratedData {
@@ -46,6 +54,20 @@ function dataForRegion(seedData: GeneratedData, regionCode: string): GeneratedDa
   return createEmptyRegionData(regionCode);
 }
 
+function fallbackFromResolved(resolved: {
+  usedFallback: boolean;
+  requestedSeason: SeasonId;
+  season: SeasonId;
+}): SeasonFallbackState | null {
+  if (!resolved.usedFallback) {
+    return null;
+  }
+  return {
+    requestedSeason: resolved.requestedSeason,
+    activeSeason: resolved.season,
+  };
+}
+
 export function useFtcData(seedData: GeneratedData): UseFtcDataResult {
   const [regionCode, setRegionCode] = useState(() => loadStoredRegionCode(seedData.regionCode));
   const [data, setData] = useState(() => dataForRegion(seedData, loadStoredRegionCode(seedData.regionCode)));
@@ -53,11 +75,16 @@ export function useFtcData(seedData: GeneratedData): UseFtcDataResult {
   const [liveMessage, setLiveMessage] = useState<string | null>(null);
   const [liveDiagnostics, setLiveDiagnostics] = useState<string | null>(null);
   const [liveProgress, setLiveProgress] = useState<LiveRefreshProgress | null>(null);
+  const [seasonFallback, setSeasonFallback] = useState<SeasonFallbackState | null>(null);
   const dataRef = useRef(data);
   const regionRef = useRef(regionCode);
   const autoPullKeysRef = useRef(new Set<string>());
   dataRef.current = data;
   regionRef.current = regionCode;
+
+  const clearSeasonFallback = useCallback(() => {
+    setSeasonFallback(null);
+  }, []);
 
   const refreshRegion = useCallback(async (season: SeasonId, force = false, replace = false) => {
     setLiveStatus('refreshing');
@@ -66,7 +93,8 @@ export function useFtcData(seedData: GeneratedData): UseFtcDataResult {
     setLiveProgress(null);
 
     try {
-      const resolved = await resolvePublishedRegionSeason(regionRef.current, season);
+      const resolved = await resolvePublishedRegionSeason(regionRef.current, season, dataRef.current);
+      setSeasonFallback(fallbackFromResolved(resolved));
 
       if (resolved.usedFallback) {
         setLiveMessage(
@@ -111,7 +139,8 @@ export function useFtcData(seedData: GeneratedData): UseFtcDataResult {
     setLiveProgress({ label: 'Starting season refresh', completed: 0, total: 1 });
 
     try {
-      const resolved = await resolvePublishedRegionSeason(regionRef.current, season);
+      const resolved = await resolvePublishedRegionSeason(regionRef.current, season, dataRef.current);
+      setSeasonFallback(fallbackFromResolved(resolved));
 
       if (resolved.usedFallback) {
         setLiveMessage(
@@ -258,13 +287,14 @@ export function useFtcData(seedData: GeneratedData): UseFtcDataResult {
       setRegionCode(nextRegionCode);
       regionRef.current = nextRegionCode;
       autoPullKeysRef.current.clear();
+      setSeasonFallback(null);
 
       const shell = {
         ...dataForRegion(seedData, nextRegionCode),
         regionCode: nextRegionCode,
       };
       const replace = nextRegionCode !== seedData.regionCode;
-      const season = preferredSeason(shell);
+      const season = preferredSeason();
 
       setData(shell);
       dataRef.current = shell;
@@ -305,10 +335,12 @@ export function useFtcData(seedData: GeneratedData): UseFtcDataResult {
     liveMessage,
     liveDiagnostics,
     liveProgress,
+    seasonFallback,
     changeRegion,
     refreshRegion,
     refreshSeason,
     refreshTeam,
     ensureSeasonData,
+    clearSeasonFallback,
   };
 }

@@ -2,7 +2,7 @@ import { PortfolioLabEntry, portfolioMatchesSeason, portfoliosForSeason } from '
 import { isRegionChampionshipEvent } from '../data/regions';
 import {
   SeasonId,
-  TARGET_SEASONS,
+  SUPPORTED_SEASONS,
   Team,
   TeamEvent,
   TeamSeason,
@@ -48,7 +48,7 @@ export function seasonFor(team: Team, season: SeasonFilter): TeamSeason | null {
   }
 
   return (
-    TARGET_SEASONS.map((targetSeason) => team.seasons?.[targetSeason] as TeamSeason | undefined).find(Boolean) ??
+    SUPPORTED_SEASONS.map((targetSeason) => team.seasons?.[targetSeason] as TeamSeason | undefined).find(Boolean) ??
     null
   );
 }
@@ -88,10 +88,17 @@ export function statLabel(value: number, singular: string, plural = `${singular}
   return `${value.toLocaleString()} ${value === 1 ? singular : plural}`;
 }
 
-export function seasonLabel(season: SeasonId) {
+export function seasonLabel(season: SeasonId, options?: { current?: boolean; available?: boolean }) {
   const metadata = SEASON_NAMES[season];
-
-  return metadata ? `${metadata.years}: ${metadata.game}` : String(season);
+  const base = metadata ? `${metadata.years}: ${metadata.game}` : String(season);
+  const tags: string[] = [];
+  if (options?.current) {
+    tags.push('current');
+  }
+  if (options?.available === false) {
+    tags.push('not yet published');
+  }
+  return tags.length > 0 ? `${base} (${tags.join(', ')})` : base;
 }
 
 export function eventKey(event: Partial<TeamEvent>) {

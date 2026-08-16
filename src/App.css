@@ -143,6 +143,16 @@ footer,
   line-height: 1.4;
 }
 
+.season-fallback-banner {
+  margin: 0;
+  padding: 8px 10px;
+  border-left: 3px solid #b54708;
+  background: #fffaeb;
+  color: #7a2e0e;
+  font-size: 0.92rem;
+  line-height: 1.4;
+}
+
 .live-status.error {
   color: #b42318;
 }
