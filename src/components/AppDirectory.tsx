@@ -20,6 +20,9 @@ import {
   readLastSeenTeamCount,
   writeLastSeenTeamCount,
 } from '../lib/sourceHealthReport';
+import { isCorrectionsHash } from '../lib/teamCorrections';
+import { useModerationQueue } from '../hooks/useModerationQueue';
+import type { ModerationRecord } from '../data/teamCorrectionsSchema';
 import {
   ALL_FILTER,
   ALL_SEASONS,
@@ -45,6 +48,9 @@ import { TeamList } from './TeamList';
 const TeamDetailPanel = lazy(() => import('./TeamDetailPanel'));
 const SourceHealthDashboard = lazy(() =>
   import('./SourceHealthDashboard').then((module) => ({ default: module.SourceHealthDashboard })),
+);
+const ModerationQueuePanel = lazy(() =>
+  import('./ModerationQueuePanel').then((module) => ({ default: module.ModerationQueuePanel })),
 );
 
 export function AppDirectory({ seedData }: { seedData: GeneratedData }) {
@@ -86,6 +92,17 @@ export function AppDirectory({ seedData }: { seedData: GeneratedData }) {
   const [showDataHealth, setShowDataHealth] = useState(
     () => typeof window !== 'undefined' && isDataHealthHash(window.location.hash),
   );
+  const [showCorrectionsQueue, setShowCorrectionsQueue] = useState(
+    () => typeof window !== 'undefined' && isCorrectionsHash(window.location.hash),
+  );
+  const {
+    records: moderationRecords,
+    pending: pendingModeration,
+    addRecord: addModerationRecord,
+    approve: approveModeration,
+    reject: rejectModeration,
+    clearAll: clearModerationQueue,
+  } = useModerationQueue();
   const [lastSeenTeamCount, setLastSeenTeamCount] = useState<number | null>(null);
   const [lastSeenAt, setLastSeenAt] = useState<string | null>(null);
   const [query, setQuery] = useState('');
@@ -271,6 +288,7 @@ export function AppDirectory({ seedData }: { seedData: GeneratedData }) {
   useEffect(() => {
     const onHashChange = () => {
       setShowDataHealth(isDataHealthHash(window.location.hash));
+      setShowCorrectionsQueue(isCorrectionsHash(window.location.hash));
     };
 
     window.addEventListener('hashchange', onHashChange);
@@ -358,6 +376,21 @@ export function AppDirectory({ seedData }: { seedData: GeneratedData }) {
     const nextUrl = `${window.location.pathname}${window.location.search}`;
     window.history.pushState(null, '', nextUrl);
     setShowDataHealth(false);
+  };
+
+  const closeCorrectionsQueue = () => {
+    if (typeof window === 'undefined') {
+      setShowCorrectionsQueue(false);
+      return;
+    }
+
+    const nextUrl = `${window.location.pathname}${window.location.search}`;
+    window.history.pushState(null, '', nextUrl);
+    setShowCorrectionsQueue(false);
+  };
+
+  const handleCorrectionSubmitted = (record: ModerationRecord) => {
+    addModerationRecord(record);
   };
   const selectedLineage = selectedTeam ? getTeamLineage(teamLineageMap, selectedTeam.number) : null;
   const selectedPortfolios = useMemo(() => {
@@ -474,6 +507,36 @@ export function AppDirectory({ seedData }: { seedData: GeneratedData }) {
     );
   }
 
+  if (showCorrectionsQueue) {
+    return (
+      <main className="app-shell">
+        <Suspense
+          fallback={
+            <section className="moderation-queue-panel" aria-label="Correction moderation queue">
+              <p className="empty-note">Loading corrections queue…</p>
+            </section>
+          }
+        >
+          <ModerationQueuePanel
+            records={moderationRecords}
+            pendingCount={pendingModeration.length}
+            onApprove={(id, note) => {
+              const result = approveModeration(id, note);
+              return { ok: result.ok, message: result.ok ? undefined : result.message };
+            }}
+            onReject={(id, note) => {
+              const result = rejectModeration(id, note);
+              return { ok: result.ok, message: result.ok ? undefined : result.message };
+            }}
+            onClear={clearModerationQueue}
+            onClose={closeCorrectionsQueue}
+          />
+        </Suspense>
+        <DirectoryFooter data={data} />
+      </main>
+    );
+  }
+
   return (
     <main className="app-shell">
       <DirectoryHero
@@ -580,6 +643,7 @@ export function AppDirectory({ seedData }: { seedData: GeneratedData }) {
             selectedPortfolios={selectedPortfolios}
             portfolioStatus={portfolioStatus}
             refreshPortfolioCatalog={refreshPortfolioCatalog}
+            onCorrectionSubmitted={handleCorrectionSubmitted}
           />
         </Suspense>
       </section>

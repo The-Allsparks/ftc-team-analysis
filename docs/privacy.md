@@ -34,9 +34,11 @@ Future Internet Archive enrichment ([internet-archive.md](internet-archive.md), 
 
 Onshape CAD ([onshape.md](onshape.md), [#26](https://github.com/The-Allsparks/ftc-team-analysis/issues/26)) is link-only: store public document URLs teams declare, never scrape student accounts or copy CAD binaries from Public Documents.
 
-## Corrections and team claims (process only)
+## Corrections and team claims
 
-There is no in-app claim/correction product yet (tracked in [#32](https://github.com/The-Allsparks/ftc-team-analysis/issues/32)). Until then:
+In-app **Suggest a correction** on the team detail panel creates a reviewable moderation record in the browser (local queue + export / GitHub-issue markdown). Approvals produce a patch proposal with `autoApply: false` and **never** silently overwrite sourced seed or observations. Verification standards, spam controls, and the non-overwrite rule: [team-corrections.md](team-corrections.md) ([#32](https://github.com/The-Allsparks/ftc-team-analysis/issues/32)).
+
+You can also:
 
 1. Open a GitHub issue on [The-Allsparks/ftc-team-analysis](https://github.com/The-Allsparks/ftc-team-analysis/issues).
 2. Include the **team number**, the incorrect or claimed field(s), and **public evidence links** (for example FTC Events team pages).
