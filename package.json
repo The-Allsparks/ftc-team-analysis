@@ -22,7 +22,7 @@
     "discover:regions": "node scripts/discover-regions-full.mjs"
   },
   "dependencies": {
-    "node-html-parser": "^7.1.0",
+    "node-html-parser": "^9.0.1",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
     "valibot": "1.4.2"
