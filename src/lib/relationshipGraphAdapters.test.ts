@@ -222,6 +222,38 @@ describe('relationshipGraphAdapters', () => {
     expect(graph.nodes.some((n) => n.type === 'repository' && n.label === 'example/16158-code')).toBe(true);
   });
 
+  it('projects videoResources as channel/video nodes with ownership evidence', () => {
+    const team: Team = {
+      ...makeTeam(16158, [
+        makeSeason(2025, {
+          name: 'Allsparks',
+          organization: 'Family/Community',
+          teamType: 'non-school',
+        }),
+      ]),
+      videoResources: [
+        {
+          url: 'https://www.youtube.com/@AllsparksFTC',
+          kind: 'channel',
+          title: 'Allsparks FTC',
+          evidence: 'Declared team website YouTube link',
+          evidenceKind: 'declared-link',
+          ownershipConfidence: 'high',
+          confirmationState: 'unconfirmed',
+          source: 'YouTube (verified)',
+          retrievedAt: '2026-08-16T00:00:00.000Z',
+        },
+      ],
+    };
+
+    const graph = buildRelationshipGraph({ teams: [team], generatedAt: '2026-08-16T00:00:00.000Z' });
+    expect(graph.nodes.some((n) => n.type === 'channel' && n.label === 'Allsparks FTC')).toBe(true);
+    const edge = graph.edges.find(
+      (e) => e.type === 'links_to' && e.evidence.source === 'YouTube (verified)',
+    );
+    expect(edge?.evidence.kind).toBe('declared-link');
+  });
+
   it('maps lineage links into related_to edges and round-trips the full graph', () => {
     const prior = makeTeam(1001, [
       makeSeason(2022, {

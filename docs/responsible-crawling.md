@@ -40,6 +40,10 @@ GM0 gallery enrichment is **opt-in** (`--enrich-gm0`) and defaults off on schedu
 
 GitHub enrichment is **opt-in** (`--enrich-github`) and defaults off on scheduled Actions. When enabled it verifies `github.com/owner/repo` URLs already on team links (website / OA / GM0), optionally fetching public REST metadata. Ownership is never inferred from team number alone. Prefer verifying known URLs over broad search (unauthenticated rate limits). See [github-repos.md](github-repos.md).
 
+## YouTube verification
+
+YouTube enrichment is **opt-in** (`--enrich-youtube`) and defaults off on scheduled Actions. When enabled it verifies YouTube URLs already on team links (website / OA / GM0). Declared-link verification works without an API key; optional Data API metadata uses server-side `YOUTUBE_API_KEY` only (never committed). Name-only matches are never auto-accepted. Prefer verifying known URLs over search (search costs 100 quota units). See [youtube.md](youtube.md).
+
 ## The Orange Alliance
 
 TOA is **not crawled** by this project today (research only — [#21](https://github.com/The-Allsparks/ftc-team-analysis/issues/21)). A future optional integration would use the account-gated REST API (not HTML scrape-as-primary), fail soft, bound traffic, and never treat TOA as canonical for official FIRST results. See [orange-alliance.md](orange-alliance.md).

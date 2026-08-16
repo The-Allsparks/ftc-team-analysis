@@ -39,6 +39,10 @@ import {
   isGithubVerifiedSource,
 } from '../lib/githubRepos';
 import {
+  isYoutubeVerifiedSource,
+  youtubeResourceAttribution,
+} from '../lib/youtubeVideos';
+import {
   isOpenAllianceLinkSource,
   openAllianceLinkAttribution,
 } from '../lib/openAlliance';
@@ -645,6 +649,54 @@ export default function TeamDetailPanel({
                         }
                       >
                         {repo.source}
+                      </span>
+                    </a>
+                  );
+                })}
+              </div>
+            </section>
+          )}
+
+          {(selectedTeam.videoResources?.length ?? 0) > 0 && (
+            <section className="links-panel video-resources-panel">
+              <div className="section-heading">
+                <h3>Video resources</h3>
+                <span>{selectedTeam.videoResources!.length}</span>
+              </div>
+              <p className="links-enrichment-note">
+                Public YouTube channels, videos, and playlists verified from declared team links
+                (website, Open Alliance, or GM0) or corroborating search. Ownership is never inferred
+                from team name alone.
+              </p>
+              <div className="link-grid">
+                {selectedTeam.videoResources!.map((resource) => {
+                  const metaBits = [
+                    resource.kind,
+                    resource.publishedAt
+                      ? `published ${new Date(resource.publishedAt).toLocaleDateString()}`
+                      : null,
+                    resource.seasonHint ? `season ${resource.seasonHint}` : null,
+                  ].filter(Boolean);
+                  const attribution = youtubeResourceAttribution(resource);
+
+                  return (
+                    <a
+                      key={resource.url}
+                      href={resource.url}
+                      target="_blank"
+                      rel="noreferrer"
+                      title={attribution}
+                    >
+                      <strong>{resource.title || resource.url}</strong>
+                      <span>{metaBits.join(' · ') || 'youtube.com'}</span>
+                      <span
+                        className={
+                          isYoutubeVerifiedSource(resource.source)
+                            ? 'link-source link-source-youtube'
+                            : 'link-source'
+                        }
+                      >
+                        {resource.source}
                       </span>
                     </a>
                   );

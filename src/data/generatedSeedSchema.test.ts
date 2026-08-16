@@ -198,6 +198,40 @@ describe('parseGeneratedSeed', () => {
     }
   });
 
+  it('accepts optional videoResources without requiring it on older shapes', () => {
+    const fixture = validSeed();
+    (fixture.teams[0] as { videoResources?: unknown[] }).videoResources = [
+      {
+        url: 'https://www.youtube.com/@AllsparksFTC',
+        kind: 'channel',
+        title: 'Allsparks FTC',
+        publishedAt: '2019-01-01T00:00:00Z',
+        seasonHint: 2025,
+        channelId: 'UCexample',
+        videoId: null,
+        playlistId: null,
+        evidence: 'Declared on team website; not name-only.',
+        evidenceKind: 'declared-link',
+        ownershipConfidence: 'high',
+        confirmationState: 'unconfirmed',
+        source: 'YouTube (verified)',
+        retrievedAt: '2026-08-16T12:00:00.000Z',
+      },
+    ];
+
+    const withVideos = parseGeneratedSeed(fixture);
+    expect(withVideos.ok).toBe(true);
+    if (withVideos.ok) {
+      expect(withVideos.data.teams[0]?.videoResources?.[0]?.kind).toBe('channel');
+    }
+
+    const withoutVideos = parseGeneratedSeed(validSeed());
+    expect(withoutVideos.ok).toBe(true);
+    if (withoutVideos.ok) {
+      expect(withoutVideos.data.teams[0]?.videoResources).toBeUndefined();
+    }
+  });
+
   it('quarantines one invalid team and keeps the rest', () => {
     const fixture = validSeed();
     (fixture.teams[0] as { latestName: unknown }).latestName = 123;
