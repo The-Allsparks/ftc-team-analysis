@@ -50,14 +50,11 @@ const scoutQuickStatsSchema = v.looseObject({
   count: v.number(),
 });
 
-const scoutOprSchema = v.looseObject({
+/** Shared totals group used by opr / avg / dev (season-specific extra keys allowed). */
+const scoutPointGroupSchema = v.looseObject({
   totalPoints: optionalNullableNumber,
   autoPoints: optionalNullableNumber,
   dcPoints: optionalNullableNumber,
-});
-
-const scoutAvgSchema = v.looseObject({
-  totalPoints: optionalNullableNumber,
 });
 
 const scoutEventStatsSchema = v.looseObject({
@@ -67,8 +64,10 @@ const scoutEventStatsSchema = v.looseObject({
   losses: v.optional(v.number()),
   ties: v.optional(v.number()),
   qualMatchesPlayed: optionalNullableNumber,
-  opr: v.optional(v.nullable(scoutOprSchema)),
-  avg: v.optional(v.nullable(scoutAvgSchema)),
+  opr: v.optional(v.nullable(scoutPointGroupSchema)),
+  avg: v.optional(v.nullable(scoutPointGroupSchema)),
+  /** Upstream variability group; normalized to `scoreSpread` from `totalPoints`. */
+  dev: v.optional(v.nullable(scoutPointGroupSchema)),
 });
 
 const scoutEventParticipationSchema = v.looseObject({
@@ -77,6 +76,34 @@ const scoutEventParticipationSchema = v.looseObject({
   teamNumber: v.number(),
   stats: v.nullable(scoutEventStatsSchema),
 });
+
+/** Wire shape before normalize maps `dev.totalPoints` → `scoreSpread`. */
+type ScoutEventStatsWire = {
+  rank?: number | null;
+  rp?: number | null;
+  wins?: number;
+  losses?: number;
+  ties?: number;
+  qualMatchesPlayed?: number | null;
+  opr?: {
+    totalPoints?: number | null;
+    autoPoints?: number | null;
+    dcPoints?: number | null;
+  } | null;
+  avg?: {
+    totalPoints?: number | null;
+  } | null;
+  dev?: {
+    totalPoints?: number | null;
+  } | null;
+};
+
+type ScoutEventParticipationWire = {
+  season: number;
+  eventCode: string;
+  teamNumber: number;
+  stats: ScoutEventStatsWire | null;
+};
 
 function isPlainObject(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value);
@@ -101,6 +128,52 @@ function issuesFromValibot(
 
 export function formatScoutIssues(issues: ScoutIssue[]): string {
   return issues.map((issue) => `${issue.path}: ${issue.message}`).join('; ');
+}
+
+function scoreSpreadFromDev(dev: ScoutEventStatsWire['dev']): number | null {
+  const value = dev?.totalPoints;
+  if (value === null || value === undefined || Number.isNaN(value)) {
+    return null;
+  }
+  return value;
+}
+
+function toScoutEventParticipation(wire: ScoutEventParticipationWire): ScoutEventParticipation {
+  if (!wire.stats) {
+    return {
+      season: wire.season,
+      eventCode: wire.eventCode,
+      teamNumber: wire.teamNumber,
+      stats: null,
+    };
+  }
+
+  return {
+    season: wire.season,
+    eventCode: wire.eventCode,
+    teamNumber: wire.teamNumber,
+    stats: {
+      rank: wire.stats.rank ?? null,
+      rp: wire.stats.rp ?? null,
+      wins: wire.stats.wins ?? 0,
+      losses: wire.stats.losses ?? 0,
+      ties: wire.stats.ties ?? 0,
+      qualMatchesPlayed: wire.stats.qualMatchesPlayed ?? null,
+      opr: wire.stats.opr
+        ? {
+            totalPoints: wire.stats.opr.totalPoints ?? null,
+            autoPoints: wire.stats.opr.autoPoints ?? null,
+            dcPoints: wire.stats.opr.dcPoints ?? null,
+          }
+        : null,
+      avg: wire.stats.avg
+        ? {
+            totalPoints: wire.stats.avg.totalPoints ?? null,
+          }
+        : null,
+      scoreSpread: scoreSpreadFromDev(wire.stats.dev),
+    },
+  };
 }
 
 export function parseScoutQuickStats(raw: unknown): ParseScoutQuickStatsResult {
@@ -135,7 +208,7 @@ export function parseScoutEvents(raw: unknown): ParseScoutEventsResult {
   raw.forEach((value, index) => {
     const parsed = v.safeParse(scoutEventParticipationSchema, value);
     if (parsed.success) {
-      valid.push(parsed.output as ScoutEventParticipation);
+      valid.push(toScoutEventParticipation(parsed.output as ScoutEventParticipationWire));
       return;
     }
     quarantinedRecordCount += 1;

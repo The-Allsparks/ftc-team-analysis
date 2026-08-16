@@ -5,6 +5,15 @@ import {
   ftcScoutTeamUrl,
   TeamScoutData,
 } from '../data/ftcScout';
+import {
+  SCOUT_API_DOCS_URL,
+  SCOUT_CALCULATED_LABEL,
+  SCOUT_CROSS_SEASON_WARNING,
+  SCOUT_META_CATALOG_VERSION,
+  SCOUT_RANKING_SCOPE_LABEL,
+  SCOUT_SCORE_SPREAD_LABEL,
+  scoutSampleSizeCaption,
+} from '../data/ftcScoutMeta';
 import { PortfolioLabEntry, portfolioCoverUrl, portfolioLabSearchUrl } from '../data/portfolioLab';
 import {
   RegionEvent,
@@ -167,6 +176,7 @@ export default function TeamDetailPanel({
         (link) => link.confirmationState !== 'rejected' && link.relationshipType !== 'sister_team',
       )
     : [];
+  const scoutSampleCaption = scoutSampleSizeCaption(selectedScoutData?.quickStats?.count);
 
   return (
     <section className="detail-panel" aria-label="Team details">
@@ -274,6 +284,20 @@ export default function TeamDetailPanel({
               <h3>FTCScout Analytics</h3>
               <span>{selectedScoutData?.events.length ?? 0}</span>
             </div>
+            <p className="scout-provenance">
+              <span>{SCOUT_CALCULATED_LABEL}</span>
+              <span>
+                {SCOUT_RANKING_SCOPE_LABEL} · meta {SCOUT_META_CATALOG_VERSION} ·{' '}
+                {seasonLabel(selectedSeason.season)}
+              </span>
+              {scoutSampleCaption ? <span>{scoutSampleCaption}</span> : null}
+              <a href={SCOUT_API_DOCS_URL} target="_blank" rel="noreferrer">
+                FTCScout API docs
+              </a>
+            </p>
+            {selectedSeasons.length > 1 && (
+              <p className="scout-cross-season-note">{SCOUT_CROSS_SEASON_WARNING}</p>
+            )}
             {scoutStatus === 'loading' && !selectedScoutData ? (
               <p className="empty-note">Loading OPR and event analytics from FTCScout...</p>
             ) : scoutStatus === 'error' && !selectedScoutData?.quickStats ? (
@@ -316,6 +340,7 @@ export default function TeamDetailPanel({
                       <th>Record</th>
                       <th>Event OPR</th>
                       <th>Avg Points</th>
+                      <th>{SCOUT_SCORE_SPREAD_LABEL}</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -346,6 +371,7 @@ export default function TeamDetailPanel({
                           </td>
                           <td>{formatScoutNumber(participation.stats?.opr?.totalPoints ?? null)}</td>
                           <td>{formatScoutNumber(participation.stats?.avg?.totalPoints ?? null)}</td>
+                          <td>{formatScoutNumber(participation.stats?.scoreSpread ?? null)}</td>
                         </tr>
                       );
                     })}
