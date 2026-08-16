@@ -36,6 +36,7 @@ FTC Events / FTCScout / Portfolio Lab / FTC Scoring (public HTTP)
 - **No credentialed FIRST API** in the current design (season discovery stays config + ingested data; see #14 / #17).
 - **The Orange Alliance:** researched only (#21); **not** wired. Future role is non-canonical corroboration/enrichment; **FIRST remains canonical** for official results. See [orange-alliance.md](orange-alliance.md) and source hierarchy in [attribution.md](attribution.md).
 - **Internet Archive / Wayback:** researched only (#25); **not** wired. Future role is optional reconstruction of **archived** public team website facts; never treated as current live truth. See [internet-archive.md](internet-archive.md).
+- **Onshape:** researched only (#26); **not** wired as a crawler. CAD appears only as outbound `TeamLink` `cad` URLs when teams declare them (website / OA / GM0). Public Documents mining is **NO-GO**. See [onshape.md](onshape.md).
 
 ## Season model
 
@@ -55,6 +56,7 @@ When FTC Events has not published the current region page, the UI selects the la
 - [gm0.md](gm0.md) — optional Game Manual 0 gallery resource enrichment
 - [orange-alliance.md](orange-alliance.md) — TOA research: corroboration only; FIRST stays canonical (#21)
 - [internet-archive.md](internet-archive.md) — Wayback research: archived website reconstruction only (#25)
+- [onshape.md](onshape.md) — Onshape research: declared CAD links only; no Public Documents crawl (#26)
 - [deployment.md](deployment.md) — deploy commands and proxy table
 - [attribution.md](attribution.md) — sources, hierarchy, and residual risks
 - [relationship-graph.md](relationship-graph.md) — evidence-backed team relationship graph model (#28)

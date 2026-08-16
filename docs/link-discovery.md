@@ -60,6 +60,7 @@ Measurable coverage of teams with ≥1 verified public link improves when operat
 ## Out of scope here
 
 - YouTube Data API deep discovery ([#23](https://github.com/The-Allsparks/ftc-team-analysis/issues/23))
+- Onshape Public Documents crawling ([#26](https://github.com/The-Allsparks/ftc-team-analysis/issues/26)) — declared Onshape URLs from websites / OA / GM0 are in scope for collectors; mining Public Documents is not (see [onshape.md](onshape.md))
 - Team-submitted link corrections ([#32](https://github.com/The-Allsparks/ftc-team-analysis/issues/32))
 - Full `Team.links` observation history (deferred; see [field-evidence.md](field-evidence.md))
 

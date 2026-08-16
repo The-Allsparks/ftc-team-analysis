@@ -29,6 +29,8 @@ Field-level fact provenance (#5) and organization affiliations (#4) stay as they
 | `robot` | Season robot name (when present) | `robot:…` |
 | `video` / `channel` | Placeholders for future media (#23) | reserved |
 
+Declared Onshape CAD URLs on `Team.links` (`type: 'cad'`) project as `artifact` nodes via `links_to` — no separate Onshape crawl ([onshape.md](onshape.md), [#26](https://github.com/The-Allsparks/ftc-team-analysis/issues/26)).
+
 ## Edge types
 
 | Type | From → To | Source projection |

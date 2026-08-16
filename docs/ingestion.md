@@ -54,6 +54,7 @@ Refresh-to-refresh field observations are stored in the append-only side store `
 - Credentialed FTC Events API payloads
 - The Orange Alliance API payloads (researched in #21; not wired to `pull:data`)
 - Internet Archive / Wayback payloads (researched in #25; not wired to `pull:data` or scheduled refresh)
+- Onshape Public Documents / CAD binaries (researched in #26; declared CAD URLs may arrive via website / OA / GM0 only — see [onshape.md](onshape.md))
 - Student PII or private contact databases (link collectors filter personal social/mailto patterns; see [privacy.md](privacy.md) and [link-discovery.md](link-discovery.md))
 - Portfolio Lab as identity-critical input (optional enrichment only; HTML scrape carries residual terms/format risk)
 
@@ -88,6 +89,10 @@ Opt-in with `--enrich-canonical-ids` (default **off** for CI/scheduled refresh).
 ## Internet Archive / Wayback (#25)
 
 **Not ingested yet** (research only). Conditional go for future opt-in reconstruction of known Nevada team website captures via Availability/CDX; facts must be labeled **archived** (never current). **Do not** enable on scheduled data-refresh. See [internet-archive.md](internet-archive.md).
+
+## Onshape CAD (#26)
+
+**Not crawled** (research only). Prefer attaching **declared** Onshape document URLs already found via website / Open Alliance / GM0 as `TeamLink` `cad` rows. **Do not** search or mine Onshape Public Documents via API or scrape (API Terms prohibit automated Public Documents extraction). Matching stub rejects number-only hits — see [onshape.md](onshape.md).
 
 ## Tests
 

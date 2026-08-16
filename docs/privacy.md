@@ -31,6 +31,8 @@ Details: [link-discovery.md](link-discovery.md). Broader contributor expectation
 
 Future Internet Archive enrichment ([internet-archive.md](internet-archive.md), [#25](https://github.com/The-Allsparks/ftc-team-analysis/issues/25)) must apply the same PII filters: do not retain personal emails, phones, or student social accounts found only in archived page captures.
 
+Onshape CAD ([onshape.md](onshape.md), [#26](https://github.com/The-Allsparks/ftc-team-analysis/issues/26)) is link-only: store public document URLs teams declare, never scrape student accounts or copy CAD binaries from Public Documents.
+
 ## Corrections and team claims (process only)
 
 There is no in-app claim/correction product yet (tracked in [#32](https://github.com/The-Allsparks/ftc-team-analysis/issues/32)). Until then:
