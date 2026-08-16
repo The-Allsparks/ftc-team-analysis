@@ -3,6 +3,8 @@ export type PullMode = 'current' | 'full';
 export type PullArgs = {
   mode: PullMode;
   skipLinkEnrichment: boolean;
+  /** Opt-in Open Alliance FTC team-declared resource enrichment (off by default). */
+  enrichOpenAlliance: boolean;
   dryRun: boolean;
   /** When set, skip network pull and load this JSON as the candidate (tests / dry gates). */
   candidateFixture: string | null;
@@ -33,6 +35,7 @@ export function parsePullArgs(argv: string[]): PullArgs {
   const args: PullArgs = {
     mode: 'full',
     skipLinkEnrichment: false,
+    enrichOpenAlliance: false,
     dryRun: false,
     candidateFixture: null,
     help: false,
@@ -49,6 +52,14 @@ export function parsePullArgs(argv: string[]): PullArgs {
         args.skipLinkEnrichment = isTruthy(token.slice(token.indexOf('=') + 1));
       } else {
         args.skipLinkEnrichment = true;
+      }
+      continue;
+    }
+    if (token === '--enrich-open-alliance' || token.startsWith('--enrich-open-alliance=')) {
+      if (token.includes('=')) {
+        args.enrichOpenAlliance = isTruthy(token.slice(token.indexOf('=') + 1));
+      } else {
+        args.enrichOpenAlliance = true;
       }
       continue;
     }
@@ -91,6 +102,7 @@ export const PULL_DATA_HELP = `Usage: npm run pull:data -- [options]
 Options:
   --mode=current|full       current = refresh CURRENT_SEASON and merge; full = rebuild all supported (default)
   --skip-link-enrichment    skip crawling team websites for links
+  --enrich-open-alliance    opt-in: attach Open Alliance team-declared resources (exact team # only)
   --dry-run                 run guards/report but do not write the seed
   --candidate-fixture=PATH  load candidate JSON from PATH (no network); for gate tests
   --help                    show this help

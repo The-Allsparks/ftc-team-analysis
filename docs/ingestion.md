@@ -15,6 +15,7 @@ Common flags:
 ```bash
 npm run pull:data -- --mode=current --skip-link-enrichment
 npm run pull:data -- --mode=full
+npm run pull:data -- --mode=current --skip-link-enrichment --enrich-open-alliance
 npm run pull:data -- --dry-run --candidate-fixture=src/data/fixtures/empty-generated-candidate.json
 ```
 
@@ -54,6 +55,10 @@ Refresh-to-refresh field observations are stored in the append-only side store `
 ## Link enrichment (#24)
 
 When `--skip-link-enrichment` is **not** set, `pull:data` runs bounded public discovery (`src/lib/linkDiscovery.ts`): On The Web URLs, homepage anchors, robots/sitemap, common site paths, and link-hub outs. Links are normalized, privacy-filtered, annotated with ownership confidence/evidence, and optionally checked for liveness.
+
+## Open Alliance enrichment (#19)
+
+Opt-in with `--enrich-open-alliance` (default **off** for CI/scheduled refresh). Performs one public `GET` to `api.theopenalliance.org/teams/ftc`, matches **exact team numbers** only, and attaches declared code/CAD/build-thread/media/website URLs as attributed `TeamLink` enrichment. OA awards/stats are not ingested as competitive results. See [open-alliance.md](open-alliance.md).
 
 ## Tests
 

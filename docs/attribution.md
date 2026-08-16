@@ -20,6 +20,7 @@ Project code and original documentation are MIT-licensed ([LICENSE](../LICENSE))
 - **Metadata:** Upstream payloads do not expose formula/version fields. Local catalog version `v1` in `src/data/ftcScoutMeta.ts` links definitions to [FTCScout API docs](https://ftcscout.org/api).
 | FTC Portfolio Lab | Optional enrichment only (not identity-critical) | [FTC Portfolio Lab](https://www.ftcportfoliolab.org/) | Public `/api/search` for search hits; full catalog fields from public `/portfolio` HTML embedding. **No documented full-catalog API.** HTML/RSC format drift and third-party terms are **residual risks (not a legal clearance)**. |
 | FTC Scoring (avatars) | Runtime team avatar CSS/PNGs via allowlisted proxy | [FTC Scoring](https://ftc-scoring.firstinspires.org) | Public composed avatar stylesheet used by FTC Event Web. Avatars are not stored in the generated seed JSON. Availability varies by season. |
+| Open Alliance (FTC) | Optional team-declared technical links (code/CAD/build thread/media) | [theopenalliance.org/ftc](https://theopenalliance.org/ftc) / [api.theopenalliance.org](https://api.theopenalliance.org) | Public `GET /teams/ftc` only when `--enrich-open-alliance` is set. Exact team-number match; original URLs preserved. **Not** competitive results. Rate limits / terms are upstream’s — residual risk. See [open-alliance.md](open-alliance.md). |
 
 ## What we claim (and do not)
 

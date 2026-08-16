@@ -2,21 +2,23 @@ import { describe, expect, it } from 'vitest';
 import { parsePullArgs } from './pullArgs';
 
 describe('parsePullArgs', () => {
-  it('defaults to full mode with enrichment enabled', () => {
+  it('defaults to full mode with website enrichment on and Open Alliance off', () => {
     expect(parsePullArgs([])).toEqual({
       mode: 'full',
       skipLinkEnrichment: false,
+      enrichOpenAlliance: false,
       dryRun: false,
       candidateFixture: null,
       help: false,
     });
   });
 
-  it('parses mode, skip enrichment, dry-run, and fixture path', () => {
+  it('parses mode, skip enrichment, Open Alliance, dry-run, and fixture path', () => {
     expect(
       parsePullArgs([
         '--mode=current',
         '--skip-link-enrichment',
+        '--enrich-open-alliance',
         '--dry-run',
         '--candidate-fixture',
         'tmp/candidate.json',
@@ -24,6 +26,7 @@ describe('parsePullArgs', () => {
     ).toEqual({
       mode: 'current',
       skipLinkEnrichment: true,
+      enrichOpenAlliance: true,
       dryRun: true,
       candidateFixture: 'tmp/candidate.json',
       help: false,

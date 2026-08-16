@@ -31,6 +31,10 @@ import {
 } from '../lib/organizationAffiliations';
 import { toPortfolioLabProxyUrl } from '../lib/portfolioLab';
 import {
+  isOpenAllianceLinkSource,
+  openAllianceLinkAttribution,
+} from '../lib/openAlliance';
+import {
   advancementLabel,
   advancementStatus,
   eventKey,
@@ -537,6 +541,12 @@ export default function TeamDetailPanel({
                 <h3>Useful Links</h3>
                 <span>{selectedTeam.links.length}</span>
               </div>
+              {selectedTeam.links.some((link) => isOpenAllianceLinkSource(link.source)) ? (
+                <p className="links-enrichment-note">
+                  Open Alliance entries are team-declared technical resources (enrichment with
+                  attribution). They are not official competitive results or awards.
+                </p>
+              ) : null}
               <div className="link-grid">
                 {selectedTeam.links.map((link) => {
                   const meta = [
@@ -547,14 +557,28 @@ export default function TeamDetailPanel({
                   ]
                     .filter(Boolean)
                     .join(' · ');
+                  const attribution = isOpenAllianceLinkSource(link.source)
+                    ? openAllianceLinkAttribution(link)
+                    : meta;
 
                   return (
-                    <a key={link.url} href={link.url} target="_blank" title={meta || link.source}>
+                    <a key={link.url} href={link.url} target="_blank" title={attribution || link.source}>
                       <strong>{link.label}</strong>
                       <span>
                         {new URL(link.url).hostname.replace(/^www\./, '')}
                         {link.liveness === 'dead' ? ' (dead link)' : ''}
                       </span>
+                      {link.source ? (
+                        <span
+                          className={
+                            isOpenAllianceLinkSource(link.source)
+                              ? 'link-source link-source-oa'
+                              : 'link-source'
+                          }
+                        >
+                          {link.source}
+                        </span>
+                      ) : null}
                     </a>
                   );
                 })}
