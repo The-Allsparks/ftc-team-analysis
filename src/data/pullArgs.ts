@@ -5,6 +5,8 @@ export type PullArgs = {
   skipLinkEnrichment: boolean;
   /** Opt-in Open Alliance FTC team-declared resource enrichment (off by default). */
   enrichOpenAlliance: boolean;
+  /** Opt-in Game Manual 0 gallery resource enrichment (off by default). */
+  enrichGm0: boolean;
   dryRun: boolean;
   /** When set, skip network pull and load this JSON as the candidate (tests / dry gates). */
   candidateFixture: string | null;
@@ -36,6 +38,7 @@ export function parsePullArgs(argv: string[]): PullArgs {
     mode: 'full',
     skipLinkEnrichment: false,
     enrichOpenAlliance: false,
+    enrichGm0: false,
     dryRun: false,
     candidateFixture: null,
     help: false,
@@ -60,6 +63,14 @@ export function parsePullArgs(argv: string[]): PullArgs {
         args.enrichOpenAlliance = isTruthy(token.slice(token.indexOf('=') + 1));
       } else {
         args.enrichOpenAlliance = true;
+      }
+      continue;
+    }
+    if (token === '--enrich-gm0' || token.startsWith('--enrich-gm0=')) {
+      if (token.includes('=')) {
+        args.enrichGm0 = isTruthy(token.slice(token.indexOf('=') + 1));
+      } else {
+        args.enrichGm0 = true;
       }
       continue;
     }
@@ -103,6 +114,7 @@ Options:
   --mode=current|full       current = refresh CURRENT_SEASON and merge; full = rebuild all supported (default)
   --skip-link-enrichment    skip crawling team websites for links
   --enrich-open-alliance    opt-in: attach Open Alliance team-declared resources (exact team # only)
+  --enrich-gm0              opt-in: attach Game Manual 0 gallery resources (exact team # only)
   --dry-run                 run guards/report but do not write the seed
   --candidate-fixture=PATH  load candidate JSON from PATH (no network); for gate tests
   --help                    show this help

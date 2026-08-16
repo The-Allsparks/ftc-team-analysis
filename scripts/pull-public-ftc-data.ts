@@ -51,6 +51,13 @@ import {
   applyOpenAllianceEnrichment,
   fetchOpenAllianceFtcTeamList,
 } from '../src/lib/openAlliance';
+import {
+  GM0_GALLERY_PAGE_URL,
+  GM0_GALLERY_RST_URL,
+  GM0_SOURCE,
+  applyGm0GalleryEnrichment,
+  fetchGm0GalleryRst,
+} from '../src/lib/gm0Gallery';
 
 const TEAM_SEARCH_URL = `https://www.firstinspires.org/team-event-search?content=teams&season=${CURRENT_SEASON}&country=United+States&state=NV&programs=FIRST+Tech+Challenge&indices=teams_*`;
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
@@ -86,6 +93,11 @@ const DEFAULT_SOURCES: GeneratedData['sources'] = [
     url: 'https://theopenalliance.org/ftc',
     note: 'Optional enrichment via public GET /teams/ftc. Exact team-number match only; original resource URLs preserved. Not used as official competitive results. Enabled with --enrich-open-alliance.',
   },
+  {
+    label: 'Game Manual 0 (gallery)',
+    url: GM0_GALLERY_PAGE_URL,
+    note: 'Optional enrichment via bounded gallery.rst fetch. Exact leading team-number match only; resource URLs and gallery page linked (prose not copied). Enabled with --enrich-gm0.',
+  },
 ];
 
 const DEFAULT_LIMITATIONS: string[] = [
@@ -96,6 +108,7 @@ const DEFAULT_LIMITATIONS: string[] = [
   'Match-level details are limited to what appears on public team pages. The script stores event participation, ranks, records, playoff summaries, awards, per-event points, and official league RS/rank where visible.',
   'External team links are discovered from public FTC On The Web URLs plus a bounded crawl of each team website (homepage, robots/sitemap when present, and common About/Sponsors/Robots/Resources/Contact/Links paths, including Linktree-style hubs). URLs are normalized, checked for liveness, and stored with ownership confidence + evidence. Private student social accounts and personal contact info are filtered out (see docs/privacy.md and docs/link-discovery.md).',
   'Open Alliance FTC team-declared resources (code, CAD, build threads, media, website) can be attached with --enrich-open-alliance via a single public GET to api.theopenalliance.org/teams/ftc. Matching requires an exact team number; OA awards/stats are not ingested as competitive results (see docs/open-alliance.md). Scheduled refreshes leave this off by default.',
+  'Game Manual 0 gallery resources can be attached with --enrich-gm0 via a single bounded fetch of gallery.rst. Matching requires an exact leading team number on the gallery heading; name-only headings are rejected. Copyrighted GM0 prose is linked (gallery page + outbound URLs), not copied (see docs/gm0.md). Scheduled refreshes leave this off by default.',
 ];
 
 async function syncPublicAssets(): Promise<void> {
@@ -169,6 +182,36 @@ async function enrichOpenAllianceLinks(teams: Team[]): Promise<SourceCheck> {
     return {
       label: OPEN_ALLIANCE_SOURCE,
       url: listUrl,
+      checkedAt,
+      ok: false,
+      detail,
+    };
+  }
+}
+
+async function enrichGm0GalleryLinks(teams: Team[]): Promise<SourceCheck> {
+  const checkedAt = new Date().toISOString();
+
+  try {
+    const { entries, skippedAmbiguous } = await fetchGm0GalleryRst();
+    const result = applyGm0GalleryEnrichment(teams, entries, { retrievedAt: checkedAt });
+    console.log(
+      `GM0 gallery: matched ${result.matchedTeams} teams, added ${result.linksAdded} links` +
+        (skippedAmbiguous ? ` (skipped ${skippedAmbiguous} ambiguous headings)` : ''),
+    );
+    return {
+      label: GM0_SOURCE,
+      url: GM0_GALLERY_RST_URL,
+      checkedAt,
+      ok: true,
+      detail: `matched=${result.matchedTeams}; linksAdded=${result.linksAdded}; skippedAmbiguous=${skippedAmbiguous}; gallery=${GM0_GALLERY_PAGE_URL}`,
+    };
+  } catch (error) {
+    const detail = error instanceof Error ? error.message : String(error);
+    console.warn(`GM0 gallery enrichment failed (continuing without GM0 links): ${detail}`);
+    return {
+      label: GM0_SOURCE,
+      url: GM0_GALLERY_RST_URL,
       checkedAt,
       ok: false,
       detail,
@@ -363,6 +406,7 @@ async function buildFromNetwork(
   mode: 'current' | 'full',
   skipLinkEnrichment: boolean,
   enrichOpenAlliance: boolean,
+  enrichGm0: boolean,
 ): Promise<GeneratedData> {
   const seasonsToPull: readonly SeasonId[] = mode === 'current' ? [CURRENT_SEASON] : SUPPORTED_SEASONS;
   const catalog = await pullSeasonCatalog(seasonsToPull);
@@ -393,6 +437,13 @@ async function buildFromNetwork(
     sourceChecks.push(await enrichOpenAllianceLinks(pulled.teams));
   } else {
     console.log('Skipping Open Alliance enrichment (pass --enrich-open-alliance to enable)');
+  }
+
+  if (enrichGm0) {
+    console.log('Enriching with Game Manual 0 gallery resources (exact team number only)');
+    sourceChecks.push(await enrichGm0GalleryLinks(pulled.teams));
+  } else {
+    console.log('Skipping GM0 gallery enrichment (pass --enrich-gm0 to enable)');
   }
 
   const generatedAt = new Date().toISOString();
@@ -470,7 +521,12 @@ async function main() {
     }
     console.log(`Loaded candidate fixture from ${fixturePath}`);
   } else {
-    data = await buildFromNetwork(args.mode, args.skipLinkEnrichment, args.enrichOpenAlliance);
+    data = await buildFromNetwork(
+      args.mode,
+      args.skipLinkEnrichment,
+      args.enrichOpenAlliance,
+      args.enrichGm0,
+    );
   }
 
   assertSafeToPublishGeneratedData(previous, data);
