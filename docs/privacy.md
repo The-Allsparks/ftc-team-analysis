@@ -1,0 +1,37 @@
+# Privacy and data corrections
+
+## Public-data stance
+
+Nevada FTC Team Analysis is a **public team directory**. It is intended to show facts that already appear on public FTC / FIRST-related pages (team numbers, names, cities, organizations/sponsors as published, public event/award lines, and optional public enrichments).
+
+**Do not gather, store, or contribute student personally identifiable information (PII)** — for example personal emails, phone numbers, home addresses, birth dates, school ID numbers, or photos of minors beyond what an official public team avatar already exposes via FIRST systems.
+
+If you discover student PII in the checked-in seed or UI that should not be retained, open a correction or security report (see below and [SECURITY.md](../SECURITY.md)).
+
+## What this project stores
+
+| Kind | Typical content | Notes |
+| --- | --- | --- |
+| Checked-in Nevada seed | Public team/season snapshot JSON | Refreshed from public FTC Events pages via `pull:data` / scheduled Actions |
+| Runtime enrichments | FTCScout stats, Portfolio Lab hits, avatars | Fetched live through allowlisted proxies; not all fields are persisted in the seed |
+| Browser/local behavior | Standard web hosting/CDN logs as operated by the host | No project-operated student profile database |
+
+This project does **not** operate a login, team account system, or student profile store today.
+
+## Corrections and team claims (process only)
+
+There is no in-app claim/correction product yet (tracked in [#32](https://github.com/The-Allsparks/ftc-team-analysis/issues/32)). Until then:
+
+1. Open a GitHub issue on [The-Allsparks/ftc-team-analysis](https://github.com/The-Allsparks/ftc-team-analysis/issues).
+2. Include the **team number**, the incorrect or claimed field(s), and **public evidence links** (for example FTC Events team pages).
+3. Do not attach private documents or student PII.
+
+Maintainers may update the seed, fix parsers, or decline changes that cannot be verified from public sources.
+
+## Inferred relationships
+
+Related-team suggestions are typed and evidence-backed, and remain unconfirmed by default. They are not implied legal succession or coaching claims. Details: [team-relationships.md](team-relationships.md).
+
+## Contact for privacy concerns
+
+Use a GitHub issue as above for directory corrections. For suspected sensitive-data exposure, prefer the channels in [SECURITY.md](../SECURITY.md).
