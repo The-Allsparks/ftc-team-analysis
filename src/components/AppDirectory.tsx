@@ -7,6 +7,13 @@ import { usePortfolioLab } from '../hooks/usePortfolioLab';
 import { useTeamAvatarCatalog } from '../hooks/useTeamAvatarCatalog';
 import { defaultSeasonWithData } from '../lib/ftcSeason';
 import {
+  buildSourceHealthReport,
+  isDataHealthHash,
+  LiveSourceSnapshot,
+  readLastSeenTeamCount,
+  writeLastSeenTeamCount,
+} from '../lib/sourceHealthReport';
+import {
   ALL_FILTER,
   ALL_SEASONS,
   SeasonFilter,
@@ -29,6 +36,9 @@ import { DirectoryStats } from './DirectoryStats';
 import { TeamList } from './TeamList';
 
 const TeamDetailPanel = lazy(() => import('./TeamDetailPanel'));
+const SourceHealthDashboard = lazy(() =>
+  import('./SourceHealthDashboard').then((module) => ({ default: module.SourceHealthDashboard })),
+);
 
 export function AppDirectory({ seedData }: { seedData: GeneratedData }) {
   const {
@@ -48,6 +58,7 @@ export function AppDirectory({ seedData }: { seedData: GeneratedData }) {
   const {
     portfoliosByTeam,
     status: portfolioStatus,
+    sourceState: portfolioSourceState,
     message: portfolioMessage,
     diagnostics: portfolioDiagnostics,
     refreshCatalog: refreshPortfolioCatalog,
@@ -55,6 +66,7 @@ export function AppDirectory({ seedData }: { seedData: GeneratedData }) {
   const {
     getTeamScoutData,
     scoutStatus,
+    scoutSourceState,
     scoutMessage,
     scoutDiagnostics,
     loadTeamScout,
@@ -62,6 +74,11 @@ export function AppDirectory({ seedData }: { seedData: GeneratedData }) {
   const seasons = useMemo(() => seasonOptions(data), [data]);
   const defaultSeason = useMemo(() => defaultSeasonWithData(seasons, data.teams), [data.teams, seasons]);
   const teamLineageMap = useMemo(() => buildTeamLineageMap(data.teams), [data.teams]);
+  const [showDataHealth, setShowDataHealth] = useState(
+    () => typeof window !== 'undefined' && isDataHealthHash(window.location.hash),
+  );
+  const [lastSeenTeamCount, setLastSeenTeamCount] = useState<number | null>(null);
+  const [lastSeenAt, setLastSeenAt] = useState<string | null>(null);
   const [query, setQuery] = useState('');
   const [seasonFilter, setSeasonFilter] = useState<SeasonFilter>(defaultSeason);
   const [leagueFilter, setLeagueFilter] = useState('all');
@@ -229,9 +246,102 @@ export function AppDirectory({ seedData }: { seedData: GeneratedData }) {
   const {
     getAvatarUrl,
     status: avatarStatus,
+    sourceState: avatarSourceState,
     message: avatarMessage,
     diagnostics: avatarDiagnostics,
   } = useTeamAvatarCatalog(avatarSeason);
+
+  useEffect(() => {
+    const onHashChange = () => {
+      setShowDataHealth(isDataHealthHash(window.location.hash));
+    };
+
+    window.addEventListener('hashchange', onHashChange);
+    return () => window.removeEventListener('hashchange', onHashChange);
+  }, []);
+
+  useEffect(() => {
+    const storage = typeof window !== 'undefined' ? window.localStorage : null;
+    const previous = readLastSeenTeamCount(storage);
+    setLastSeenTeamCount(previous.count);
+    setLastSeenAt(previous.seenAt);
+    writeLastSeenTeamCount(data.teams.length, storage);
+  }, [data.generatedAt, data.teams.length]);
+
+  const liveSources = useMemo<LiveSourceSnapshot[]>(
+    () => [
+      {
+        id: 'ftc-events',
+        label: 'FTC Events (session)',
+        sessionStatus: liveStatus === 'refreshing' ? 'refreshing' : liveStatus === 'error' ? 'error' : 'idle',
+        sourceState: null,
+        message: liveMessage,
+        diagnostics: liveDiagnostics,
+      },
+      {
+        id: 'ftcscout',
+        label: 'FTCScout (session)',
+        sessionStatus: scoutStatus === 'loading' ? 'loading' : scoutStatus,
+        sourceState: scoutSourceState,
+        message: scoutMessage,
+        diagnostics: scoutDiagnostics,
+      },
+      {
+        id: 'portfolio-lab',
+        label: 'Portfolio Lab (session)',
+        sessionStatus: portfolioStatus === 'loading' ? 'loading' : portfolioStatus,
+        sourceState: portfolioSourceState,
+        message: portfolioMessage,
+        diagnostics: portfolioDiagnostics,
+      },
+      {
+        id: 'team-avatars',
+        label: 'Team avatars (session)',
+        sessionStatus: avatarStatus === 'loading' ? 'loading' : avatarStatus,
+        sourceState: avatarSourceState,
+        message: avatarMessage,
+        diagnostics: avatarDiagnostics,
+      },
+    ],
+    [
+      avatarDiagnostics,
+      avatarMessage,
+      avatarSourceState,
+      avatarStatus,
+      liveDiagnostics,
+      liveMessage,
+      liveStatus,
+      portfolioDiagnostics,
+      portfolioMessage,
+      portfolioSourceState,
+      portfolioStatus,
+      scoutDiagnostics,
+      scoutMessage,
+      scoutSourceState,
+      scoutStatus,
+    ],
+  );
+
+  const sourceHealthReport = useMemo(
+    () =>
+      buildSourceHealthReport(data, {
+        liveSources,
+        lastSeenTeamCount,
+        lastSeenAt,
+      }),
+    [data, lastSeenAt, lastSeenTeamCount, liveSources],
+  );
+
+  const closeDataHealth = () => {
+    if (typeof window === 'undefined') {
+      setShowDataHealth(false);
+      return;
+    }
+
+    const nextUrl = `${window.location.pathname}${window.location.search}`;
+    window.history.pushState(null, '', nextUrl);
+    setShowDataHealth(false);
+  };
   const selectedLineage = selectedTeam ? getTeamLineage(teamLineageMap, selectedTeam.number) : null;
   const selectedPortfolios = useMemo(() => {
     if (!selectedTeam) {
@@ -329,6 +439,23 @@ export function AppDirectory({ seedData }: { seedData: GeneratedData }) {
   const awardCount = countAwards(visibleSeasonValues);
   const portfolioCount = countPortfolioMatches(filteredTeams, seasonFilter, portfoliosByTeam);
   const activeSeasonCount = visibleSeasonValues.length;
+
+  if (showDataHealth) {
+    return (
+      <main className="app-shell">
+        <Suspense
+          fallback={
+            <section className="source-health" aria-label="Data health dashboard">
+              <p className="empty-note">Loading data health…</p>
+            </section>
+          }
+        >
+          <SourceHealthDashboard report={sourceHealthReport} onBack={closeDataHealth} />
+        </Suspense>
+        <DirectoryFooter data={data} />
+      </main>
+    );
+  }
 
   return (
     <main className="app-shell">

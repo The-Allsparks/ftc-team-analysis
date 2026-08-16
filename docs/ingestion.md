@@ -32,6 +32,19 @@ Scheduled GitHub Actions (`.github/workflows/data-refresh.yml`) run the same pul
 
 Successful refreshes record per-source `sourceChecks` timestamps on the snapshot so operators can see when each upstream was last observed healthy.
 
+## Data health dashboard (#30)
+
+Maintainers can open a secondary **Data health** view from the footer link or `#health`. It aggregates:
+
+- seed `sourceChecks`, snapshot age (stale when `generatedAt` is older than 8 days), and record counts
+- coverage gaps (missing website / organization / location) by season
+- affiliation confidence, evidence conflicts / unconfirmed rows, and unverified inferred relationships
+- season-over-season team-count deltas (highlighted drops ≥20% when the prior season had ≥10 teams)
+- optional browser last-seen team count (localStorage) for visit-to-visit deltas
+- **session-only** live `SourceResult` statuses already observed in-app (does not probe upstreams on open)
+
+Refresh-to-refresh historical snapshots remain out of scope here (see [#29](https://github.com/The-Allsparks/ftc-team-analysis/issues/29)). Hosting/edge source-health metadata stays with [#38](https://github.com/The-Allsparks/ftc-team-analysis/issues/38).
+
 ## What is not ingested
 
 - Credentialed FTC Events API payloads
