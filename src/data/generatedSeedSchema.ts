@@ -7,6 +7,8 @@
  * Document-level provenance is the `sources` array already on the seed. Optional
  * season `affiliations` and optional `evidence` are additive under v1
  * (see docs/organization-affiliations.md and docs/field-evidence.md).
+ * Optional `registeredLocation` and affiliation identity fields are additive
+ * under v1 (see docs/canonical-identifiers.md).
  * Checked-in seeds may omit `evidence`; UI derives display rows on read.
  */
 import * as v from 'valibot';
@@ -64,6 +66,48 @@ const organizationEntityTypeSchema = v.picklist([
 ]);
 const affiliationConfidenceSchema = v.picklist(['high', 'medium', 'low']);
 const affiliationConfirmationSchema = v.picklist(['unconfirmed', 'confirmed', 'rejected']);
+const identityMatchStatusSchema = v.picklist(['unmatched', 'matched', 'ambiguous', 'quarantined']);
+const nameAliasKindSchema = v.picklist(['alias', 'historical', 'normalized']);
+const geoPrecisionSchema = v.picklist(['city', 'state', 'country', 'point']);
+
+const nullableString = v.nullable(v.string());
+const nullableNumber = v.nullable(v.number());
+
+const canonicalIdentifierSchema = v.looseObject({
+  idNamespace: v.string(),
+  canonicalId: v.string(),
+  confidence: v.optional(affiliationConfidenceSchema),
+  evidence: v.optional(nullableString),
+  source: v.optional(nullableString),
+});
+
+const nameAliasSchema = v.looseObject({
+  name: v.string(),
+  kind: nameAliasKindSchema,
+  validFrom: v.optional(nullableString),
+  validTo: v.optional(nullableString),
+});
+
+const normalizedLocationSchema = v.looseObject({
+  normalizedName: v.optional(nullableString),
+  city: v.optional(nullableString),
+  stateCode: v.optional(nullableString),
+  countryCode: v.optional(nullableString),
+  subdivisionCode: v.optional(nullableString),
+  rawLocation: v.optional(nullableString),
+  geo: v.optional(
+    v.nullable(
+      v.looseObject({
+        lat: v.optional(nullableNumber),
+        lon: v.optional(nullableNumber),
+        osmId: v.optional(nullableString),
+        precision: v.optional(v.nullable(geoPrecisionSchema)),
+      }),
+    ),
+  ),
+  identifiers: v.optional(v.array(canonicalIdentifierSchema)),
+});
+
 const teamFactFieldSchema = v.picklist([
   'name',
   'location',
@@ -82,9 +126,6 @@ const teamFactFieldSchema = v.picklist([
 const factKindSchema = v.picklist(['observed', 'derived']);
 const observationStatusSchema = v.picklist(['current', 'conflicting', 'superseded']);
 
-const nullableString = v.nullable(v.string());
-const nullableNumber = v.nullable(v.number());
-
 const teamAffiliationSchema = v.looseObject({
   entityType: organizationEntityTypeSchema,
   name: v.string(),
@@ -94,6 +135,11 @@ const teamAffiliationSchema = v.looseObject({
   confidence: affiliationConfidenceSchema,
   confirmationState: affiliationConfirmationSchema,
   sourceText: v.string(),
+  normalizedName: v.optional(nullableString),
+  slug: v.optional(nullableString),
+  identifiers: v.optional(v.array(canonicalIdentifierSchema)),
+  aliases: v.optional(v.array(nameAliasSchema)),
+  identityMatchStatus: v.optional(identityMatchStatusSchema),
 });
 
 const fieldEvidenceSchema = v.looseObject({
@@ -203,6 +249,7 @@ const teamSeasonSchema = v.looseObject({
   rookieYear: nullableNumber,
   organization: nullableString,
   affiliations: v.optional(v.array(teamAffiliationSchema)),
+  registeredLocation: v.optional(v.nullable(normalizedLocationSchema)),
   teamType: teamTypeSchema,
   website: nullableString,
   robot: nullableString,

@@ -18,6 +18,7 @@ import {
 } from '../src/data/schema';
 import { mergePriorEvidenceIntoTeams, mergeSeasonRefresh } from '../src/data/seasonMerge';
 import { parseTeamObservations } from '../src/data/teamObservationsSchema';
+import { enrichGeneratedDataCanonicalIdentity } from '../src/lib/canonicalIdentity';
 import {
   emptyTeamObservations,
   stripSeasonEvidence,
@@ -120,6 +121,7 @@ const DEFAULT_LIMITATIONS: string[] = [
   'Open Alliance FTC team-declared resources (code, CAD, build threads, media, website) can be attached with --enrich-open-alliance via a single public GET to api.theopenalliance.org/teams/ftc. Matching requires an exact team number; OA awards/stats are not ingested as competitive results (see docs/open-alliance.md). Scheduled refreshes leave this off by default.',
   'Game Manual 0 gallery resources can be attached with --enrich-gm0 via a single bounded fetch of gallery.rst. Matching requires an exact leading team number on the gallery heading; name-only headings are rejected. Copyrighted GM0 prose is linked (gallery page + outbound URLs), not copied (see docs/gm0.md). Scheduled refreshes leave this off by default.',
   'Public GitHub repositories can be verified with --enrich-github from URLs already present on Team.links (website discovery, Open Alliance, GM0). Metadata (owner, languages, pushed_at, description hints) is fetched fail-soft via unauthenticated GitHub REST when available. Ownership requires evidence beyond the team number alone — number-only search hits are rejected (see docs/github-repos.md). Scheduled refreshes leave this off by default. Public org/team repos only; no private student-account scraping.',
+  'Canonical location/organization identity fields (ISO country/subdivision, internal slugs, curated NCES IDs when uniquely matched) can be attached with --enrich-canonical-ids. Offline normalize + allowlist only — no paid geocoders, no invented external IDs, no student PII (see docs/canonical-identifiers.md). Scheduled refreshes leave this off by default; UI can still derive-on-read.',
 ];
 
 async function syncPublicAssets(): Promise<void> {
@@ -448,6 +450,7 @@ async function buildFromNetwork(
   enrichOpenAlliance: boolean,
   enrichGm0: boolean,
   enrichGithub: boolean,
+  enrichCanonicalIds: boolean,
 ): Promise<GeneratedData> {
   const seasonsToPull: readonly SeasonId[] = mode === 'current' ? [CURRENT_SEASON] : SUPPORTED_SEASONS;
   const catalog = await pullSeasonCatalog(seasonsToPull);
@@ -498,13 +501,15 @@ async function buildFromNetwork(
 
   const generatedAt = new Date().toISOString();
 
+  let data: GeneratedData;
+
   if (mode === 'full') {
     const previous = await loadPrevious();
     const teams = previous
       ? mergePriorEvidenceIntoTeams(previous, pulled.teams)
       : pulled.teams;
 
-    return {
+    data = {
       generatedAt,
       targetSeasons: seasonsWithData(teams),
       regionCode: REGION_CODE,
@@ -516,35 +521,46 @@ async function buildFromNetwork(
       limitations: DEFAULT_LIMITATIONS,
       sourceChecks,
     };
+  } else {
+    const previous = await loadPrevious();
+    if (!previous) {
+      throw new Error('Current-season merge requires an existing seed at src/data/nv-ftc-teams.generated.json');
+    }
+
+    const currentSeason = CURRENT_SEASON;
+    const merged = mergeSeasonRefresh(
+      previous,
+      currentSeason,
+      pulled.teams.map(refreshLatestFields),
+      [...catalog.regionEvents.values()],
+    );
+
+    const teams = merged.teams.map(refreshLatestFields).sort((a, b) => a.number - b.number);
+
+    data = {
+      generatedAt,
+      targetSeasons: merged.targetSeasons,
+      regionCode: previous.regionCode || REGION_CODE,
+      regionLabel: previous.regionLabel,
+      schemaVersion: previous.schemaVersion,
+      teams,
+      regionEvents: merged.regionEvents,
+      sources: previous.sources?.length ? previous.sources : DEFAULT_SOURCES,
+      limitations: previous.limitations?.length ? previous.limitations : DEFAULT_LIMITATIONS,
+      sourceChecks,
+    };
   }
 
-  const previous = await loadPrevious();
-  if (!previous) {
-    throw new Error('Current-season merge requires an existing seed at src/data/nv-ftc-teams.generated.json');
+  if (enrichCanonicalIds) {
+    console.log(
+      'Enriching registered locations and affiliation identity fields (curated NCES allowlist; no invented IDs)',
+    );
+    data = enrichGeneratedDataCanonicalIdentity(data);
+  } else {
+    console.log('Skipping canonical ID enrichment (pass --enrich-canonical-ids to enable)');
   }
 
-  const currentSeason = CURRENT_SEASON;
-  const merged = mergeSeasonRefresh(
-    previous,
-    currentSeason,
-    pulled.teams.map(refreshLatestFields),
-    [...catalog.regionEvents.values()],
-  );
-
-  const teams = merged.teams.map(refreshLatestFields).sort((a, b) => a.number - b.number);
-
-  return {
-    generatedAt,
-    targetSeasons: merged.targetSeasons,
-    regionCode: previous.regionCode || REGION_CODE,
-    regionLabel: previous.regionLabel,
-    schemaVersion: previous.schemaVersion,
-    teams,
-    regionEvents: merged.regionEvents,
-    sources: previous.sources?.length ? previous.sources : DEFAULT_SOURCES,
-    limitations: previous.limitations?.length ? previous.limitations : DEFAULT_LIMITATIONS,
-    sourceChecks,
-  };
+  return data;
 }
 
 async function main() {
@@ -570,6 +586,9 @@ async function main() {
       data.generatedAt = new Date().toISOString();
     }
     console.log(`Loaded candidate fixture from ${fixturePath}`);
+    if (args.enrichCanonicalIds) {
+      data = enrichGeneratedDataCanonicalIdentity(data);
+    }
   } else {
     data = await buildFromNetwork(
       args.mode,
@@ -577,6 +596,7 @@ async function main() {
       args.enrichOpenAlliance,
       args.enrichGm0,
       args.enrichGithub,
+      args.enrichCanonicalIds,
     );
   }
 

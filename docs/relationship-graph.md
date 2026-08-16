@@ -13,7 +13,7 @@ Teams, schools/sponsors, events, awards, links, and repositories were connected 
 | **No graph database** | Avoids paid infra and migration risk; Valibot validates the document shape. |
 | **Optional side JSON later** | A future `*.relationship-graph.json` artifact can be written by a script; this PR does not require emitting it from `pull:data`. |
 
-Field-level fact provenance (#5) and organization affiliations (#4) stay as they are; the graph **projects** affiliation / lineage / link / repo evidence onto edges rather than replacing those models.
+Field-level fact provenance (#5) and organization affiliations (#4) stay as they are; the graph **projects** affiliation / lineage / link / repo evidence onto edges rather than replacing those models. Organization nodes may carry optional canonical identity refs from [#16](https://github.com/The-Allsparks/ftc-team-analysis/issues/16) (`slug`, curated NCES ids) when enrichment matches — see [canonical-identifiers.md](canonical-identifiers.md).
 
 ## Node types
 

@@ -69,18 +69,18 @@ describe('relationshipGraphAdapters', () => {
       [
         makeSeason(2025, {
           name: 'Fixture Bots',
-          organization: 'Acme High School&REV Robotics',
+          organization: 'Helen C Cannon Middle School&REV Robotics',
           teamType: 'school',
           affiliations: [
             {
               entityType: 'school',
-              name: 'Acme High School',
+              name: 'Helen C Cannon Middle School',
               season: 2025,
               source: 'organization-backfill',
               retrievedAt: null,
               confidence: 'high',
               confirmationState: 'unconfirmed',
-              sourceText: 'Acme High School&REV Robotics',
+              sourceText: 'Helen C Cannon Middle School&REV Robotics',
             },
             {
               entityType: 'sponsor',
@@ -90,7 +90,7 @@ describe('relationshipGraphAdapters', () => {
               retrievedAt: null,
               confidence: 'high',
               confirmationState: 'unconfirmed',
-              sourceText: 'Acme High School&REV Robotics',
+              sourceText: 'Helen C Cannon Middle School&REV Robotics',
             },
           ],
           events: [
@@ -172,8 +172,21 @@ describe('relationshipGraphAdapters', () => {
     const schoolEdge = [...edges.values()].find(
       (e) => e.type === 'affiliated_with' && e.props?.entityType === 'school',
     );
-    expect(schoolEdge?.evidence.notes).toContain('Acme High School');
+    expect(schoolEdge?.evidence.notes).toContain('Helen C Cannon Middle School');
     expect(nodes.has(teamSeasonNodeId(9001, 2025))).toBe(true);
+
+    const schoolNode = [...nodes.values()].find(
+      (n) => n.type === 'organization' && n.refs?.entityType === 'school',
+    );
+    expect(schoolNode?.refs?.ncesSch).toBe('320006000042');
+    expect(schoolNode?.refs?.slug).toBe('helen-c-cannon-middle-school');
+
+    const seasonNode = nodes.get(teamSeasonNodeId(9001, 2025));
+    expect(seasonNode?.refs?.postalStateCode).toBe('NV');
+    expect(seasonNode?.props?.registeredLocation).toMatchObject({
+      stateCode: 'NV',
+      subdivisionCode: 'US-NV',
+    });
   });
 
   it('projects codeRepositories as repository nodes with ownership evidence', () => {
