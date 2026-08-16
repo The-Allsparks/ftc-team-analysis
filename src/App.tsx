@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react';
 import { GeneratedData } from './data/schema';
 import { loadGeneratedSeed, LoadGeneratedSeedResult } from './data/loadGeneratedSeed';
+import { loadTeamObservations } from './data/loadTeamObservations';
 import { regionCatalogResult } from './data/regions';
+import { attachObservationsToData } from './lib/teamObservations';
 import { AppDirectory } from './components/AppDirectory';
 import {
   RegionCatalogEnvelopeError,
@@ -21,22 +23,42 @@ export default function App() {
   useEffect(() => {
     let cancelled = false;
 
-    void loadGeneratedSeed().then((result) => {
+    void (async () => {
+      const seedResult = await loadGeneratedSeed();
       if (cancelled) {
         return;
       }
 
-      if (!result.ok) {
-        setSeedState({ status: 'error', result });
+      if (!seedResult.ok) {
+        setSeedState({ status: 'error', result: seedResult });
         return;
       }
 
-      if (result.quarantined.length > 0) {
-        console.warn('[generated-seed] quarantined invalid records', result.quarantined);
+      if (seedResult.quarantined.length > 0) {
+        console.warn('[generated-seed] quarantined invalid records', seedResult.quarantined);
       }
 
-      setSeedState({ status: 'ready', data: result.data });
-    });
+      const observationsResult = await loadTeamObservations(
+        undefined,
+        fetch,
+        seedResult.data.regionCode,
+      );
+      if (cancelled) {
+        return;
+      }
+
+      let data = seedResult.data;
+      if (observationsResult.ok) {
+        if (observationsResult.quarantined.length > 0) {
+          console.warn('[observations] quarantined invalid records', observationsResult.quarantined);
+        }
+        data = attachObservationsToData(data, observationsResult.data);
+      } else {
+        console.warn('[observations]', observationsResult.message, observationsResult.issues);
+      }
+
+      setSeedState({ status: 'ready', data });
+    })();
 
     return () => {
       cancelled = true;

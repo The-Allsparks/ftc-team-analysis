@@ -7,8 +7,10 @@ import {
   evidenceForField,
   evidenceForSeason,
   evidenceForSeasonField,
+  formatObservationScopeLabel,
   formatProvenanceSummary,
   mergeSeasonEvidence,
+  observationScopeLabel,
   recordObservation,
   synthesizeSeasonEvidence,
 } from './fieldEvidence';
@@ -192,5 +194,29 @@ describe('fieldEvidence', () => {
     const summary = formatProvenanceSummary(rows);
     expect(summary).toMatch(/ftc events team page/i);
     expect(summary).toMatch(/conflicting/i);
+  });
+
+  it('labels current vs season vs historical observation scopes for UI', () => {
+    expect(formatObservationScopeLabel('current')).toBe('Current');
+    expect(formatObservationScopeLabel('season')).toBe('Observed this season');
+    expect(formatObservationScopeLabel('historical')).toBe('Previously observed');
+
+    const current = obs('name', 'Now', 'ftc-events-team-page');
+    const prior = { ...obs('name', 'Then', 'ftc-events-team-page'), status: 'superseded' as const };
+    expect(observationScopeLabel(current)).toBe('season');
+    expect(observationScopeLabel(current, { isProfileCurrent: true })).toBe('current');
+    expect(observationScopeLabel(prior)).toBe('historical');
+  });
+
+  it('buildSeasonEvidence includes active presence', () => {
+    const rows = buildSeasonEvidence(
+      { ...baseSeason, active: true },
+      {
+        sourceType: 'ftc-events-team-page',
+        sourceUrl: baseSeason.sourceUrl,
+        retrievedAt: '2026-05-01T00:00:00.000Z',
+      },
+    );
+    expect(currentEvidenceForField(rows, 'active')[0]?.value).toBe('true');
   });
 });

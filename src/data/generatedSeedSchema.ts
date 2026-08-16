@@ -77,6 +77,7 @@ const teamFactFieldSchema = v.picklist([
   'region',
   'robot',
   'teamType',
+  'active',
 ]);
 const factKindSchema = v.picklist(['observed', 'derived']);
 const observationStatusSchema = v.picklist(['current', 'conflicting', 'superseded']);

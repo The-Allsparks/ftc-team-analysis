@@ -111,6 +111,70 @@ describe('mergeSeasonRefresh', () => {
     expect(merged.targetSeasons).toContain(2025);
   });
 
+  it('preserves prior evidence when a season row is refreshed with a changed value', () => {
+    const prior = previous();
+    prior.teams = [
+      team(1, {
+        2026: {
+          ...season(2026, 'Old Name'),
+          evidence: [
+            {
+              id: 'name|ftc-events-team-page|old name|2026-01-01T00:00:00.000Z',
+              field: 'name',
+              value: 'Old Name',
+              kind: 'observed',
+              sourceType: 'ftc-events-team-page',
+              sourceUrl: 'https://example.test/2026/team/1',
+              retrievedAt: '2026-01-01T00:00:00.000Z',
+              observedSeason: 2026,
+              extractionMethod: 'html-title',
+              confidence: 'high',
+              confirmationState: 'unconfirmed',
+              status: 'current',
+              rawValue: null,
+              supersedesId: null,
+            },
+          ],
+        },
+      }),
+    ];
+
+    const merged = mergeSeasonRefresh(
+      prior,
+      2026,
+      [
+        team(1, {
+          2026: {
+            ...season(2026, 'New Name'),
+            evidence: [
+              {
+                id: 'name|ftc-events-team-page|new name|2026-02-01T00:00:00.000Z',
+                field: 'name',
+                value: 'New Name',
+                kind: 'observed',
+                sourceType: 'ftc-events-team-page',
+                sourceUrl: 'https://example.test/2026/team/1',
+                retrievedAt: '2026-02-01T00:00:00.000Z',
+                observedSeason: 2026,
+                extractionMethod: 'html-title',
+                confidence: 'high',
+                confirmationState: 'unconfirmed',
+                status: 'current',
+                rawValue: null,
+                supersedesId: null,
+              },
+            ],
+          },
+        }),
+      ],
+      [],
+    );
+
+    const evidence = merged.teams[0]?.seasons[2026]?.evidence ?? [];
+    expect(evidence.some((row) => row.status === 'current' && row.value === 'New Name')).toBe(true);
+    expect(evidence.some((row) => row.status === 'superseded' && row.value === 'Old Name')).toBe(true);
+  });
+
   it('removes teams that only existed in the refreshed season and dropped out', () => {
     const prior = previous();
     prior.teams = [team(9, { 2026: season(2026, 'Only 2026') })];
