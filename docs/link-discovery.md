@@ -2,7 +2,7 @@
 
 How Nevada FTC Team Analysis finds, normalizes, and scores **public** team websites and resource links during `npm run pull:data` (when link enrichment is enabled).
 
-Related: [privacy.md](privacy.md), [responsible-crawling.md](responsible-crawling.md), [ingestion.md](ingestion.md), [open-alliance.md](open-alliance.md).
+Related: [privacy.md](privacy.md), [responsible-crawling.md](responsible-crawling.md), [ingestion.md](ingestion.md), [open-alliance.md](open-alliance.md), [gm0.md](gm0.md).
 
 ## Sources (bounded)
 
@@ -12,8 +12,9 @@ Related: [privacy.md](privacy.md), [responsible-crawling.md](responsible-crawlin
 4. **Common paths** on the same origin: `/about`, `/sponsors`, `/robots`, `/resources`, `/contact`, `/links`, `/linktree`, and similar hubs.
 5. **Linktree-style hubs** (`linktr.ee`, `beacons.ai`, …): outbound public links extracted when the hub is the declared site or linked from it.
 6. **Open Alliance (opt-in)** team-declared resources via public API — separate from website crawl; see [open-alliance.md](open-alliance.md).
+7. **Game Manual 0 gallery (opt-in)** curated design links via bounded `gallery.rst` fetch — exact team number only; see [gm0.md](gm0.md).
 
-Scheduled Actions continue to prefer `--skip-link-enrichment` and leave `--enrich-open-alliance` unset (see [responsible-crawling.md](responsible-crawling.md)).
+Scheduled Actions continue to prefer `--skip-link-enrichment` and leave `--enrich-open-alliance` / `--enrich-gm0` unset (see [responsible-crawling.md](responsible-crawling.md)).
 
 ## Normalization
 

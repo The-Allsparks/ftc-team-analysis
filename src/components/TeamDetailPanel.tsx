@@ -35,6 +35,10 @@ import {
   openAllianceLinkAttribution,
 } from '../lib/openAlliance';
 import {
+  gm0LinkAttribution,
+  isGm0LinkSource,
+} from '../lib/gm0Gallery';
+import {
   advancementLabel,
   advancementStatus,
   eventKey,
@@ -547,6 +551,12 @@ export default function TeamDetailPanel({
                   attribution). They are not official competitive results or awards.
                 </p>
               ) : null}
+              {selectedTeam.links.some((link) => isGm0LinkSource(link.source)) ? (
+                <p className="links-enrichment-note">
+                  Game Manual 0 gallery entries are curated community design links (enrichment with
+                  attribution). Copyrighted GM0 content is linked, not copied; not official results.
+                </p>
+              ) : null}
               <div className="link-grid">
                 {selectedTeam.links.map((link) => {
                   const meta = [
@@ -559,7 +569,9 @@ export default function TeamDetailPanel({
                     .join(' · ');
                   const attribution = isOpenAllianceLinkSource(link.source)
                     ? openAllianceLinkAttribution(link)
-                    : meta;
+                    : isGm0LinkSource(link.source)
+                      ? gm0LinkAttribution(link)
+                      : meta;
 
                   return (
                     <a key={link.url} href={link.url} target="_blank" title={attribution || link.source}>
@@ -573,7 +585,9 @@ export default function TeamDetailPanel({
                           className={
                             isOpenAllianceLinkSource(link.source)
                               ? 'link-source link-source-oa'
-                              : 'link-source'
+                              : isGm0LinkSource(link.source)
+                                ? 'link-source link-source-gm0'
+                                : 'link-source'
                           }
                         >
                           {link.source}

@@ -32,6 +32,10 @@ Optional team-website crawling (when enabled) should remain bounded (Nevada scop
 
 Open Alliance enrichment is **opt-in** (`--enrich-open-alliance`) and defaults off on scheduled Actions. When enabled it issues a single public list fetch (`GET /teams/ftc`), not per-team crawl storms. See [open-alliance.md](open-alliance.md).
 
+## Game Manual 0 gallery
+
+GM0 gallery enrichment is **opt-in** (`--enrich-gm0`) and defaults off on scheduled Actions. When enabled it issues a single bounded fetch of `gallery.rst` (not the whole GM0 book), matches exact leading team numbers only, and stores outbound resource URLs plus a link to the public gallery page. Copyrighted GM0 prose is not copied into the seed. See [gm0.md](gm0.md).
+
 ## Related
 
 - [ingestion.md](ingestion.md)

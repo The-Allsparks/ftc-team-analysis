@@ -60,6 +60,10 @@ When `--skip-link-enrichment` is **not** set, `pull:data` runs bounded public di
 
 Opt-in with `--enrich-open-alliance` (default **off** for CI/scheduled refresh). Performs one public `GET` to `api.theopenalliance.org/teams/ftc`, matches **exact team numbers** only, and attaches declared code/CAD/build-thread/media/website URLs as attributed `TeamLink` enrichment. OA awards/stats are not ingested as competitive results. See [open-alliance.md](open-alliance.md).
 
+## Game Manual 0 gallery enrichment (#20)
+
+Opt-in with `--enrich-gm0` (default **off** for CI/scheduled refresh). Performs one bounded public GET of GM0 `gallery.rst`, matches **exact leading team numbers** only (name-only headings rejected), and attaches curated resource URLs plus a gallery page link as attributed `TeamLink` enrichment. Copyrighted GM0 prose is linked, not copied. See [gm0.md](gm0.md).
+
 ## Tests
 
 `npm test` uses local fixtures under `src/lib/fixtures/` and does not hit live FTC Events or FIRST. Live refresh is for Actions `workflow_dispatch` / cron or intentional local pulls.

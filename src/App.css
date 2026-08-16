@@ -758,6 +758,11 @@ button:focus-visible {
   font-weight: 600;
 }
 
+.link-source-gm0 {
+  color: #1b4f72;
+  font-weight: 600;
+}
+
 .portfolio-panel {
   margin: 0 0 22px;
 }
