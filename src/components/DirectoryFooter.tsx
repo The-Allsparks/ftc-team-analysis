@@ -1,4 +1,5 @@
 import { GeneratedData } from '../data/schema';
+import { DATA_HEALTH_HASH } from '../lib/sourceHealthReport';
 
 export type DirectoryFooterProps = {
   data: GeneratedData;
@@ -33,6 +34,9 @@ export function DirectoryFooter({ data }: DirectoryFooterProps) {
           title="Community FTC statistics API used for OPR and event analytics."
         >
           FTCScout API
+        </a>
+        <a href={DATA_HEALTH_HASH} title="Maintainer snapshot and session source health">
+          Data health
         </a>
       </div>
       <p>
