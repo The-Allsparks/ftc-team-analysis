@@ -24,11 +24,20 @@ Project code and original documentation are MIT-licensed ([LICENSE](../LICENSE))
 | Game Manual 0 (gallery) | Optional curated design/CAD/code gallery links | [gm0.org gallery](https://gm0.org/en/latest/docs/appendix/gallery.html) / [gallery.rst](https://github.com/gamemanual0/gm0/blob/main/source/docs/appendix/gallery.rst) | Bounded RST fetch only when `--enrich-gm0` is set. Exact leading team-number match; **link** outbound URLs + gallery page — do not copy copyrighted GM0 prose. Name-only headings rejected. Upstream license/terms are residual risk. See [gm0.md](gm0.md). |
 | GitHub (public repos) | Optional verification of already-discovered repo URLs | [GitHub REST docs](https://docs.github.com/en/rest) | Unauthenticated REST only when `--enrich-github` is set; prefer verifying known URLs. Ownership requires evidence beyond team number. Public repos only; no tokens committed. Rate limits / ToS are upstream residual risk. See [github-repos.md](github-repos.md). |
 | NCES CCD / EDGE / Census ACS | Deferred aggregate school/community context (#27) | [CCD](https://nces.ed.gov/ccd/) / [EDGE](https://nces.ed.gov/programs/edge/) / [ACS API](https://www.census.gov/programs-surveys/acs/data/data-via-api.html) | **Not fetched yet.** Policy allows institution/geography aggregates only; no student microdata, no paid APIs, no bulk dumps in git. See [school-community-context.md](school-community-context.md). |
+| The Orange Alliance (TOA) | Deferred optional corroboration / media-stream enrichment (#21) | [theorangealliance.org](https://theorangealliance.org/) | **Not fetched yet.** Account-gated REST (`X-TOA-Key` + `X-Application-Origin`). **FIRST remains canonical** for official scores/awards/ranks; TOA must never override. Terms/redistribution residual risk — not a legal clearance. See [orange-alliance.md](orange-alliance.md). |
+
+## Source hierarchy (competitive vs enrichment)
+
+1. **FIRST / FTC Events** — canonical for official competitive results (public pages today; authenticated API in [#17](https://github.com/The-Allsparks/ftc-team-analysis/issues/17)).
+2. **Nevada seed** — identity-critical roster/history from public FTC Events (publish-guarded).
+3. **FTCScout** — optional community-calculated stats (not official FIRST results).
+4. **The Orange Alliance** — future optional corroboration/enrichment only ([orange-alliance.md](orange-alliance.md)); never canonical where FIRST exists.
+5. **Link/resource enrichments** — Open Alliance, GM0, Portfolio Lab, GitHub verification.
 
 ## What we claim (and do not)
 
 - We attribute Portfolio Lab and other enrichment sources in the UI/docs where used.
-- We do **not** claim ownership of FIRST, FTC Events, FTCScout, or Portfolio Lab content.
+- We do **not** claim ownership of FIRST, FTC Events, FTCScout, Portfolio Lab, or The Orange Alliance content.
 - We do **not** claim that scraping or republishing public pages has been reviewed by counsel.
 - Inferred team relationships are evidence-backed suggestions, not certified succession — see [team-relationships.md](team-relationships.md).
 

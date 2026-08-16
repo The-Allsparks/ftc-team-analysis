@@ -34,6 +34,7 @@ FTC Events / FTCScout / Portfolio Lab / FTC Scoring (public HTTP)
 - **Identity-critical path:** public FTC Events–backed seed + runtime schema validation; fail closed on broken envelopes.
 - **Optional enrichment:** FTCScout, Portfolio Lab, avatars — failures surface as availability states, not empty “success” caches.
 - **No credentialed FIRST API** in the current design (season discovery stays config + ingested data; see #14 / #17).
+- **The Orange Alliance:** researched only (#21); **not** wired. Future role is non-canonical corroboration/enrichment; **FIRST remains canonical** for official results. See [orange-alliance.md](orange-alliance.md) and source hierarchy in [attribution.md](attribution.md).
 
 ## Season model
 
@@ -51,8 +52,9 @@ When FTC Events has not published the current region page, the UI selects the la
 - [link-discovery.md](link-discovery.md) — website/social link discovery, confidence, dead-link checks
 - [open-alliance.md](open-alliance.md) — optional Open Alliance team-declared resource enrichment
 - [gm0.md](gm0.md) — optional Game Manual 0 gallery resource enrichment
+- [orange-alliance.md](orange-alliance.md) — TOA research: corroboration only; FIRST stays canonical (#21)
 - [deployment.md](deployment.md) — deploy commands and proxy table
-- [attribution.md](attribution.md) — sources and residual risks
+- [attribution.md](attribution.md) — sources, hierarchy, and residual risks
 - [relationship-graph.md](relationship-graph.md) — evidence-backed team relationship graph model (#28)
 - [canonical-identifiers.md](canonical-identifiers.md) — location/school/org canonical IDs (#16)
 - [school-community-context.md](school-community-context.md) — aggregate school/community context policy (#27)

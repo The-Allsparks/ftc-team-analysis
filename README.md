@@ -22,6 +22,7 @@ Built and maintained by [The Allsparks](https://www.theallsparks.org/). Licensed
 | [docs/github-repos.md](docs/github-repos.md) | Public GitHub repo verification + ownership evidence (#22) |
 | [docs/relationship-graph.md](docs/relationship-graph.md) | Evidence-backed team relationship graph model (#28; derived view, not a graph DB) |
 | [docs/canonical-identifiers.md](docs/canonical-identifiers.md) | Location/school/org canonical IDs (#16; ISO + curated NCES, fail-soft) |
+| [docs/orange-alliance.md](docs/orange-alliance.md) | The Orange Alliance research (#21; corroboration only; FIRST stays canonical) |
 
 ## Product milestone
 
@@ -97,13 +98,14 @@ Local Vite (`npm run dev` / `npm run preview`) provides the same prefixes. Produ
 
 ## Data Sources
 
-Full attribution and residual constraints: [docs/attribution.md](docs/attribution.md). Privacy and corrections: [docs/privacy.md](docs/privacy.md).
+Full attribution, source hierarchy, and residual constraints: [docs/attribution.md](docs/attribution.md). Privacy and corrections: [docs/privacy.md](docs/privacy.md). Official competitive results remain **FIRST / FTC Events**–canonical; community sources (FTCScout, future TOA corroboration) never override them — see [docs/orange-alliance.md](docs/orange-alliance.md).
 
 - FIRST Team/Event Search: https://www.firstinspires.org/team-event-search?content=teams&season=2025&country=United+States&state=NV&programs=FIRST+Tech+Challenge&indices=teams_*
 - FTC Events Nevada region pages: https://ftc-events.firstinspires.org/2025/region/USNV
 - FTC Events public team pages: https://ftc-events.firstinspires.org/2025/team/16158
 - FTC Events API information: https://ftc-events.firstinspires.org/services/API
 - FTC Portfolio Lab (optional enrichment): https://www.ftcportfoliolab.org/portfolio — rated public portfolio catalog; attribute [FTC Portfolio Lab](https://www.ftcportfoliolab.org/). The only known public JSON surface used here is `/api/search` (search hits). Full catalog fields are read from the public `/portfolio` HTML embedding. There is no documented full-catalog API; upstream HTML/RSC format changes and third-party terms are residual risks (not a legal clearance).
+- The Orange Alliance (research only, #21): https://theorangealliance.org/ — account-gated API researched for future non-canonical corroboration/media enrichment; **not** wired to `pull:data`.
 
 ## Public-Only Limitation
 
