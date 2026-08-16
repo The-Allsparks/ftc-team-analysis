@@ -53,6 +53,7 @@ Refresh-to-refresh field observations are stored in the append-only side store `
 
 - Credentialed FTC Events API payloads
 - The Orange Alliance API payloads (researched in #21; not wired to `pull:data`)
+- Internet Archive / Wayback payloads (researched in #25; not wired to `pull:data` or scheduled refresh)
 - Student PII or private contact databases (link collectors filter personal social/mailto patterns; see [privacy.md](privacy.md) and [link-discovery.md](link-discovery.md))
 - Portfolio Lab as identity-critical input (optional enrichment only; HTML scrape carries residual terms/format risk)
 
@@ -83,6 +84,10 @@ Opt-in with `--enrich-canonical-ids` (default **off** for CI/scheduled refresh).
 ## The Orange Alliance (#21)
 
 **Not ingested yet** (research only). Conditional go for future non-canonical corroboration/media enrichment after terms, secrets, and conflict rules; competitive corroboration implementation remains blocked on [#17](https://github.com/The-Allsparks/ftc-team-analysis/issues/17). **Do not** treat TOA as canonical where FIRST official data exists. See [orange-alliance.md](orange-alliance.md).
+
+## Internet Archive / Wayback (#25)
+
+**Not ingested yet** (research only). Conditional go for future opt-in reconstruction of known Nevada team website captures via Availability/CDX; facts must be labeled **archived** (never current). **Do not** enable on scheduled data-refresh. See [internet-archive.md](internet-archive.md).
 
 ## Tests
 

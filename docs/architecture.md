@@ -35,6 +35,7 @@ FTC Events / FTCScout / Portfolio Lab / FTC Scoring (public HTTP)
 - **Optional enrichment:** FTCScout, Portfolio Lab, avatars — failures surface as availability states, not empty “success” caches.
 - **No credentialed FIRST API** in the current design (season discovery stays config + ingested data; see #14 / #17).
 - **The Orange Alliance:** researched only (#21); **not** wired. Future role is non-canonical corroboration/enrichment; **FIRST remains canonical** for official results. See [orange-alliance.md](orange-alliance.md) and source hierarchy in [attribution.md](attribution.md).
+- **Internet Archive / Wayback:** researched only (#25); **not** wired. Future role is optional reconstruction of **archived** public team website facts; never treated as current live truth. See [internet-archive.md](internet-archive.md).
 
 ## Season model
 
@@ -53,6 +54,7 @@ When FTC Events has not published the current region page, the UI selects the la
 - [open-alliance.md](open-alliance.md) — optional Open Alliance team-declared resource enrichment
 - [gm0.md](gm0.md) — optional Game Manual 0 gallery resource enrichment
 - [orange-alliance.md](orange-alliance.md) — TOA research: corroboration only; FIRST stays canonical (#21)
+- [internet-archive.md](internet-archive.md) — Wayback research: archived website reconstruction only (#25)
 - [deployment.md](deployment.md) — deploy commands and proxy table
 - [attribution.md](attribution.md) — sources, hierarchy, and residual risks
 - [relationship-graph.md](relationship-graph.md) — evidence-backed team relationship graph model (#28)

@@ -23,6 +23,7 @@ Built and maintained by [The Allsparks](https://www.theallsparks.org/). Licensed
 | [docs/relationship-graph.md](docs/relationship-graph.md) | Evidence-backed team relationship graph model (#28; derived view, not a graph DB) |
 | [docs/canonical-identifiers.md](docs/canonical-identifiers.md) | Location/school/org canonical IDs (#16; ISO + curated NCES, fail-soft) |
 | [docs/orange-alliance.md](docs/orange-alliance.md) | The Orange Alliance research (#21; corroboration only; FIRST stays canonical) |
+| [docs/internet-archive.md](docs/internet-archive.md) | Internet Archive / Wayback research (#25; archived website reconstruction only) |
 
 ## Product milestone
 
@@ -106,6 +107,7 @@ Full attribution, source hierarchy, and residual constraints: [docs/attribution.
 - FTC Events API information: https://ftc-events.firstinspires.org/services/API
 - FTC Portfolio Lab (optional enrichment): https://www.ftcportfoliolab.org/portfolio — rated public portfolio catalog; attribute [FTC Portfolio Lab](https://www.ftcportfoliolab.org/). The only known public JSON surface used here is `/api/search` (search hits). Full catalog fields are read from the public `/portfolio` HTML embedding. There is no documented full-catalog API; upstream HTML/RSC format changes and third-party terms are residual risks (not a legal clearance).
 - The Orange Alliance (research only, #21): https://theorangealliance.org/ — account-gated API researched for future non-canonical corroboration/media enrichment; **not** wired to `pull:data`.
+- Internet Archive / Wayback (research only, #25): https://archive.org/ / https://web.archive.org/ — Availability/CDX researched for future archived team-site reconstruction; **not** wired to `pull:data` or scheduled refresh.
 
 ## Public-Only Limitation
 
