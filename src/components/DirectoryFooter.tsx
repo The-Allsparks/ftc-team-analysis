@@ -46,7 +46,8 @@ export function DirectoryFooter({ data }: DirectoryFooterProps) {
         </a>
         . {data.limitations.join(' ')} Portfolio Lab is optional enrichment from the public catalog (attributed to FTC
         Portfolio Lab), validated at runtime, and cached in the browser for 24 hours. FTCScout OPR and event analytics
-        are cached per team-season for 30 minutes to 7 days.
+        are calculated community statistics (not official FIRST results), labeled in the team detail panel, and cached
+        per team-season for 30 minutes to 7 days.
       </p>
     </footer>
   );

@@ -836,6 +836,28 @@ button:focus-visible {
   margin: 0 0 22px;
 }
 
+.scout-provenance {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 14px;
+  margin: 0 0 10px;
+  color: #526072;
+  font-size: 0.86rem;
+}
+
+.scout-provenance a {
+  color: #1d4ed8;
+}
+
+.scout-cross-season-note {
+  margin: 0 0 12px;
+  padding: 8px 10px;
+  border-left: 3px solid #c4a35a;
+  background: #fffbeb;
+  color: #5c4b1f;
+  font-size: 0.88rem;
+}
+
 .scout-quick-stats {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));

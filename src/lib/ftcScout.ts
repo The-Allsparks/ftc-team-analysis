@@ -1,9 +1,15 @@
 import {
+  emptyTeamScoutData,
   FTCSCOUT_API_BASE_URL,
   ScoutEventParticipation,
   ScoutQuickStats,
   TeamScoutData,
 } from '../data/ftcScout';
+import {
+  SCOUT_API_DOCS_URL,
+  SCOUT_DEFAULT_RANKING_SCOPE,
+  SCOUT_META_CATALOG_VERSION,
+} from '../data/ftcScoutMeta';
 import {
   formatScoutIssues,
   parseScoutEvents,
@@ -29,7 +35,8 @@ export function toFtcScoutProxyUrl(path: string): string {
 }
 
 function scoutCacheKey(season: SeasonId, teamNumber: number): string {
-  return cacheKey('ftcscout-v3', String(season), String(teamNumber));
+  // v4: rankingScope + metaCatalogVersion + event scoreSpread retention
+  return cacheKey('ftcscout-v4', String(season), String(teamNumber));
 }
 
 function scoutTtl(season: SeasonId): number {
@@ -153,6 +160,7 @@ function normalizeEventParticipation(payload: ScoutEventParticipation): ScoutEve
             totalPoints: payload.stats.avg.totalPoints ?? null,
           }
         : null,
+      scoreSpread: payload.stats.scoreSpread ?? null,
     },
   };
 }
@@ -230,9 +238,9 @@ export async function fetchTeamScoutData(
       : null;
 
   const data: TeamScoutData = {
-    fetchedAt: new Date().toISOString(),
-    season,
-    teamNumber,
+    ...emptyTeamScoutData(season, teamNumber),
+    rankingScope: SCOUT_DEFAULT_RANKING_SCOPE,
+    metaCatalogVersion: SCOUT_META_CATALOG_VERSION,
     quickStats,
     events,
   };
@@ -274,10 +282,15 @@ export async function fetchTeamScoutData(
 }
 
 export function scoutApiDocsUrl(): string {
-  return `${FTCSCOUT_API_BASE_URL.replace('/rest/v1', '')}/api`;
+  return SCOUT_API_DOCS_URL;
 }
 
-/** Test helper: current scout cache key namespace (v3 is schema-validated before cache). */
+/** @deprecated Prefer SCOUT_API_DOCS_URL; kept for callers that built from REST base. */
+export function scoutRestApiBaseUrl(): string {
+  return FTCSCOUT_API_BASE_URL;
+}
+
+/** Test helper: current scout cache key namespace (v4 retains scoreSpread + meta). */
 export function scoutTeamCacheKeyForTests(season: SeasonId, teamNumber: number): string {
   return scoutCacheKey(season, teamNumber);
 }

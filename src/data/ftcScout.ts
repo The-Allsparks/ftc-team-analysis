@@ -1,4 +1,9 @@
 import { SeasonId } from './schema';
+import {
+  SCOUT_DEFAULT_RANKING_SCOPE,
+  SCOUT_META_CATALOG_VERSION,
+  ScoutRankingScope,
+} from './ftcScoutMeta';
 
 export type ScoutStatValue = {
   value: number;
@@ -12,7 +17,14 @@ export type ScoutQuickStats = {
   auto: ScoutStatValue;
   dc: ScoutStatValue;
   eg: ScoutStatValue;
+  /** World ranking pool size for this season (FTCScout `count`). */
   count: number;
+};
+
+export type ScoutPointTotals = {
+  totalPoints: number | null;
+  autoPoints: number | null;
+  dcPoints: number | null;
 };
 
 export type ScoutEventStats = {
@@ -22,14 +34,15 @@ export type ScoutEventStats = {
   losses: number;
   ties: number;
   qualMatchesPlayed: number | null;
-  opr: {
-    totalPoints: number | null;
-    autoPoints: number | null;
-    dcPoints: number | null;
-  } | null;
+  opr: ScoutPointTotals | null;
   avg: {
     totalPoints: number | null;
   } | null;
+  /**
+   * Points-spread / variability from FTCScout `dev.totalPoints` when present.
+   * Not a formal confidence interval.
+   */
+  scoreSpread: number | null;
 };
 
 export type ScoutEventParticipation = {
@@ -43,6 +56,8 @@ export type TeamScoutData = {
   fetchedAt: string;
   season: SeasonId;
   teamNumber: number;
+  rankingScope: ScoutRankingScope;
+  metaCatalogVersion: typeof SCOUT_META_CATALOG_VERSION;
   quickStats: ScoutQuickStats | null;
   events: ScoutEventParticipation[];
 };
@@ -78,4 +93,20 @@ export function formatScoutRank(rank: number | null | undefined): string {
   }
 
   return `#${rank.toLocaleString()}`;
+}
+
+export function emptyTeamScoutData(
+  season: SeasonId,
+  teamNumber: number,
+  fetchedAt = new Date().toISOString(),
+): TeamScoutData {
+  return {
+    fetchedAt,
+    season,
+    teamNumber,
+    rankingScope: SCOUT_DEFAULT_RANKING_SCOPE,
+    metaCatalogVersion: SCOUT_META_CATALOG_VERSION,
+    quickStats: null,
+    events: [],
+  };
 }

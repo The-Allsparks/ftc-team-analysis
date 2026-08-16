@@ -145,8 +145,60 @@ describe('fetchTeamScoutData', () => {
     if (result.ok) {
       expect(result.state).toBe('available');
       expect(result.data.events).toHaveLength(1);
+      expect(result.data.rankingScope).toBe('world');
+      expect(result.data.metaCatalogVersion).toBe('v1');
+      expect(result.data.quickStats?.count).toBe(10);
     }
     expect(getCached(scoutTeamCacheKeyForTests(2025, 16158), 60_000)).toEqual(result.ok ? result.data : null);
+    expect(scoutTeamCacheKeyForTests(2025, 16158)).toContain('ftcscout-v4');
+  });
+
+  it('retains event score spread from optional dev.totalPoints', async () => {
+    const fetchMock = vi.mocked(fetch);
+    fetchMock.mockImplementation(async (input) => {
+      const url = String(input);
+      if (url.includes('quick-stats')) {
+        return jsonResponse(200, sampleQuickStats);
+      }
+      return jsonResponse(200, [
+        {
+          season: 2025,
+          eventCode: 'USNVCMP',
+          teamNumber: 16158,
+          stats: {
+            rank: 3,
+            wins: 5,
+            losses: 0,
+            ties: 0,
+            qualMatchesPlayed: 8,
+            opr: { totalPoints: 55.1, autoPoints: 10, dcPoints: 30 },
+            avg: { totalPoints: 120 },
+            dev: { totalPoints: 14.2 },
+          },
+        },
+        {
+          season: 2025,
+          eventCode: 'USNVQ1',
+          teamNumber: 16158,
+          stats: {
+            wins: 1,
+            losses: 1,
+            ties: 0,
+            opr: { totalPoints: 22 },
+          },
+        },
+      ]);
+    });
+
+    const result = await fetchTeamScoutData(2025, 16158, { force: true });
+    expect(result.ok).toBe(true);
+    if (!result.ok) {
+      return;
+    }
+    expect(result.data.events[0]?.eventCode).toBe('USNVCMP');
+    expect(result.data.events[0]?.stats?.scoreSpread).toBe(14.2);
+    expect(result.data.events[0]?.stats?.qualMatchesPlayed).toBe(8);
+    expect(result.data.events[1]?.stats?.scoreSpread).toBeNull();
   });
 
   it('maps invalid quick-stats JSON shape to parse_failure without caching', async () => {

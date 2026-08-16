@@ -131,4 +131,65 @@ describe('parseScoutEvents', () => {
     expect(result.quarantined).toEqual([]);
     expect(result.quarantinedRecordCount).toBe(0);
   });
+
+  it('maps optional event stats including score spread from dev.totalPoints', () => {
+    const result = parseScoutEvents([
+      {
+        season: 2025,
+        eventCode: 'USNVCMP',
+        teamNumber: 16158,
+        stats: {
+          rank: 2,
+          rp: 1.5,
+          wins: 4,
+          losses: 1,
+          ties: 0,
+          qualMatchesPlayed: 6,
+          opr: { totalPoints: 40.5, autoPoints: 12, dcPoints: 20 },
+          avg: { totalPoints: 110 },
+          dev: { totalPoints: 9.25, autoPoints: 1 },
+        },
+      },
+    ]);
+
+    expect(result.ok).toBe(true);
+    if (!result.ok) {
+      return;
+    }
+    expect(result.data[0]?.stats).toEqual({
+      rank: 2,
+      rp: 1.5,
+      wins: 4,
+      losses: 1,
+      ties: 0,
+      qualMatchesPlayed: 6,
+      opr: { totalPoints: 40.5, autoPoints: 12, dcPoints: 20 },
+      avg: { totalPoints: 110 },
+      scoreSpread: 9.25,
+    });
+  });
+
+  it('tolerates missing optional score spread and nested stats', () => {
+    const result = parseScoutEvents([
+      {
+        season: 2025,
+        eventCode: 'USNVQ1',
+        teamNumber: 16158,
+        stats: {
+          wins: 1,
+          losses: 2,
+          ties: 0,
+          opr: { totalPoints: 20 },
+        },
+      },
+    ]);
+
+    expect(result.ok).toBe(true);
+    if (!result.ok) {
+      return;
+    }
+    expect(result.data[0]?.stats?.scoreSpread).toBeNull();
+    expect(result.data[0]?.stats?.opr?.autoPoints).toBeNull();
+    expect(result.data[0]?.stats?.avg).toBeNull();
+  });
 });
