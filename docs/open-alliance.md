@@ -25,6 +25,7 @@ OA `NewestAward` / award fields from the API are intentionally ignored.
 | Exact `TeamNumber` (1–5 digits) + optional `TeamID` = `FTC{n}` | **Confirmed** (API validation + list shape) |
 | Per-team HTML scrape of `/ftc/teams` SSR | **Not used** (list is empty without client fetch; API is the bounded source) |
 | GitHub org search / deep verification | Declared OA `Code` URLs may be verified via [`--enrich-github`](github-repos.md) ([#22](https://github.com/The-Allsparks/ftc-team-analysis/issues/22)) |
+| YouTube search / deep verification | Declared OA media URLs may be verified via [`--enrich-youtube`](youtube.md) ([#23](https://github.com/The-Allsparks/ftc-team-analysis/issues/23)) |
 
 ## Matching rule
 

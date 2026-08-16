@@ -23,6 +23,7 @@ GM0 gallery data is **enrichment only**:
 | Exact leading team number is reliable identity evidence | **Confirmed** (parser + fixture tests) |
 | Name-only headings are safe to auto-match | **Rejected** (ambiguous; false-match tests) |
 | GitHub org search / deep verification of linked repos | Declared gallery GitHub URLs may be verified via [`--enrich-github`](github-repos.md) ([#22](https://github.com/The-Allsparks/ftc-team-analysis/issues/22)) |
+| YouTube search / deep verification of linked media | Declared gallery YouTube URLs may be verified via [`--enrich-youtube`](youtube.md) ([#23](https://github.com/The-Allsparks/ftc-team-analysis/issues/23)) |
 
 ## Matching rule
 

@@ -11,6 +11,7 @@ import type {
   TeamEvent,
   TeamLink,
   TeamSeason,
+  TeamVideoResource,
 } from '../data/schema';
 import {
   GraphEdge,
@@ -357,6 +358,53 @@ function projectRepository(
   });
 }
 
+function projectVideoResource(
+  team: Team,
+  resource: TeamVideoResource,
+  nodes: Map<string, GraphNode>,
+  edges: Map<string, GraphEdge>,
+): void {
+  const id = artifactNodeId(resource.url);
+  const nodeType = resource.kind === 'channel' ? 'channel' : 'video';
+  upsertNode(nodes, {
+    id,
+    type: nodeType,
+    label: resource.title || resource.url,
+    refs: {
+      url: resource.url,
+      channelId: resource.channelId ?? null,
+      videoId: resource.videoId ?? null,
+      playlistId: resource.playlistId ?? null,
+      kind: resource.kind,
+    },
+    props: {
+      publishedAt: resource.publishedAt ?? null,
+      seasonHint: resource.seasonHint ?? null,
+      evidenceKind: resource.evidenceKind,
+    },
+  });
+
+  pushEdge(edges, {
+    id: `links_to:${teamNodeId(team.number)}:${id}`,
+    from: teamNodeId(team.number),
+    to: id,
+    type: 'links_to',
+    evidence: evidence({
+      source: resource.source,
+      retrievedAt: resource.retrievedAt ?? null,
+      confidence: resource.ownershipConfidence,
+      confirmationState: resource.confirmationState ?? 'unconfirmed',
+      notes: resource.evidence,
+      url: resource.url,
+      kind: resource.evidenceKind,
+      detail: resource.title ?? null,
+    }),
+    props: {
+      linkType: resource.kind,
+    },
+  });
+}
+
 function projectSeason(
   teamNumber: number,
   season: TeamSeason,
@@ -491,6 +539,10 @@ export function projectTeamToGraph(
 
   for (const repo of team.codeRepositories ?? []) {
     projectRepository(team, repo, nodes, edges);
+  }
+
+  for (const resource of team.videoResources ?? []) {
+    projectVideoResource(team, resource, nodes, edges);
   }
 
   return { nodes, edges };

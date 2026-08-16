@@ -203,6 +203,15 @@ const codeRepositoryEvidenceKindSchema = v.picklist([
   'search-corroborated',
 ]);
 
+const videoResourceKindSchema = v.picklist(['channel', 'video', 'playlist']);
+
+const videoResourceEvidenceKindSchema = v.picklist([
+  'declared-link',
+  'open-alliance',
+  'gm0-gallery',
+  'search-corroborated',
+]);
+
 const teamLinkSchema = v.looseObject({
   type: teamLinkTypeSchema,
   label: v.string(),
@@ -230,6 +239,23 @@ const teamCodeRepositorySchema = v.looseObject({
   description: v.optional(nullableString),
   evidence: v.string(),
   evidenceKind: codeRepositoryEvidenceKindSchema,
+  ownershipConfidence: affiliationConfidenceSchema,
+  confirmationState: v.optional(affiliationConfirmationSchema),
+  source: v.string(),
+  retrievedAt: v.optional(nullableString),
+});
+
+const teamVideoResourceSchema = v.looseObject({
+  url: v.string(),
+  kind: videoResourceKindSchema,
+  title: v.optional(nullableString),
+  publishedAt: v.optional(nullableString),
+  seasonHint: v.optional(nullableNumber),
+  channelId: v.optional(nullableString),
+  videoId: v.optional(nullableString),
+  playlistId: v.optional(nullableString),
+  evidence: v.string(),
+  evidenceKind: videoResourceEvidenceKindSchema,
   ownershipConfidence: affiliationConfidenceSchema,
   confirmationState: v.optional(affiliationConfirmationSchema),
   source: v.string(),
@@ -279,6 +305,7 @@ const teamSchema = v.looseObject({
   latestRegion: nullableString,
   links: v.array(teamLinkSchema),
   codeRepositories: v.optional(v.array(teamCodeRepositorySchema)),
+  videoResources: v.optional(v.array(teamVideoResourceSchema)),
   seasons: v.pipe(
     v.record(seasonKeySchema, teamSeasonSchema),
     v.minEntries(1, 'Team must include at least one season.'),

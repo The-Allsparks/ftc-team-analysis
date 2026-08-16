@@ -9,6 +9,8 @@ export type PullArgs = {
   enrichGm0: boolean;
   /** Opt-in GitHub repo verification from declared links (off by default). */
   enrichGithub: boolean;
+  /** Opt-in YouTube verification from declared links (off by default). */
+  enrichYoutube: boolean;
   /**
    * Opt-in canonical location/org identity fields (#16). Off by default.
    * Offline catalog + string normalize only — no geocoding network calls.
@@ -47,6 +49,7 @@ export function parsePullArgs(argv: string[]): PullArgs {
     enrichOpenAlliance: false,
     enrichGm0: false,
     enrichGithub: false,
+    enrichYoutube: false,
     enrichCanonicalIds: false,
     dryRun: false,
     candidateFixture: null,
@@ -88,6 +91,14 @@ export function parsePullArgs(argv: string[]): PullArgs {
         args.enrichGithub = isTruthy(token.slice(token.indexOf('=') + 1));
       } else {
         args.enrichGithub = true;
+      }
+      continue;
+    }
+    if (token === '--enrich-youtube' || token.startsWith('--enrich-youtube=')) {
+      if (token.includes('=')) {
+        args.enrichYoutube = isTruthy(token.slice(token.indexOf('=') + 1));
+      } else {
+        args.enrichYoutube = true;
       }
       continue;
     }
@@ -141,6 +152,7 @@ Options:
   --enrich-open-alliance    opt-in: attach Open Alliance team-declared resources (exact team # only)
   --enrich-gm0              opt-in: attach Game Manual 0 gallery resources (exact team # only)
   --enrich-github           opt-in: verify GitHub repos from declared links (OA/GM0/website); no number-only ownership
+  --enrich-youtube          opt-in: verify YouTube channels/videos from declared links; no name-only ownership
   --enrich-canonical-ids    opt-in: normalize locations/orgs + curated NCES IDs when uniquely matched (#16)
   --dry-run                 run guards/report but do not write the seed
   --candidate-fixture=PATH  load candidate JSON from PATH (no network); for gate tests

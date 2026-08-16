@@ -107,6 +107,38 @@ export type TeamCodeRepository = {
 };
 
 /**
+ * Verified public YouTube channel / video / playlist attached to a team (#23).
+ * Ownership always requires evidence beyond the team number / name alone.
+ * Optional / additive — older seeds without `videoResources` remain valid.
+ */
+export type VideoResourceKind = 'channel' | 'video' | 'playlist';
+
+export type VideoResourceEvidenceKind =
+  | 'declared-link'
+  | 'open-alliance'
+  | 'gm0-gallery'
+  | 'search-corroborated';
+
+export type TeamVideoResource = {
+  url: string;
+  kind: VideoResourceKind;
+  title?: string | null;
+  /** ISO timestamp when known (video publish / channel creation). */
+  publishedAt?: string | null;
+  /** Season year inferred from title/description when known. */
+  seasonHint?: number | null;
+  channelId?: string | null;
+  videoId?: string | null;
+  playlistId?: string | null;
+  evidence: string;
+  evidenceKind: VideoResourceEvidenceKind;
+  ownershipConfidence: LinkOwnershipConfidence;
+  confirmationState?: LinkConfirmation;
+  source: string;
+  retrievedAt?: string | null;
+};
+
+/**
  * Role for a parsed organization/sponsor segment.
  * Auto-backfill typically fills school, sponsor, community_organization,
  * team_affiliation, and host_organization. Other roles are schema-supported
@@ -324,6 +356,11 @@ export type Team = {
    * populated when `--enrich-github` verifies declared / corroborated URLs.
    */
   codeRepositories?: TeamCodeRepository[];
+  /**
+   * Optional verified public YouTube resources (#23). Omitted on older seeds;
+   * populated when `--enrich-youtube` verifies declared / corroborated URLs.
+   */
+  videoResources?: TeamVideoResource[];
   seasons: Partial<Record<SeasonId, TeamSeason>>;
 };
 

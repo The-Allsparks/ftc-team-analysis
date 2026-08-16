@@ -71,7 +71,7 @@ GitHub Actions (`.github/workflows/data-refresh.yml`) refreshes the checked-in N
 | Cron 1st of month 16:00 UTC | `full` | Rebuilds all configured seasons |
 | `workflow_dispatch` | `current` or `full` | Manual; link enrichment optional |
 
-Scheduled runs skip team-website link crawling to keep traffic modest. Open Alliance, Game Manual 0 gallery, and GitHub verification enrichment are also off unless you pass `--enrich-open-alliance` / `--enrich-gm0` / `--enrich-github` (see [docs/open-alliance.md](docs/open-alliance.md), [docs/gm0.md](docs/gm0.md), and [docs/github-repos.md](docs/github-repos.md)). Before writing, `pull:data` reuses the empty/drop `publishGuard`, then the workflow runs `validate:data`. Each successful run writes a change report (`data-refresh-report.md`, also uploaded as an artifact) and records per-source `sourceChecks` timestamps on the snapshot. When the seed changes, the workflow opens a PR by default (never pushes directly to `main`, never auto-merges). Set repository variable `DATA_REFRESH_OPEN_PR=false` to disable PR creation (artifacts still upload). **Required repo setting:** Actions → General → Workflow permissions → enable **Allow GitHub Actions to create and approve pull requests**; without that, the refresh still writes artifacts and pushes `data-refresh/*` but PR creation fails. Local flags:
+Scheduled runs skip team-website link crawling to keep traffic modest. Open Alliance, Game Manual 0 gallery, GitHub, and YouTube verification enrichment are also off unless you pass `--enrich-open-alliance` / `--enrich-gm0` / `--enrich-github` / `--enrich-youtube` (see [docs/open-alliance.md](docs/open-alliance.md), [docs/gm0.md](docs/gm0.md), [docs/github-repos.md](docs/github-repos.md), and [docs/youtube.md](docs/youtube.md)). Before writing, `pull:data` reuses the empty/drop `publishGuard`, then the workflow runs `validate:data`. Each successful run writes a change report (`data-refresh-report.md`, also uploaded as an artifact) and records per-source `sourceChecks` timestamps on the snapshot. When the seed changes, the workflow opens a PR by default (never pushes directly to `main`, never auto-merges). Set repository variable `DATA_REFRESH_OPEN_PR=false` to disable PR creation (artifacts still upload). **Required repo setting:** Actions → General → Workflow permissions → enable **Allow GitHub Actions to create and approve pull requests**; without that, the refresh still writes artifacts and pushes `data-refresh/*` but PR creation fails. Local flags:
 
 ```bash
 npm run pull:data -- --mode=current --skip-link-enrichment
@@ -79,6 +79,7 @@ npm run pull:data -- --mode=full
 npm run pull:data -- --mode=current --skip-link-enrichment --enrich-open-alliance
 npm run pull:data -- --mode=current --skip-link-enrichment --enrich-gm0
 npm run pull:data -- --mode=current --skip-link-enrichment --enrich-github
+npm run pull:data -- --mode=current --skip-link-enrichment --enrich-youtube
 npm run pull:data -- --mode=current --skip-link-enrichment --enrich-canonical-ids
 npm run pull:data -- --dry-run --candidate-fixture=src/data/fixtures/empty-generated-candidate.json
 ```

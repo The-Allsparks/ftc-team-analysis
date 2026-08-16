@@ -18,6 +18,7 @@ npm run pull:data -- --mode=full
 npm run pull:data -- --mode=current --skip-link-enrichment --enrich-open-alliance
 npm run pull:data -- --mode=current --skip-link-enrichment --enrich-gm0
 npm run pull:data -- --mode=current --skip-link-enrichment --enrich-github
+npm run pull:data -- --mode=current --skip-link-enrichment --enrich-youtube
 npm run pull:data -- --mode=current --skip-link-enrichment --enrich-canonical-ids
 npm run pull:data -- --dry-run --candidate-fixture=src/data/fixtures/empty-generated-candidate.json
 ```
@@ -73,6 +74,10 @@ Opt-in with `--enrich-gm0` (default **off** for CI/scheduled refresh). Performs 
 ## GitHub repository verification (#22)
 
 Opt-in with `--enrich-github` (default **off** for CI/scheduled refresh). Verifies public `github.com/owner/repo` URLs already present on `Team.links` (website / Open Alliance / GM0), stores additive `codeRepositories` with owner, languages, last activity, and evidence. Ownership is never inferred from team number alone. See [github-repos.md](github-repos.md).
+
+## YouTube verification (#23)
+
+Opt-in with `--enrich-youtube` (default **off** for CI/scheduled refresh). Verifies public YouTube channel/video/playlist URLs already present on `Team.links`, stores additive `videoResources` with kind, title, publishedAt, seasonHint, and evidence. Works without `YOUTUBE_API_KEY` (declared-link path); optional Data API metadata uses a server-side key only. Name-only matches are never auto-accepted. See [youtube.md](youtube.md).
 
 ## Canonical location / organization identity (#16)
 

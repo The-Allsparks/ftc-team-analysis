@@ -768,6 +768,11 @@ button:focus-visible {
   font-weight: 600;
 }
 
+.link-source-youtube {
+  color: #b2071d;
+  font-weight: 600;
+}
+
 .portfolio-panel {
   margin: 0 0 22px;
 }

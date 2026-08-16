@@ -9,6 +9,7 @@ describe('parsePullArgs', () => {
       enrichOpenAlliance: false,
       enrichGm0: false,
       enrichGithub: false,
+      enrichYoutube: false,
       enrichCanonicalIds: false,
       dryRun: false,
       candidateFixture: null,
@@ -16,7 +17,7 @@ describe('parsePullArgs', () => {
     });
   });
 
-  it('parses mode, skip enrichment, Open Alliance, GM0, GitHub, canonical ids, dry-run, and fixture path', () => {
+  it('parses mode, skip enrichment, Open Alliance, GM0, GitHub, YouTube, canonical ids, dry-run, and fixture path', () => {
     expect(
       parsePullArgs([
         '--mode=current',
@@ -24,6 +25,7 @@ describe('parsePullArgs', () => {
         '--enrich-open-alliance',
         '--enrich-gm0',
         '--enrich-github',
+        '--enrich-youtube',
         '--enrich-canonical-ids',
         '--dry-run',
         '--candidate-fixture',
@@ -35,6 +37,7 @@ describe('parsePullArgs', () => {
       enrichOpenAlliance: true,
       enrichGm0: true,
       enrichGithub: true,
+      enrichYoutube: true,
       enrichCanonicalIds: true,
       dryRun: true,
       candidateFixture: 'tmp/candidate.json',

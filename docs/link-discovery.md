@@ -2,7 +2,7 @@
 
 How Nevada FTC Team Analysis finds, normalizes, and scores **public** team websites and resource links during `npm run pull:data` (when link enrichment is enabled).
 
-Related: [privacy.md](privacy.md), [responsible-crawling.md](responsible-crawling.md), [ingestion.md](ingestion.md), [open-alliance.md](open-alliance.md), [gm0.md](gm0.md).
+Related: [privacy.md](privacy.md), [responsible-crawling.md](responsible-crawling.md), [ingestion.md](ingestion.md), [open-alliance.md](open-alliance.md), [gm0.md](gm0.md), [github-repos.md](github-repos.md), [youtube.md](youtube.md).
 
 ## Sources (bounded)
 
@@ -14,8 +14,9 @@ Related: [privacy.md](privacy.md), [responsible-crawling.md](responsible-crawlin
 6. **Open Alliance (opt-in)** team-declared resources via public API — separate from website crawl; see [open-alliance.md](open-alliance.md).
 7. **Game Manual 0 gallery (opt-in)** curated design links via bounded `gallery.rst` fetch — exact team number only; see [gm0.md](gm0.md).
 8. **GitHub verification (opt-in)** of `github.com/owner/repo` URLs already on `Team.links` — see [github-repos.md](github-repos.md).
+9. **YouTube verification (opt-in)** of YouTube channel/video/playlist URLs already on `Team.links` — see [youtube.md](youtube.md).
 
-Scheduled Actions continue to prefer `--skip-link-enrichment` and leave `--enrich-open-alliance` / `--enrich-gm0` / `--enrich-github` unset (see [responsible-crawling.md](responsible-crawling.md)).
+Scheduled Actions continue to prefer `--skip-link-enrichment` and leave `--enrich-open-alliance` / `--enrich-gm0` / `--enrich-github` / `--enrich-youtube` unset (see [responsible-crawling.md](responsible-crawling.md)).
 
 ## Normalization
 
@@ -59,9 +60,9 @@ Measurable coverage of teams with ≥1 verified public link improves when operat
 
 ## Out of scope here
 
-- YouTube Data API deep discovery ([#23](https://github.com/The-Allsparks/ftc-team-analysis/issues/23))
 - Onshape Public Documents crawling ([#26](https://github.com/The-Allsparks/ftc-team-analysis/issues/26)) — declared Onshape URLs from websites / OA / GM0 are in scope for collectors; mining Public Documents is not (see [onshape.md](onshape.md))
 - Team-submitted link corrections ([#32](https://github.com/The-Allsparks/ftc-team-analysis/issues/32))
 - Full `Team.links` observation history (deferred; see [field-evidence.md](field-evidence.md))
 
 GitHub repo **verification** of already-discovered URLs is covered in [github-repos.md](github-repos.md) (`--enrich-github`).
+YouTube **verification** of already-discovered URLs is covered in [youtube.md](youtube.md) (`--enrich-youtube`).
