@@ -18,6 +18,16 @@ If you discover student PII in the checked-in seed or UI that should not be reta
 
 This project does **not** operate a login, team account system, or student profile store today.
 
+## Link discovery privacy rules
+
+Website and social-link collectors (`src/lib/linkDiscovery.ts`) enforce:
+
+- **No personal emails / phones** — `mailto:` and `tel:` are rejected during normalization.
+- **No personal/student social accounts** — handles that look like personal names (for example `first.last`, LinkedIn `/in/…`, Facebook `profile.php`) are filtered unless the URL clearly includes a team number or robotics/FTC signal.
+- **Public team pages only** — discovery stays on declared On The Web URLs and bounded crawls of public team/school robotics pages and link hubs.
+
+Details: [link-discovery.md](link-discovery.md). Broader contributor expectations remain in [#31](https://github.com/The-Allsparks/ftc-team-analysis/issues/31) docs.
+
 ## Corrections and team claims (process only)
 
 There is no in-app claim/correction product yet (tracked in [#32](https://github.com/The-Allsparks/ftc-team-analysis/issues/32)). Until then:

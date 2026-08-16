@@ -17,6 +17,7 @@ Built and maintained by [The Allsparks](https://www.theallsparks.org/). Licensed
 | [docs/ingestion.md](docs/ingestion.md) | Seed pull and publish guards |
 | [docs/deployment.md](docs/deployment.md) | Deploy overview (Cloudflare runbooks → [#38](https://github.com/The-Allsparks/ftc-team-analysis/issues/38)) |
 | [docs/responsible-crawling.md](docs/responsible-crawling.md) | Crawling / refresh traffic policy |
+| [docs/link-discovery.md](docs/link-discovery.md) | Website/social link discovery, ownership confidence, privacy filters |
 
 ## Product milestone
 

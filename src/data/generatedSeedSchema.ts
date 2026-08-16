@@ -149,11 +149,21 @@ const teamAwardSchema = v.looseObject({
   eventUrl: nullableString,
 });
 
+const linkLivenessSchema = v.picklist(['alive', 'dead', 'unknown']);
+
 const teamLinkSchema = v.looseObject({
   type: teamLinkTypeSchema,
   label: v.string(),
   url: v.string(),
   source: v.string(),
+  ownershipConfidence: v.optional(affiliationConfidenceSchema),
+  confirmationState: v.optional(affiliationConfirmationSchema),
+  evidence: v.optional(nullableString),
+  notes: v.optional(nullableString),
+  retrievedAt: v.optional(nullableString),
+  lastCheckedAt: v.optional(nullableString),
+  httpStatus: v.optional(nullableNumber),
+  liveness: v.optional(linkLivenessSchema),
 });
 
 const teamSeasonSchema = v.looseObject({

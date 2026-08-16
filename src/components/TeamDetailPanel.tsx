@@ -538,12 +538,26 @@ export default function TeamDetailPanel({
                 <span>{selectedTeam.links.length}</span>
               </div>
               <div className="link-grid">
-                {selectedTeam.links.map((link) => (
-                  <a key={link.url} href={link.url} target="_blank" title={link.source}>
-                    <strong>{link.label}</strong>
-                    <span>{new URL(link.url).hostname.replace(/^www\./, '')}</span>
-                  </a>
-                ))}
+                {selectedTeam.links.map((link) => {
+                  const meta = [
+                    link.source,
+                    link.ownershipConfidence ? `ownership: ${link.ownershipConfidence}` : null,
+                    link.liveness && link.liveness !== 'unknown' ? `status: ${link.liveness}` : null,
+                    link.evidence,
+                  ]
+                    .filter(Boolean)
+                    .join(' · ');
+
+                  return (
+                    <a key={link.url} href={link.url} target="_blank" title={meta || link.source}>
+                      <strong>{link.label}</strong>
+                      <span>
+                        {new URL(link.url).hostname.replace(/^www\./, '')}
+                        {link.liveness === 'dead' ? ' (dead link)' : ''}
+                      </span>
+                    </a>
+                  );
+                })}
               </div>
             </section>
           )}

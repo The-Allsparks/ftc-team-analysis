@@ -113,10 +113,21 @@ export function normalizeExternalUrl(value: string | null | undefined, base?: st
       return null;
     }
 
+    // Prefer https for public team links when the host is reached via http.
+    if (url.protocol === 'http:') {
+      url.protocol = 'https:';
+    }
+
     url.hash = '';
+    url.username = '';
+    url.password = '';
 
     for (const key of [...url.searchParams.keys()]) {
-      if (/^utm_/i.test(key) || ['ref', 'refid', 'mibextid', 'refer'].includes(key.toLowerCase())) {
+      const lower = key.toLowerCase();
+      if (
+        /^utm_/i.test(key) ||
+        ['ref', 'refid', 'mibextid', 'refer', 'fbclid', 'gclid', 'igshid', 'si'].includes(lower)
+      ) {
         url.searchParams.delete(key);
       }
     }
@@ -127,7 +138,12 @@ export function normalizeExternalUrl(value: string | null | undefined, base?: st
       url.pathname = `/channel/${youtubeChannel[1]}`;
     }
 
-    return url.toString().replace(/\/$/, '');
+    if (url.pathname.length > 1 && url.pathname.endsWith('/')) {
+      url.pathname = url.pathname.slice(0, -1);
+    }
+
+    const pathAndQuery = `${url.pathname === '/' ? '' : url.pathname}${url.search}`;
+    return `${url.protocol}//${url.host}${pathAndQuery}`;
   } catch {
     return null;
   }
@@ -1129,81 +1145,6 @@ export function applyLeagueRankings(
       }
     }
   }
-}
-
-export async function discoverLinksForWebsite(teamWebsite: string, team: Team): Promise<TeamLink[]> {
-  const links = new Map<string, TeamLink>();
-  const websiteType = classifyTeamLink(teamWebsite).type;
-
-  if (websiteType !== 'website' && websiteType !== 'link-hub') {
-    if (websiteType !== 'social' || socialLinkLooksUseful(teamWebsite)) {
-      addTeamLink(links, teamWebsite, 'FTC Events On The Web');
-    }
-
-    return [...links.values()];
-  }
-
-  let siteIsTeamRelated = isTeamRelatedWebsite(teamWebsite, '', team);
-
-  try {
-    const response = await fetch(teamWebsite, {
-      headers: { 'user-agent': 'Nevada FTC Team Explorer public link discovery' },
-      signal: AbortSignal.timeout(8000),
-    });
-
-    if (!response.ok) {
-      if (siteIsTeamRelated) {
-        addTeamLink(links, teamWebsite, 'FTC Events On The Web');
-      }
-
-      return [...links.values()];
-    }
-
-    const contentType = response.headers.get('content-type') ?? '';
-
-    if (!contentType.includes('text/html')) {
-      if (siteIsTeamRelated) {
-        addTeamLink(links, teamWebsite, 'FTC Events On The Web');
-      }
-
-      return [...links.values()];
-    }
-
-    const root = parse(await response.text());
-    const pageHeadingText = cleanText(
-      [root.querySelector('title')?.textContent, root.querySelector('h1')?.textContent].join(' '),
-    );
-    siteIsTeamRelated = isTeamRelatedWebsite(teamWebsite, pageHeadingText, team);
-
-    if (siteIsTeamRelated) {
-      addTeamLink(links, teamWebsite, 'FTC Events On The Web');
-    }
-
-    for (const anchor of root.querySelectorAll('a') as HTMLElement[]) {
-      const href = anchor.getAttribute('href') ?? '';
-
-      if (/refer=embed/i.test(href)) {
-        continue;
-      }
-
-      const url = normalizeExternalUrl(href, teamWebsite);
-      const anchorText = cleanText(anchor.textContent);
-
-      if (!url || !shouldKeepDiscoveredLink(url, teamWebsite, anchorText, team, siteIsTeamRelated)) {
-        continue;
-      }
-
-      addTeamLink(links, url, 'Team website');
-    }
-  } catch {
-    if (siteIsTeamRelated) {
-      addTeamLink(links, teamWebsite, 'FTC Events On The Web');
-    }
-
-    return [...links.values()];
-  }
-
-  return [...links.values()].sort((a, b) => linkPriority(a) - linkPriority(b) || a.label.localeCompare(b.label));
 }
 
 export async function mapLimit<T, R>(

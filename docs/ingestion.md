@@ -48,8 +48,12 @@ Refresh-to-refresh field observations are stored in the append-only side store `
 ## What is not ingested
 
 - Credentialed FTC Events API payloads
-- Student PII or private contact databases
+- Student PII or private contact databases (link collectors filter personal social/mailto patterns; see [privacy.md](privacy.md) and [link-discovery.md](link-discovery.md))
 - Portfolio Lab as identity-critical input (optional enrichment only; HTML scrape carries residual terms/format risk)
+
+## Link enrichment (#24)
+
+When `--skip-link-enrichment` is **not** set, `pull:data` runs bounded public discovery (`src/lib/linkDiscovery.ts`): On The Web URLs, homepage anchors, robots/sitemap, common site paths, and link-hub outs. Links are normalized, privacy-filtered, annotated with ownership confidence/evidence, and optionally checked for liveness.
 
 ## Tests
 
