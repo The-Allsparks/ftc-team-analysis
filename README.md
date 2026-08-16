@@ -47,7 +47,7 @@ GitHub Actions (`.github/workflows/data-refresh.yml`) refreshes the checked-in N
 | Cron 1st of month 16:00 UTC | `full` | Rebuilds all configured seasons |
 | `workflow_dispatch` | `current` or `full` | Manual; link enrichment optional |
 
-Scheduled runs skip team-website link crawling to keep traffic modest. Before writing, `pull:data` reuses the empty/drop `publishGuard`, then the workflow runs `validate:data`. Each successful run writes a change report (`data-refresh-report.md`, also uploaded as an artifact) and records per-source `sourceChecks` timestamps on the snapshot. When the seed changes, the workflow opens a PR by default (never pushes directly to `main`, never auto-merges). Set repository variable `DATA_REFRESH_OPEN_PR=false` to disable PR creation (artifacts still upload). Local flags:
+Scheduled runs skip team-website link crawling to keep traffic modest. Before writing, `pull:data` reuses the empty/drop `publishGuard`, then the workflow runs `validate:data`. Each successful run writes a change report (`data-refresh-report.md`, also uploaded as an artifact) and records per-source `sourceChecks` timestamps on the snapshot. When the seed changes, the workflow opens a PR by default (never pushes directly to `main`, never auto-merges). Set repository variable `DATA_REFRESH_OPEN_PR=false` to disable PR creation (artifacts still upload). **Required repo setting:** Actions → General → Workflow permissions → enable **Allow GitHub Actions to create and approve pull requests**; without that, the refresh still writes artifacts and pushes `data-refresh/*` but PR creation fails. Local flags:
 
 ```bash
 npm run pull:data -- --mode=current --skip-link-enrichment
