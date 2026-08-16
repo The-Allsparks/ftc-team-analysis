@@ -1,6 +1,10 @@
 # Nevada FTC Team Analysis
 
-Local React/Vite explorer for Nevada-region FIRST Tech Challenge teams across seasons `2025` through `2019`.
+Trust-first Nevada-region FIRST Tech Challenge team directory and historical record (seasons `2025` through `2019`), with a local React/Vite UI.
+
+## Product milestone
+
+Immediate objective: **a trustworthy, source-backed Nevada FTC team directory and historical record.** Predictive and comparative analytics that depend on unresolved identity or provenance are deferred until readiness criteria are met. Existing Scout and lineage surfaces are a qualified preview. Maintainers may reject new analytics PRs until then — see [docs/v1-milestone.md](docs/v1-milestone.md).
 
 ## Setup
 
