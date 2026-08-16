@@ -23,6 +23,19 @@ export const TEAM_FACT_FIELDS = [
   'region',
   'robot',
   'teamType',
+  'active',
+] as const satisfies readonly TeamFactField[];
+
+/** Fields tracked across refreshes in the observations side store (#29). */
+export const CHANGE_TRACKED_FIELDS = [
+  'name',
+  'location',
+  'organization',
+  'website',
+  'league',
+  'region',
+  'robot',
+  'active',
 ] as const satisfies readonly TeamFactField[];
 
 export type EvidenceSourceType =
@@ -183,6 +196,7 @@ export function buildSeasonEvidence(
   season: Pick<
     TeamSeason,
     | 'season'
+    | 'active'
     | 'name'
     | 'location'
     | 'organization'
@@ -247,6 +261,9 @@ export function buildSeasonEvidence(
   add('league', season.league);
   add('region', season.region);
   add('robot', season.robot);
+  if (typeof season.active === 'boolean') {
+    add('active', season.active ? 'true' : 'false');
+  }
 
   if (opts.includeTeamType !== false) {
     add('teamType', season.teamType, {
@@ -298,6 +315,7 @@ export function evidenceForSeason(
   season: Pick<
     TeamSeason,
     | 'season'
+    | 'active'
     | 'name'
     | 'location'
     | 'organization'
@@ -351,6 +369,7 @@ export function evidenceForSeasonField(
   season: Pick<
     TeamSeason,
     | 'season'
+    | 'active'
     | 'name'
     | 'location'
     | 'organization'
@@ -370,4 +389,29 @@ export function evidenceForSeasonField(
   field: TeamFactField,
 ): FieldEvidence[] {
   return evidenceForField(evidenceForSeason(season), field);
+}
+
+/** Human labels for current / season-observed / historically-observed rows (#29). */
+export function observationScopeLabel(
+  row: FieldEvidence,
+  opts?: { isProfileCurrent?: boolean },
+): 'current' | 'season' | 'historical' {
+  if (row.status === 'superseded' || row.status === 'conflicting') {
+    return 'historical';
+  }
+  if (opts?.isProfileCurrent) {
+    return 'current';
+  }
+  return 'season';
+}
+
+export function formatObservationScopeLabel(scope: 'current' | 'season' | 'historical'): string {
+  switch (scope) {
+    case 'current':
+      return 'Current';
+    case 'season':
+      return 'Observed this season';
+    case 'historical':
+      return 'Previously observed';
+  }
 }

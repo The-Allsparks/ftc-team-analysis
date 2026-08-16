@@ -20,8 +20,9 @@ FTC Events / FTCScout / Portfolio Lab / FTC Scoring (public HTTP)
 | UI | `src/` | Directory, season history, qualified Scout/lineage previews |
 | Season model | `src/data/seasons.ts` | `SUPPORTED_SEASONS` (validate/name), explicit `CURRENT_SEASON`, `availableSeasons` from seed |
 | Seed schema | `src/data/*Schema.ts` | Valibot validation for seed, regions, live enrichments |
-| Canonical seed | `src/data/nv-ftc-teams.generated.json` | Checked-in Nevada snapshot |
-| Public seed copy | `public/data/` | Served as `/data/...` (via `npm run sync:data`) |
+| Canonical seed | `src/data/nv-ftc-teams.generated.json` | Checked-in Nevada snapshot (current scalars) |
+| Observations side store | `src/data/nv-ftc-team-observations.generated.json` | Append-only field change history (#29) |
+| Public data copy | `public/data/` | Served as `/data/...` (via `npm run sync:data`) |
 | Ingestion | `scripts/pull-public-ftc-data.ts` | Public-page pull, publish guards |
 | Worker | `worker/proxy.ts`, `wrangler.jsonc` | Allowlisted live-data proxy + static assets |
 

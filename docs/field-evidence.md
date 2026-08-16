@@ -7,28 +7,35 @@ Document-level `GeneratedData.sources` and a single `TeamSeason.sourceUrl` are n
 ## What changed (schema v1, additive)
 
 - **Kept:** All existing season scalars, document `sources`, and #4 `affiliations`.
-- **Added (optional):** `TeamSeason.evidence?: FieldEvidence[]` — one or more observations per core field.
+- **Added (optional):** `TeamSeason.evidence?: FieldEvidence[]` — one or more observations per core field (runtime / live refresh).
+- **Added (#29):** Append-only side store `src/data/nv-ftc-team-observations.generated.json` (synced to `public/data/`) for cross-refresh history. The mega seed keeps **current season scalars only** and omits full history.
 - **Schema version:** remains **1**. Older seeds without `evidence` still validate.
-- **Checked-in seed:** may omit `evidence` arrays to keep the Vite bundle small. The UI uses **derive-on-read** (`evidenceForSeason` / `evidenceForSeasonField`), mirroring `affiliationsForSeason`.
+- **Checked-in seed:** omits `evidence` arrays to avoid bundle/asset bloat. The UI loads the observations side store and joins history on read (`attachObservationsToData`); when no store rows exist it still **derive-on-reads** via `evidenceForSeason`.
 
 ### `FieldEvidence` fields
 
 | Field | Meaning |
 | --- | --- |
 | `id` | Stable within a season for supersede/conflict links |
-| `field` | Fact key (`name`, `location`, `organization`, `website`, `record`, `qualificationRecord`, `playoffRecord`, `rookieYear`, `league`, `region`, `robot`, `teamType`) |
+| `field` | Fact key (`name`, `location`, `organization`, `website`, `record`, `qualificationRecord`, `playoffRecord`, `rookieYear`, `league`, `region`, `robot`, `teamType`, `active`) |
 | `value` | Normalized display/compare string |
 | `kind` | `observed` (scraped/indexed) or `derived` (e.g. `teamType` heuristic) |
-| `sourceType` | e.g. `ftc-events-team-page`, `first-search`, `derived`, `offline-synthesize` |
+| `sourceType` | e.g. `ftc-events-team-page`, `first-search`, `derived`, `offline-synthesize`, `refresh-presence` |
 | `sourceUrl` | Page or document URL when known |
 | `retrievedAt` | ISO timestamp when known; `null` for offline synthesize / derive-on-read |
 | `observedSeason` | Season id of the observation |
-| `extractionMethod` | e.g. `html-field`, `html-title`, `search-index`, `heuristic`, `offline-synthesize` |
+| `extractionMethod` | e.g. `html-field`, `html-title`, `search-index`, `heuristic`, `offline-synthesize`, `presence-drop` |
 | `confidence` | `high` \| `medium` \| `low` |
 | `confirmationState` | `unconfirmed` \| `confirmed` \| `rejected` |
 | `status` | `current` \| `conflicting` \| `superseded` |
 | `rawValue` | Raw snippet when useful (e.g. full organization line) |
 | `supersedesId` | Prior observation id this row replaces (when status is current after supersede) |
+
+### Change-tracked fields (#29)
+
+Side-store history covers: **name**, **location**, **organization** (school/sponsors via the public org line), **website**, **league**, **region**, **robot**, **active** (season flag + presence vs dropped on refresh).
+
+**Deferred:** social/resource `Team.links` observation history (follow-up).
 
 ### Derived vs observed
 
@@ -42,21 +49,25 @@ Organization segment roles (`TeamAffiliation`) keep their own `source` / `confid
 
 ### Competitive facts in scope
 
-Season `record`, and `qualificationRecord` / `playoffRecord` when present. Per-event and per-award field evidence is out of scope (event/award rows already carry useful URLs).
+Season `record`, and `qualificationRecord` / `playoffRecord` when present (evidence model). Per-event and per-award field evidence is out of scope. Competitive records are not required in the #29 change-tracking side store.
 
 ## Ingestion and display
 
 - `parseTeamSeason` writes evidence with `retrievedAt` on live/pull.
 - `seasonFromSeed` writes evidence for search/region placeholders.
 - Live refresh merges prior evidence via `mergeSeasonEvidence` (supersede on value change).
-- **UI:** `evidenceForSeason` returns stored rows when present; otherwise synthesizes from scalars + `sourceUrl` without mutating the seed.
-- Optional maintainer script `scripts/backfill-field-evidence.ts` can persist synthesized rows locally — **do not** rewrite the checked-in seed with it (bundle bloat). Prefer live/`pull:data` for persisted evidence in future refreshes.
+- `mergeSeasonRefresh` and full pull merge prior season evidence before writing.
+- `pull:data` syncs the **observations side store** (`syncObservationsFromPull`): baseline synthesize on first touch (`retrievedAt: null` / `offline-synthesize`), append/supersede on changes, record `active=false` when a team is dropped from a refreshed season, then **strips** `evidence` from the mega seed.
+- **UI:** loads observations JSON, attaches history onto seasons, and labels **Current** / **Observed this season** / **Previously observed**.
+- Optional maintainer script `scripts/migrate-team-observations.ts` migrates any embedded seed evidence into the side store offline.
 
 ## Non-goals
 
 - Canonical location/school/org IDs (#16)
 - Relationship graph (#28)
-- Full historical snapshot product (#29)
+- Internet Archive reconstruction (#25)
+- Cloudflare static snapshot tree / hosting (#38)
 - Team-submitted correction workflow (#32)
 - Paid services, secrets, or student PII
-- Persisting offline-synthesized evidence into the mega seed solely for UI provenance
+- Persisting full observation history inside the mega seed
+- Social/resource `Team.links` change history (deferred follow-up)

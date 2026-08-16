@@ -105,7 +105,8 @@ export type TeamFactField =
   | 'league'
   | 'region'
   | 'robot'
-  | 'teamType';
+  | 'teamType'
+  | 'active';
 
 export type FactKind = 'observed' | 'derived';
 export type ObservationStatus = 'current' | 'conflicting' | 'superseded';
@@ -227,7 +228,9 @@ export type SourceCheck = {
  * (`GENERATED_DATA_SCHEMA_VERSION` = 1). The checked-in Nevada JSON omits
  * `schemaVersion` and is treated as version 1. `sources` is document-level
  * provenance; optional season `evidence` holds per-field observations (issue #5).
- * Optional `sourceChecks` records generation-time upstream probe results (#3).
+ * Cross-refresh history lives in the append-only observations side store (#29),
+ * not in the mega seed. Optional `sourceChecks` records generation-time upstream
+ * probe results (#3).
  */
 export type GeneratedData = {
   generatedAt: string;
@@ -243,6 +246,22 @@ export type GeneratedData = {
   limitations: string[];
   /** Optional; omitted on older checked-in seeds. */
   sourceChecks?: SourceCheck[];
+};
+
+/**
+ * Append-only observation log for public team field changes across refreshes (#29).
+ * Served as `/data/nv-ftc-team-observations.generated.json` (not embedded in seed).
+ */
+export type TeamObservationRecord = FieldEvidence & {
+  teamNumber: number;
+};
+
+export type TeamObservationsData = {
+  generatedAt: string;
+  /** Present on future snapshots; omitted file is version 1. */
+  schemaVersion?: number;
+  regionCode: string;
+  observations: TeamObservationRecord[];
 };
 
 /**

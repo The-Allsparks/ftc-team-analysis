@@ -23,7 +23,7 @@ import {
   TeamFactField,
   TeamSeason,
 } from '../data/schema';
-import { evidenceForSeasonField, formatProvenanceSummary } from '../lib/fieldEvidence';
+import { evidenceForSeasonField, formatObservationScopeLabel, formatProvenanceSummary } from '../lib/fieldEvidence';
 import { LiveRefreshStatus } from '../lib/ftcLive';
 import {
   hostAffiliations,
@@ -46,25 +46,58 @@ import {
 import { TeamAvatar } from './TeamAvatar';
 import { SourceStatusBlock } from './SourceStatusBlock';
 
-function FactProvenance({ season, field }: { season: TeamSeason; field: TeamFactField }) {
+function FactProvenance({
+  season,
+  field,
+  currentProfileValue,
+}: {
+  season: TeamSeason;
+  field: TeamFactField;
+  /** When set and different from the season current value, show a Current label. */
+  currentProfileValue?: string | null;
+}) {
   const rows = evidenceForSeasonField(season, field);
   if (rows.length === 0) {
     return null;
   }
 
   const current = rows.find((row) => row.status === 'current') ?? rows[0];
+  const historical = rows.filter((row) => row.status === 'superseded' || row.status === 'conflicting');
   const summary = formatProvenanceSummary(rows);
+  const showCurrent =
+    currentProfileValue != null &&
+    currentProfileValue.trim() !== '' &&
+    current != null &&
+    currentProfileValue.replace(/\s+/g, ' ').trim().toLowerCase() !==
+      current.value.replace(/\s+/g, ' ').trim().toLowerCase();
 
   return (
     <small className="fact-provenance">
-      <span className="fact-provenance-label">Source</span>
-      {current?.sourceUrl ? (
-        <a href={current.sourceUrl} target="_blank" rel="noreferrer">
-          {summary}
-        </a>
-      ) : (
-        <span>{summary}</span>
+      {showCurrent && (
+        <span className="fact-provenance-row">
+          <span className="fact-provenance-label">{formatObservationScopeLabel('current')}</span>
+          <span>{currentProfileValue}</span>
+        </span>
       )}
+      <span className="fact-provenance-row">
+        <span className="fact-provenance-label">{formatObservationScopeLabel('season')}</span>
+        {current?.sourceUrl ? (
+          <a href={current.sourceUrl} target="_blank" rel="noreferrer">
+            {summary}
+          </a>
+        ) : (
+          <span>{summary}</span>
+        )}
+      </span>
+      {historical.slice(0, 3).map((row) => (
+        <span key={row.id} className="fact-provenance-row fact-provenance-historical">
+          <span className="fact-provenance-label">{formatObservationScopeLabel('historical')}</span>
+          <span>
+            {row.value}
+            {row.retrievedAt ? ` · ${row.retrievedAt.slice(0, 10)}` : ''}
+          </span>
+        </span>
+      ))}
     </small>
   );
 }
@@ -77,7 +110,13 @@ function formatAffiliationNames(names: string[]): string {
   return names.length > 0 ? names.join(', ') : 'Not listed';
 }
 
-function OrganizationIdentity({ season }: { season: TeamSeason }) {
+function OrganizationIdentity({
+  season,
+  currentOrganization,
+}: {
+  season: TeamSeason;
+  currentOrganization?: string | null;
+}) {
   const hosts = hostAffiliations(season);
   const sponsors = sponsorAffiliations(season);
   const hasStructured = hosts.length > 0 || sponsors.length > 0;
@@ -87,7 +126,11 @@ function OrganizationIdentity({ season }: { season: TeamSeason }) {
       <div>
         <span>Organization / Sponsors</span>
         <strong>Not available publicly yet</strong>
-        <FactProvenance season={season} field="organization" />
+        <FactProvenance
+          season={season}
+          field="organization"
+          currentProfileValue={currentOrganization}
+        />
       </div>
     );
   }
@@ -97,7 +140,11 @@ function OrganizationIdentity({ season }: { season: TeamSeason }) {
       <div>
         <span>Organization / Sponsors</span>
         <strong>{season.organization}</strong>
-        <FactProvenance season={season} field="organization" />
+        <FactProvenance
+          season={season}
+          field="organization"
+          currentProfileValue={currentOrganization}
+        />
       </div>
     );
   }
@@ -110,12 +157,20 @@ function OrganizationIdentity({ season }: { season: TeamSeason }) {
         {hosts.some((row) => row.confidence === 'low') && (
           <small className="record-key">Parsed from public sponsor line; low confidence</small>
         )}
-        <FactProvenance season={season} field="organization" />
+        <FactProvenance
+          season={season}
+          field="organization"
+          currentProfileValue={currentOrganization}
+        />
       </div>
       <div>
         <span>Sponsors</span>
         <strong>{formatAffiliationNames(sponsors.map((row) => row.name))}</strong>
-        <FactProvenance season={season} field="organization" />
+        <FactProvenance
+          season={season}
+          field="organization"
+          currentProfileValue={currentOrganization}
+        />
       </div>
     </>
   );
@@ -193,12 +248,20 @@ export default function TeamDetailPanel({
               <div>
                 <p className="eyebrow">Team {selectedTeam.number}</p>
                 <h2>{selectedTeam.latestName}</h2>
-                <FactProvenance season={selectedSeason} field="name" />
+                <FactProvenance
+                  season={selectedSeason}
+                  field="name"
+                  currentProfileValue={selectedTeam.latestName}
+                />
                 <p>
                   {selectedSeason.location}
                   {selectedSeason.league ? ` - ${selectedSeason.league}` : ''}
                 </p>
-                <FactProvenance season={selectedSeason} field="location" />
+                <FactProvenance
+                  season={selectedSeason}
+                  field="location"
+                  currentProfileValue={selectedTeam.latestLocation}
+                />
               </div>
             </div>
             <div className="detail-actions">
@@ -228,7 +291,10 @@ export default function TeamDetailPanel({
           </div>
 
           <div className="identity-grid">
-            <OrganizationIdentity season={selectedSeason} />
+            <OrganizationIdentity
+              season={selectedSeason}
+              currentOrganization={selectedTeam.latestOrganization}
+            />
             <div>
               <span>Website</span>
               <strong>
@@ -240,7 +306,33 @@ export default function TeamDetailPanel({
                   'Not listed'
                 )}
               </strong>
-              <FactProvenance season={selectedSeason} field="website" />
+              <FactProvenance
+                season={selectedSeason}
+                field="website"
+                currentProfileValue={selectedTeam.latestWebsite}
+              />
+            </div>
+            <div>
+              <span>League / Region</span>
+              <strong>
+                {[selectedSeason.league, selectedSeason.region].filter(Boolean).join(' · ') ||
+                  'Not listed'}
+              </strong>
+              <FactProvenance
+                season={selectedSeason}
+                field="league"
+                currentProfileValue={selectedTeam.latestLeague}
+              />
+              <FactProvenance
+                season={selectedSeason}
+                field="region"
+                currentProfileValue={selectedTeam.latestRegion}
+              />
+            </div>
+            <div>
+              <span>Listed this season</span>
+              <strong>{selectedSeason.active ? 'Active' : 'Not listed / inactive'}</strong>
+              <FactProvenance season={selectedSeason} field="active" />
             </div>
             <div>
               <span>Rookie Year</span>
@@ -264,6 +356,7 @@ export default function TeamDetailPanel({
             <div>
               <span>Robot</span>
               <strong>{selectedSeason.robot ?? 'Not listed'}</strong>
+              <FactProvenance season={selectedSeason} field="robot" />
             </div>
           </div>
 

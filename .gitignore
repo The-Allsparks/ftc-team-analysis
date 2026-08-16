@@ -1,6 +1,7 @@
 node_modules
 dist
 public/data/nv-ftc-teams.generated.json
+public/data/nv-ftc-team-observations.generated.json
 .tools
 .env
 .DS_Store
