@@ -26,11 +26,11 @@ import {
 import {
   applyLeagueRankings,
   BASE_URL,
-  discoverLinksForWebsite,
   fetchFirstSearchTeams,
   fetchHtml,
   LeagueRanking,
   LeagueSeed,
+  linkPriority,
   mapLimit,
   mergeSeason,
   normalizeExternalUrl,
@@ -43,6 +43,7 @@ import {
   seasonFromSeed,
   sleep,
 } from '../src/lib/ftcParsers';
+import { discoverLinksForWebsite } from '../src/lib/linkDiscovery';
 
 const TEAM_SEARCH_URL = `https://www.firstinspires.org/team-event-search?content=teams&season=${CURRENT_SEASON}&country=United+States&state=NV&programs=FIRST+Tech+Challenge&indices=teams_*`;
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
@@ -81,7 +82,7 @@ const DEFAULT_LIMITATIONS: string[] = [
   'Organization strings are also split into typed affiliations (school, sponsors, community/host) with confidence flags; the raw organization text is retained. Ambiguous parses stay unconfirmed/low confidence.',
   'Core season facts support optional per-field evidence. Cross-refresh history is stored in nv-ftc-team-observations.generated.json (append-only side store); the checked-in mega seed omits evidence arrays and the UI derives or joins provenance on read. Organization affiliations remain a parallel model. Social/resource Team.links history is not yet tracked.',
   'Match-level details are limited to what appears on public team pages. The script stores event participation, ranks, records, playoff summaries, awards, per-event points, and official league RS/rank where visible.',
-  'External team links are discovered from public FTC On The Web URLs and one crawl of each team website, so private or unlinked accounts will not appear.',
+  'External team links are discovered from public FTC On The Web URLs plus a bounded crawl of each team website (homepage, robots/sitemap when present, and common About/Sponsors/Robots/Resources/Contact/Links paths, including Linktree-style hubs). URLs are normalized, checked for liveness, and stored with ownership confidence + evidence. Private student social accounts and personal contact info are filtered out (see docs/privacy.md and docs/link-discovery.md).',
 ];
 
 async function syncPublicAssets(): Promise<void> {
@@ -118,7 +119,7 @@ async function enrichTeamLinks(teams: Team[]): Promise<void> {
     const links = new Map<string, TeamLink>();
 
     for (const website of websites) {
-      const discoveredLinks = await discoverLinksForWebsite(website, team);
+      const discoveredLinks = await discoverLinksForWebsite(website, team, { checkLiveness: true });
 
       for (const link of discoveredLinks) {
         links.set(link.url, link);
@@ -126,29 +127,7 @@ async function enrichTeamLinks(teams: Team[]): Promise<void> {
     }
 
     team.links = [...links.values()].sort(
-      (a, b) =>
-        ({
-          website: 0,
-          code: 1,
-          cad: 2,
-          video: 3,
-          social: 4,
-          community: 5,
-          docs: 6,
-          'link-hub': 7,
-          other: 8,
-        })[a.type] -
-          ({
-            website: 0,
-            code: 1,
-            cad: 2,
-            video: 3,
-            social: 4,
-            community: 5,
-            docs: 6,
-            'link-hub': 7,
-            other: 8,
-          })[b.type] || a.label.localeCompare(b.label),
+      (a, b) => linkPriority(a) - linkPriority(b) || a.label.localeCompare(b.label),
     );
   });
 }

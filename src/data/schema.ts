@@ -49,11 +49,28 @@ export type TeamAward = {
   eventUrl: string | null;
 };
 
+export type LinkOwnershipConfidence = 'high' | 'medium' | 'low';
+export type LinkConfirmation = 'unconfirmed' | 'confirmed' | 'rejected';
+export type LinkLiveness = 'alive' | 'dead' | 'unknown';
+
+/**
+ * Public team/resource link discovered from On The Web or bounded website crawls.
+ * Optional provenance fields are additive — older seeds without them still validate.
+ */
 export type TeamLink = {
   type: 'website' | 'social' | 'code' | 'video' | 'cad' | 'docs' | 'community' | 'link-hub' | 'other';
   label: string;
   url: string;
   source: string;
+  ownershipConfidence?: LinkOwnershipConfidence;
+  confirmationState?: LinkConfirmation;
+  /** Short attribution note (e.g. same-host as declared website, On The Web URL). */
+  evidence?: string | null;
+  notes?: string | null;
+  retrievedAt?: string | null;
+  lastCheckedAt?: string | null;
+  httpStatus?: number | null;
+  liveness?: LinkLiveness;
 };
 
 /**
