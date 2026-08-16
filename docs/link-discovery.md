@@ -13,8 +13,9 @@ Related: [privacy.md](privacy.md), [responsible-crawling.md](responsible-crawlin
 5. **Linktree-style hubs** (`linktr.ee`, `beacons.ai`, …): outbound public links extracted when the hub is the declared site or linked from it.
 6. **Open Alliance (opt-in)** team-declared resources via public API — separate from website crawl; see [open-alliance.md](open-alliance.md).
 7. **Game Manual 0 gallery (opt-in)** curated design links via bounded `gallery.rst` fetch — exact team number only; see [gm0.md](gm0.md).
+8. **GitHub verification (opt-in)** of `github.com/owner/repo` URLs already on `Team.links` — see [github-repos.md](github-repos.md).
 
-Scheduled Actions continue to prefer `--skip-link-enrichment` and leave `--enrich-open-alliance` / `--enrich-gm0` unset (see [responsible-crawling.md](responsible-crawling.md)).
+Scheduled Actions continue to prefer `--skip-link-enrichment` and leave `--enrich-open-alliance` / `--enrich-gm0` / `--enrich-github` unset (see [responsible-crawling.md](responsible-crawling.md)).
 
 ## Normalization
 
@@ -58,6 +59,8 @@ Measurable coverage of teams with ≥1 verified public link improves when operat
 
 ## Out of scope here
 
-- YouTube Data API / GitHub API deep discovery ([#22](https://github.com/The-Allsparks/ftc-team-analysis/issues/22), [#23](https://github.com/The-Allsparks/ftc-team-analysis/issues/23))
+- YouTube Data API deep discovery ([#23](https://github.com/The-Allsparks/ftc-team-analysis/issues/23))
 - Team-submitted link corrections ([#32](https://github.com/The-Allsparks/ftc-team-analysis/issues/32))
 - Full `Team.links` observation history (deferred; see [field-evidence.md](field-evidence.md))
+
+GitHub repo **verification** of already-discovered URLs is covered in [github-repos.md](github-repos.md) (`--enrich-github`).

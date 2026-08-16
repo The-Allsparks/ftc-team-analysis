@@ -163,6 +163,41 @@ describe('parseGeneratedSeed', () => {
     expect(withoutEvidence.ok).toBe(true);
   });
 
+  it('accepts optional codeRepositories without requiring it on older shapes', () => {
+    const fixture = validSeed();
+    (fixture.teams[0] as { codeRepositories?: unknown[] }).codeRepositories = [
+      {
+        url: 'https://github.com/example-oa/16158-code',
+        owner: 'example-oa',
+        name: '16158-code',
+        fullName: 'example-oa/16158-code',
+        seasons: [2025],
+        robotControllerType: 'REV Control Hub',
+        languages: ['Java'],
+        lastActivity: '2026-03-01T12:00:00Z',
+        description: 'FTC code',
+        evidence: 'Declared on Open Alliance; not number-only.',
+        evidenceKind: 'open-alliance',
+        ownershipConfidence: 'high',
+        confirmationState: 'unconfirmed',
+        source: 'GitHub (verified)',
+        retrievedAt: '2026-08-16T12:00:00.000Z',
+      },
+    ];
+
+    const withRepos = parseGeneratedSeed(fixture);
+    expect(withRepos.ok).toBe(true);
+    if (withRepos.ok) {
+      expect(withRepos.data.teams[0]?.codeRepositories?.[0]?.fullName).toBe('example-oa/16158-code');
+    }
+
+    const withoutRepos = parseGeneratedSeed(validSeed());
+    expect(withoutRepos.ok).toBe(true);
+    if (withoutRepos.ok) {
+      expect(withoutRepos.data.teams[0]?.codeRepositories).toBeUndefined();
+    }
+  });
+
   it('quarantines one invalid team and keeps the rest', () => {
     const fixture = validSeed();
     (fixture.teams[0] as { latestName: unknown }).latestName = 123;

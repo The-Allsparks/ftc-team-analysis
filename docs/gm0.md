@@ -22,7 +22,7 @@ GM0 gallery data is **enrichment only**:
 | Headings typically `NNNNN Team Name` with outbound Sphinx links | **Confirmed** |
 | Exact leading team number is reliable identity evidence | **Confirmed** (parser + fixture tests) |
 | Name-only headings are safe to auto-match | **Rejected** (ambiguous; false-match tests) |
-| GitHub org search / deep verification of linked repos | **Out of scope** ([#22](https://github.com/The-Allsparks/ftc-team-analysis/issues/22)); declared gallery URLs may still be stored as links |
+| GitHub org search / deep verification of linked repos | Declared gallery GitHub URLs may be verified via [`--enrich-github`](github-repos.md) ([#22](https://github.com/The-Allsparks/ftc-team-analysis/issues/22)) |
 
 ## Matching rule
 

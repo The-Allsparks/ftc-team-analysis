@@ -16,6 +16,8 @@ Common flags:
 npm run pull:data -- --mode=current --skip-link-enrichment
 npm run pull:data -- --mode=full
 npm run pull:data -- --mode=current --skip-link-enrichment --enrich-open-alliance
+npm run pull:data -- --mode=current --skip-link-enrichment --enrich-gm0
+npm run pull:data -- --mode=current --skip-link-enrichment --enrich-github
 npm run pull:data -- --dry-run --candidate-fixture=src/data/fixtures/empty-generated-candidate.json
 ```
 
@@ -63,6 +65,10 @@ Opt-in with `--enrich-open-alliance` (default **off** for CI/scheduled refresh).
 ## Game Manual 0 gallery enrichment (#20)
 
 Opt-in with `--enrich-gm0` (default **off** for CI/scheduled refresh). Performs one bounded public GET of GM0 `gallery.rst`, matches **exact leading team numbers** only (name-only headings rejected), and attaches curated resource URLs plus a gallery page link as attributed `TeamLink` enrichment. Copyrighted GM0 prose is linked, not copied. See [gm0.md](gm0.md).
+
+## GitHub repository verification (#22)
+
+Opt-in with `--enrich-github` (default **off** for CI/scheduled refresh). Verifies public `github.com/owner/repo` URLs already present on `Team.links` (website / Open Alliance / GM0), stores additive `codeRepositories` with owner, languages, last activity, and evidence. Ownership is never inferred from team number alone. See [github-repos.md](github-repos.md).
 
 ## Tests
 

@@ -31,13 +31,17 @@ import {
 } from '../lib/organizationAffiliations';
 import { toPortfolioLabProxyUrl } from '../lib/portfolioLab';
 import {
-  isOpenAllianceLinkSource,
-  openAllianceLinkAttribution,
-} from '../lib/openAlliance';
-import {
   gm0LinkAttribution,
   isGm0LinkSource,
 } from '../lib/gm0Gallery';
+import {
+  githubRepoAttribution,
+  isGithubVerifiedSource,
+} from '../lib/githubRepos';
+import {
+  isOpenAllianceLinkSource,
+  openAllianceLinkAttribution,
+} from '../lib/openAlliance';
 import {
   advancementLabel,
   advancementStatus,
@@ -593,6 +597,55 @@ export default function TeamDetailPanel({
                           {link.source}
                         </span>
                       ) : null}
+                    </a>
+                  );
+                })}
+              </div>
+            </section>
+          )}
+
+          {(selectedTeam.codeRepositories?.length ?? 0) > 0 && (
+            <section className="links-panel code-repos-panel">
+              <div className="section-heading">
+                <h3>Code repositories</h3>
+                <span>{selectedTeam.codeRepositories!.length}</span>
+              </div>
+              <p className="links-enrichment-note">
+                Public GitHub repositories verified from declared team links (website, Open Alliance,
+                or GM0) or corroborating search. Ownership is never inferred from team number alone.
+              </p>
+              <div className="link-grid">
+                {selectedTeam.codeRepositories!.map((repo) => {
+                  const metaBits = [
+                    repo.owner,
+                    repo.languages?.length ? repo.languages.slice(0, 3).join(', ') : null,
+                    repo.robotControllerType,
+                    repo.lastActivity
+                      ? `updated ${new Date(repo.lastActivity).toLocaleDateString()}`
+                      : null,
+                    repo.seasons?.length ? `seasons ${repo.seasons.join(', ')}` : null,
+                  ].filter(Boolean);
+                  const attribution = githubRepoAttribution(repo);
+
+                  return (
+                    <a
+                      key={repo.url}
+                      href={repo.url}
+                      target="_blank"
+                      rel="noreferrer"
+                      title={attribution}
+                    >
+                      <strong>{repo.fullName}</strong>
+                      <span>{metaBits.join(' · ') || 'github.com'}</span>
+                      <span
+                        className={
+                          isGithubVerifiedSource(repo.source)
+                            ? 'link-source link-source-github'
+                            : 'link-source'
+                        }
+                      >
+                        {repo.source}
+                      </span>
                     </a>
                   );
                 })}

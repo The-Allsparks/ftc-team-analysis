@@ -7,6 +7,8 @@ export type PullArgs = {
   enrichOpenAlliance: boolean;
   /** Opt-in Game Manual 0 gallery resource enrichment (off by default). */
   enrichGm0: boolean;
+  /** Opt-in GitHub repo verification from declared links (off by default). */
+  enrichGithub: boolean;
   dryRun: boolean;
   /** When set, skip network pull and load this JSON as the candidate (tests / dry gates). */
   candidateFixture: string | null;
@@ -39,6 +41,7 @@ export function parsePullArgs(argv: string[]): PullArgs {
     skipLinkEnrichment: false,
     enrichOpenAlliance: false,
     enrichGm0: false,
+    enrichGithub: false,
     dryRun: false,
     candidateFixture: null,
     help: false,
@@ -71,6 +74,14 @@ export function parsePullArgs(argv: string[]): PullArgs {
         args.enrichGm0 = isTruthy(token.slice(token.indexOf('=') + 1));
       } else {
         args.enrichGm0 = true;
+      }
+      continue;
+    }
+    if (token === '--enrich-github' || token.startsWith('--enrich-github=')) {
+      if (token.includes('=')) {
+        args.enrichGithub = isTruthy(token.slice(token.indexOf('=') + 1));
+      } else {
+        args.enrichGithub = true;
       }
       continue;
     }
@@ -115,6 +126,7 @@ Options:
   --skip-link-enrichment    skip crawling team websites for links
   --enrich-open-alliance    opt-in: attach Open Alliance team-declared resources (exact team # only)
   --enrich-gm0              opt-in: attach Game Manual 0 gallery resources (exact team # only)
+  --enrich-github           opt-in: verify GitHub repos from declared links (OA/GM0/website); no number-only ownership
   --dry-run                 run guards/report but do not write the seed
   --candidate-fixture=PATH  load candidate JSON from PATH (no network); for gate tests
   --help                    show this help

@@ -74,6 +74,39 @@ export type TeamLink = {
 };
 
 /**
+ * Verified public GitHub repository attached to a team (#22).
+ * Ownership always requires evidence beyond the team number alone.
+ * Optional / additive — older seeds without `codeRepositories` remain valid.
+ */
+export type CodeRepositoryEvidenceKind =
+  | 'declared-link'
+  | 'open-alliance'
+  | 'gm0-gallery'
+  | 'search-corroborated';
+
+export type TeamCodeRepository = {
+  url: string;
+  /** GitHub org or user login that owns the public repo. */
+  owner: string;
+  name: string;
+  fullName: string;
+  /** Seasons mentioned in description/topics when known. */
+  seasons?: number[] | null;
+  /** Robot/controller platform hint when known (e.g. REV Control Hub). */
+  robotControllerType?: string | null;
+  languages?: string[] | null;
+  /** Typically GitHub `pushed_at`. */
+  lastActivity?: string | null;
+  description?: string | null;
+  evidence: string;
+  evidenceKind: CodeRepositoryEvidenceKind;
+  ownershipConfidence: LinkOwnershipConfidence;
+  confirmationState?: LinkConfirmation;
+  source: string;
+  retrievedAt?: string | null;
+};
+
+/**
  * Role for a parsed organization/sponsor segment.
  * Auto-backfill typically fills school, sponsor, community_organization,
  * team_affiliation, and host_organization. Other roles are schema-supported
@@ -212,6 +245,11 @@ export type Team = {
   latestLeague: string | null;
   latestRegion: string | null;
   links: TeamLink[];
+  /**
+   * Optional verified public GitHub repos (#22). Omitted on older seeds;
+   * populated when `--enrich-github` verifies declared / corroborated URLs.
+   */
+  codeRepositories?: TeamCodeRepository[];
   seasons: Partial<Record<SeasonId, TeamSeason>>;
 };
 
