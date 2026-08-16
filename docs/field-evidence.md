@@ -64,7 +64,7 @@ Season `record`, and `qualificationRecord` / `playoffRecord` when present (evide
 ## Non-goals
 
 - Canonical location/school/org IDs (#16)
-- Relationship graph (#28)
+- Relationship graph product / explorer (model landed in #28; visualization deferred)
 - Internet Archive reconstruction (#25)
 - Cloudflare static snapshot tree / hosting (#38)
 - Team-submitted correction workflow (#32)
