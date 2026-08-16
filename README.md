@@ -2,6 +2,22 @@
 
 Trust-first Nevada-region FIRST Tech Challenge team directory and historical record (seasons `2025` through `2019`), with a local React/Vite UI.
 
+Built and maintained by [The Allsparks](https://www.theallsparks.org/). Licensed under the [MIT License](LICENSE).
+
+## License, privacy, and contributing
+
+| Doc | Purpose |
+| --- | --- |
+| [LICENSE](LICENSE) | MIT license (Copyright (c) 2026 The Allsparks) |
+| [CONTRIBUTING.md](CONTRIBUTING.md) | How to contribute |
+| [SECURITY.md](SECURITY.md) | Vulnerability reporting |
+| [docs/attribution.md](docs/attribution.md) | Data-source attribution and residual terms/scrape risk |
+| [docs/privacy.md](docs/privacy.md) | Public-data stance; correction/claim via GitHub issues |
+| [docs/architecture.md](docs/architecture.md) | System layout |
+| [docs/ingestion.md](docs/ingestion.md) | Seed pull and publish guards |
+| [docs/deployment.md](docs/deployment.md) | Deploy overview (Cloudflare runbooks → [#38](https://github.com/The-Allsparks/ftc-team-analysis/issues/38)) |
+| [docs/responsible-crawling.md](docs/responsible-crawling.md) | Crawling / refresh traffic policy |
+
 ## Product milestone
 
 Immediate objective: **a trustworthy, source-backed Nevada FTC team directory and historical record.** Predictive and comparative analytics that depend on unresolved identity or provenance are deferred until readiness criteria are met. Existing Scout and lineage surfaces are a qualified preview. Maintainers may reject new analytics PRs until then — see [docs/v1-milestone.md](docs/v1-milestone.md).
@@ -72,6 +88,8 @@ Local Vite (`npm run dev` / `npm run preview`) provides the same prefixes. Produ
 
 ## Data Sources
 
+Full attribution and residual constraints: [docs/attribution.md](docs/attribution.md). Privacy and corrections: [docs/privacy.md](docs/privacy.md).
+
 - FIRST Team/Event Search: https://www.firstinspires.org/team-event-search?content=teams&season=2025&country=United+States&state=NV&programs=FIRST+Tech+Challenge&indices=teams_*
 - FTC Events Nevada region pages: https://ftc-events.firstinspires.org/2025/region/USNV
 - FTC Events public team pages: https://ftc-events.firstinspires.org/2025/team/16158
@@ -80,11 +98,9 @@ Local Vite (`npm run dev` / `npm run preview`) provides the same prefixes. Produ
 
 ## Public-Only Limitation
 
-The official FTC Events API requires a username and token, so this project does not call it. Organization data is parsed from public sponsor text when available, and detailed event/award data is limited to what public FTC Events team pages expose.
+The official FTC Events API requires a username and token, so this project does not call it. Organization data is parsed from public sponsor text when available, and detailed event/award data is limited to what public FTC Events team pages expose. Do not gather student PII.
 
 Live enrichments (FTC Events refresh, FTCScout, Portfolio Lab, team avatars) use a shared source-result model so proxy/network/rate-limit failures are not stored as empty successful data. Portfolio Lab is **optional enrichment only** (not identity-critical): catalog HTML extraction is string-aware, entries and `/api/search` hits are validated with Valibot (`src/data/portfolioLabSchema.ts`), invalid catalog rows are quarantined, and extract/schema failures map to `parse_failure`. FTCScout quick-stats and event payloads are validated with Valibot (`src/data/ftcScoutSchema.ts`) before normalize/cache/UI: invalid event rows are quarantined with path diagnostics, and envelope or quick-stats schema failures map to `parse_failure`. The UI shows calm availability messages for everyday use, with optional **Technical details** for diagnostics.
-
-Built and maintained by [The Allsparks](https://www.theallsparks.org/).
 
 ## Team avatars
 
