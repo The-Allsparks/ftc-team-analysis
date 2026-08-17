@@ -93,6 +93,18 @@ describe('fieldEvidence', () => {
     expect(currentEvidenceForField(merged, 'website')[0]?.retrievedAt).toBe('2026-04-01T00:00:00.000Z');
   });
 
+  it('keeps agreeing observations from different sources as separate current rows', () => {
+    const html = obs('website', 'https://example.org', 'ftc-events-team-page');
+    const api = obs('website', 'https://example.org', 'first-api', {
+      retrievedAt: '2026-04-02T00:00:00.000Z',
+    });
+
+    const merged = mergeSeasonEvidence([html], [api]);
+    const current = currentEvidenceForField(merged, 'website');
+    expect(current).toHaveLength(2);
+    expect(current.map((row) => row.sourceType).sort()).toEqual(['first-api', 'ftc-events-team-page']);
+  });
+
   it('buildSeasonEvidence marks teamType as derived and includes competitive records', () => {
     const rows = buildSeasonEvidence(baseSeason, {
       sourceType: 'ftc-events-team-page',

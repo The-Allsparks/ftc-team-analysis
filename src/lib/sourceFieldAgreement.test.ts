@@ -227,4 +227,30 @@ describe('fieldAgreement', () => {
     expect(agreement?.dissenting).toEqual([]);
     expect(agreement?.agreeing.map((vote) => vote.label)).toEqual(['FTC Events']);
   });
+
+  it('counts a live FIRST API schoolName as a separate identity vote', () => {
+    const row: TeamSeason = {
+      ...season,
+      teamType: 'school',
+      evidence: [evidence('organization', 'Tesla STEM Academy', 'ftc-events-team-page')],
+    };
+
+    const agreement = fieldAgreement(row, 'organization', 'Tesla STEM Academy', {
+      teamNumber: 16158,
+      firstApiSeason: 2026,
+      firstApiRetrievedAt: '2026-08-17T00:00:00.000Z',
+      firstApiTeam: {
+        teamNumber: 16158,
+        nameShort: 'Allsparks',
+        schoolName: 'Synthetic High School',
+        city: 'Reno',
+        stateProv: 'NV',
+        country: 'USA',
+      },
+    });
+
+    expect(agreement?.dissenting.map((vote) => vote.label)).toEqual(['FIRST API']);
+    expect(agreement?.dissenting[0]?.displayValue).toBe('Synthetic High School');
+    expect(agreement?.agreeing.map((vote) => vote.label)).toEqual(['FTC Events']);
+  });
 });

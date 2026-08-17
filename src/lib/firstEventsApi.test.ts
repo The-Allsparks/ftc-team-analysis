@@ -9,6 +9,7 @@ import {
   buildFirstApiUrl,
   fetchAllFirstApiTeams,
   fetchFirstApiJson,
+  fetchFirstApiTeamFromProxy,
   isAllowedFirstApiPath,
   mapFirstApiAwardToTeamAward,
   mergeFirstApiAwardsIntoSeason,
@@ -250,6 +251,31 @@ describe('fetchAllFirstApiTeams', () => {
   });
 });
 
+describe('fetchFirstApiTeamFromProxy', () => {
+  it('maps 503 to credentials_absent without throwing', async () => {
+    const fetchImpl = vi.fn(async () => new Response('missing secrets', { status: 503 }));
+    const result = await fetchFirstApiTeamFromProxy(2025, 16158, fetchImpl as typeof fetch);
+    expect(result.ok).toBe(false);
+    if (!result.ok) {
+      expect(result.state).toBe('auth_failure');
+      expect(result.diagnostics).toContain('credentials_absent');
+    }
+  });
+
+  it('returns the matching team listing from the proxy JSON', async () => {
+    const fetchImpl = vi.fn(async (input: RequestInfo | URL) => {
+      expect(String(input)).toBe('/ftc-api-proxy/2025/teams?teamNumber=16158');
+      return new Response(JSON.stringify(sample.teamsPage), { status: 200 });
+    });
+    const result = await fetchFirstApiTeamFromProxy(2025, 16158, fetchImpl as typeof fetch);
+    expect(result.ok).toBe(true);
+    if (result.ok) {
+      expect(result.data?.teamNumber).toBe(16158);
+      expect(result.data?.schoolName).toBe('Synthetic High School');
+    }
+  });
+});
+
 describe('merge conflict rules (API wins)', () => {
   it('replaces HTML awards when API awards are present', () => {
     const season = baseSeason();
@@ -342,7 +368,43 @@ describe('applyFirstApiCompetitiveEnrichment', () => {
     expect(result.result.ok).toBe(true);
     expect(result.awardsReplaced).toBe(1);
     expect(result.eventsRankUpdated).toBe(1);
+    expect(result.identityVotesAttached).toBe(0);
     expect(teams[0]!.seasons[2025]!.awards[0]?.name).toBe('Inspire Award Winner');
     expect(teams[0]!.seasons[2025]!.events[0]?.rank).toBe('2');
+  });
+
+  it('attaches FIRST API identity evidence without overwriting HTML name/org', async () => {
+    const fetchImpl = vi.fn(async (input: RequestInfo | URL) => {
+      const url = String(input);
+      if (url.includes('/teams') && url.includes('teamNumber=16158')) {
+        return new Response(JSON.stringify(sample.teamsPage), { status: 200 });
+      }
+      if (url.includes('/awards/16158')) {
+        return new Response(JSON.stringify(sample.awardsFor16158), { status: 200 });
+      }
+      if (url.includes('/rankings/USNVFIX')) {
+        return new Response(JSON.stringify(sample.rankingsUSNVFIX), { status: 200 });
+      }
+      return new Response('not found', { status: 404 });
+    });
+
+    const teams = [baseTeam()];
+    const result = await applyFirstApiCompetitiveEnrichment(teams, {
+      credentials: { username: 'u', token: 't' },
+      fetchImpl: fetchImpl as typeof fetch,
+      delayMs: 0,
+      seasons: [2025],
+    });
+
+    const season = teams[0]!.seasons[2025]!;
+    expect(result.identityVotesAttached).toBe(1);
+    expect(season.name).toBe('Allsparks');
+    expect(season.organization).toBeNull();
+    expect(season.evidence?.some((row) => row.sourceType === 'first-api' && row.field === 'name')).toBe(
+      true,
+    );
+    expect(season.evidence?.find((row) => row.sourceType === 'first-api' && row.field === 'name')?.value).toBe(
+      'Fixture Allsparks',
+    );
   });
 });

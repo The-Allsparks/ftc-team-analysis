@@ -11,6 +11,7 @@ import {
 import type { DirectorySnapshotSource } from '../data/snapshotDirectory';
 import { useFtcData } from '../hooks/useFtcData';
 import { useFtcScout } from '../hooks/useFtcScout';
+import { useFirstApiTeam } from '../hooks/useFirstApiTeam';
 import { usePortfolioLab } from '../hooks/usePortfolioLab';
 import { useTeamAvatarCatalog } from '../hooks/useTeamAvatarCatalog';
 import { defaultSeasonWithData, initialSeasonFilter } from '../lib/ftcSeason';
@@ -95,6 +96,7 @@ export function AppDirectory({
     scoutDiagnostics,
     loadTeamScout,
   } = useFtcScout();
+  const { getFirstApiTeam, loadFirstApiTeam } = useFirstApiTeam();
   const seasons = useMemo(() => seasonOptions(data), [data]);
   const ingestedSeasons = useMemo(() => availableSeasons(data), [data]);
   const defaultSeason = useMemo(() => defaultSeasonWithData(seasons, data.teams), [data.teams, seasons]);
@@ -129,6 +131,7 @@ export function AppDirectory({
   const [detailSeason, setDetailSeason] = useState<SeasonId | null>(() => initialSeasonFilter(seedData));
   const lastTeamRefreshKey = useRef<string | null>(null);
   const lastScoutRefreshKey = useRef<string | null>(null);
+  const lastFirstApiRefreshKey = useRef<string | null>(null);
 
   useEffect(() => {
     if (!seasonFallback) {
@@ -423,6 +426,8 @@ export function AppDirectory({
   }, [portfoliosByTeam, selectedSeason, selectedTeam]);
   const selectedScoutData =
     selectedTeam && selectedSeason ? getTeamScoutData(selectedSeason.season, selectedTeam.number) : null;
+  const selectedFirstApiListing =
+    selectedTeam && selectedSeason ? getFirstApiTeam(selectedSeason.season, selectedTeam.number) : null;
 
   useEffect(() => {
     if (selectedTeam && !filteredTeams.some((team) => team.number === selectedTeam.number)) {
@@ -433,6 +438,7 @@ export function AppDirectory({
   useEffect(() => {
     lastTeamRefreshKey.current = null;
     lastScoutRefreshKey.current = null;
+    lastFirstApiRefreshKey.current = null;
     setSelectedTeamNumber(null);
     setSeasonFilter(defaultSeason);
     setDetailSeason(defaultSeason);
@@ -491,6 +497,21 @@ export function AppDirectory({
     lastScoutRefreshKey.current = refreshKey;
     void loadTeamScout(selectedSeason.season, selectedTeam.number);
   }, [loadTeamScout, selectedSeason?.season, selectedTeam?.number]);
+
+  useEffect(() => {
+    if (!selectedSeason || !selectedTeam) {
+      return;
+    }
+
+    const refreshKey = `${selectedTeam.number}:${selectedSeason.season}`;
+
+    if (lastFirstApiRefreshKey.current === refreshKey) {
+      return;
+    }
+
+    lastFirstApiRefreshKey.current = refreshKey;
+    void loadFirstApiTeam(selectedSeason.season, selectedTeam.number);
+  }, [loadFirstApiTeam, selectedSeason?.season, selectedTeam?.number]);
 
   const visibleSeasonValues = useMemo(
     () => visibleSeasonsForTeams(filteredTeams, seasonFilter),
@@ -652,6 +673,9 @@ export function AppDirectory({
             scoutMessage={scoutMessage}
             scoutDiagnostics={scoutDiagnostics}
             loadTeamScout={loadTeamScout}
+            firstApiTeam={selectedFirstApiListing?.team ?? null}
+            firstApiSeason={selectedFirstApiListing?.season ?? null}
+            firstApiRetrievedAt={selectedFirstApiListing?.retrievedAt ?? null}
             selectedLineage={selectedLineage}
             selectedPortfolios={selectedPortfolios}
             portfolioStatus={portfolioStatus}
