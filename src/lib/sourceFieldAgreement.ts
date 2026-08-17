@@ -212,6 +212,10 @@ function scoutProfileEvidence(season: TeamSeason, extras: FieldAgreementExtras):
   if (!profile) {
     return [];
   }
+  // Team profile is current identity from FTCScout; only vote on the season the scout fetch targeted.
+  if (extras.scout && extras.scout.season !== season.season) {
+    return [];
+  }
 
   const retrievedAt = profile.updatedAt ?? extras.scout?.fetchedAt ?? null;
   const sourceUrl =

@@ -113,6 +113,7 @@ export function IdentityFactCell({
   compact = false,
   hideValueWhenIdle = false,
   preferDisplayedValue = false,
+  agreementDisplayedValue,
 }: {
   label: string;
   season: TeamSeason;
@@ -126,10 +127,17 @@ export function IdentityFactCell({
   hideValueWhenIdle?: boolean;
   /** When true, idle text keeps `displayedValue` (e.g. parsed School / Host names) instead of majority org evidence. */
   preferDisplayedValue?: boolean;
+  /** Optional tie-break value for majority voting when idle display differs (e.g. raw organization). */
+  agreementDisplayedValue?: string | null;
 }) {
   const [hovered, setHovered] = useState<SourceVote | null>(null);
   const extras: FieldAgreementExtras = { scout, teamNumber };
-  const agreement = fieldAgreement(season, field, displayedValue, extras);
+  const agreement = fieldAgreement(
+    season,
+    field,
+    agreementDisplayedValue ?? displayedValue,
+    extras,
+  );
   const idleValue = preferDisplayedValue
     ? displayedValue || agreement?.majorityDisplay || emptyLabel
     : agreement?.majorityDisplay || displayedValue || emptyLabel;

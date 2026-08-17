@@ -172,4 +172,29 @@ describe('fieldAgreement', () => {
     expect(agreement?.dissenting.map((vote) => vote.label)).toEqual(['FTCScout']);
     expect(agreement?.dissenting[0]?.value).toBe('non-school');
   });
+
+  it('does not apply live FTCScout profile votes to a different season tab', () => {
+    const row: TeamSeason = {
+      ...season,
+      season: 2025,
+      teamType: 'school',
+      evidence: [evidence('teamType', 'school', 'ftc-events-team-page')],
+    };
+    const scout = emptyTeamScoutData(2026, 12777);
+    scout.profile = {
+      number: 12777,
+      name: 'Boulder City SuperBots',
+      schoolName: '4-H',
+      city: 'Boulder City',
+      state: 'NV',
+      country: 'USA',
+      website: null,
+      rookieYear: 2017,
+      updatedAt: '2024-10-24T22:47:36.565Z',
+    };
+
+    const agreement = fieldAgreement(row, 'teamType', 'school', { teamNumber: 12777, scout });
+    expect(agreement?.dissenting).toEqual([]);
+    expect(agreement?.agreeing.map((vote) => vote.label)).toEqual(['FTC Events']);
+  });
 });

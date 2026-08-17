@@ -117,6 +117,7 @@ function OrganizationIdentity({
         season={season}
         field="organization"
         displayedValue={formatAffiliationNames(hosts.map((row) => row.name))}
+        agreementDisplayedValue={season.organization}
         scout={scout}
         teamNumber={teamNumber}
         preferDisplayedValue
