@@ -9,9 +9,9 @@ Related: [ingestion.md](ingestion.md), [attribution.md](attribution.md), [archit
 | Layer | State |
 | --- | --- |
 | Client module + fixtures + merge rules | **In repo** (`src/lib/firstEventsApi.ts`) |
-| Opt-in `pull:data --enrich-first-api` | **In repo** (no-op / fail-soft without secrets) |
+| Opt-in `pull:data --enrich-first-api` | **In repo** (no-op / fail-soft without secrets). When credentials are set, also attaches FIRST API identity evidence (name / school / location / website / robot) as corroborating votes. |
 | CI / scheduled refresh using live API | **Off** — no `FIRST_API_*` secrets required for green CI |
-| Production Pages/Worker secret injection for browser live pulls | **In repo** as `/ftc-api-proxy` — injects Basic auth from `FIRST_API_USERNAME` / `FIRST_API_TOKEN` env; returns 503 without secrets. Operator must still set those secrets in Cloudflare. |
+| Production Pages/Worker secret injection for browser live pulls | **In repo** as `/ftc-api-proxy` — injects Basic auth from `FIRST_API_USERNAME` / `FIRST_API_TOKEN` env; returns 503 without secrets. Operator must still set those secrets in Cloudflare. When secrets are present, team-detail identity chips fetch `/{season}/teams?teamNumber=` as a live FIRST API vote. |
 | Operator-held FIRST username + token | **Required** for live canonical pull |
 
 ## Official docs
@@ -71,7 +71,7 @@ Public HTML proxies (`/ftc-proxy`, etc.) stay unauthenticated. Do **not** point 
 1. **Awards** — non-empty API award list **replaces** scraped awards for that team-season.
 2. **Event rank / rankingScore / matchCount** — API ranking row for `(eventCode, teamNumber)` **overwrites** scraped rank fields on that event.
 3. **Qualification record** — API ranking `wins` / `losses` / `ties` **overwrite** scraped qualification record when present.
-4. **Identity / links / enrichment** — unchanged by this module (still HTML + optional OA/GM0/GitHub/YouTube paths).
+4. **Identity / links / enrichment** — HTML season scalars (name, school/org, website, robot) stay as scraped. FIRST API team listings add **corroborating identity votes** (favicon chips) and stored evidence; they never silently replace the public-page values.
 
 ## Rate limits, pagination, caching
 
@@ -120,8 +120,10 @@ Without credentials, `--enrich-first-api` records a fail-soft `sourceChecks` row
 
 | Path | Role |
 | --- | --- |
-| `src/lib/firstEventsApi.ts` | Basic auth, allowlist, SourceResult fetch, pagination, merge rules, opt-in enrichment |
+| `src/lib/firstEventsApi.ts` | Basic auth, allowlist, SourceResult fetch, pagination, merge rules, opt-in enrichment, identity evidence |
+| `src/data/firstApiSchema.ts` | Valibot parse/quarantine for team listing payloads |
 | `src/lib/firstEventsApi.test.ts` | Missing-key / 401 / 429 / success merge with fixtures |
 | `src/lib/fixtures/first-api-sample.json` | Synthetic public-shaped JSON (no secrets) |
 | `src/lib/firstApiProxy.ts` | Worker/Pages `/ftc-api-proxy` — injects Basic auth from env; GET/HEAD + path allowlist |
+| `src/hooks/useFirstApiTeam.ts` | Fail-soft live team listing for identity chips |
 | `src/data/pullArgs.ts` | CLI flag |
