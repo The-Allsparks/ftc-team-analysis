@@ -88,6 +88,9 @@ function indexFieldsFromSnapshot(index: {
   latestTeamType: Team['latestTeamType'];
   latestLeague: string | null;
   latestRegion: string | null;
+  links?: Team['links'];
+  codeRepositories?: Team['codeRepositories'];
+  videoResources?: Team['videoResources'];
 }): Partial<Team> {
   return {
     latestName: index.latestName,
@@ -101,6 +104,9 @@ function indexFieldsFromSnapshot(index: {
     latestTeamType: index.latestTeamType,
     latestLeague: index.latestLeague,
     latestRegion: index.latestRegion,
+    ...(index.links ? { links: index.links } : {}),
+    ...(index.codeRepositories ? { codeRepositories: index.codeRepositories } : {}),
+    ...(index.videoResources ? { videoResources: index.videoResources } : {}),
   };
 }
 

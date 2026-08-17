@@ -137,6 +137,32 @@ describe('snapshotDirectory', () => {
     expect(next.teams[0]?.latestName).toBe('Alpha Full');
   });
 
+  it('copies team-level links from the snapshot index when merging detail', () => {
+    const shell = buildDirectoryDataFromTree(manifest, [summary2026]);
+    expect(shell.teams[0]?.links).toEqual([]);
+
+    const detail = fullSeason({ season: 2026, name: 'Alpha Full' });
+    const next = mergeTeamSeasonDetail(shell, 1, detail, {
+      links: [
+        {
+          type: 'website',
+          label: 'Team site',
+          url: 'https://example-team.example',
+          source: 'FTC Events',
+        },
+      ],
+    });
+
+    expect(next.teams[0]?.links).toEqual([
+      {
+        type: 'website',
+        label: 'Team site',
+        url: 'https://example-team.example',
+        source: 'FTC Events',
+      },
+    ]);
+  });
+
   it('merges an additional region summary into existing directory data', () => {
     const shell = buildDirectoryDataFromTree(manifest, [summary2025]);
     expect(shell.teams.some((team) => team.seasons[2026])).toBe(false);
