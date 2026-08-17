@@ -58,7 +58,7 @@ Season `record`, and `qualificationRecord` / `playoffRecord` when present (evide
 - Live refresh merges prior evidence via `mergeSeasonEvidence` (supersede on value change).
 - `mergeSeasonRefresh` and full pull merge prior season evidence before writing.
 - `pull:data` syncs the **observations side store** (`syncObservationsFromPull`): baseline synthesize on first touch (`retrievedAt: null` / `offline-synthesize`), append/supersede on changes, record `active=false` when a team is dropped from a refreshed season, then **strips** `evidence` from the mega seed.
-- **UI:** identity cells show the **majority** value across sources. Agreeing source favicons sit on the **lower left**; dissenting favicons on the **lower right**. Hovering a favicon previews that source’s value and last-seen time. Votes come from stored/synthesized FTC Events evidence, NCES catalog matches for `teamType`, and live FTCScout team profiles (`schoolName` and related identity fields).
+- **UI:** identity cells show the **majority** value across sources. Agreeing source favicons sit on the **lower left**; dissenting favicons on the **lower right**. Hovering a favicon **replaces** that cell’s value in-place with the source’s value, source name, and last-seen time (no extra line, so the favicon row does not shift). Votes come from stored/synthesized FTC Events evidence, NCES catalog matches for `teamType`, and live FTCScout team profiles (`schoolName` and related identity fields).
 - Optional maintainer script `scripts/migrate-team-observations.ts` migrates any embedded seed evidence into the side store offline.
 
 ## Non-goals

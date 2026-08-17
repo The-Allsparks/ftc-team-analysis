@@ -141,17 +141,20 @@ export function IdentityFactCell({
   const idleValue = preferDisplayedValue
     ? displayedValue || agreement?.majorityDisplay || emptyLabel
     : agreement?.majorityDisplay || displayedValue || emptyLabel;
-  const value = hovered ? hovered.displayValue : idleValue;
-  const caption = hovered
-    ? `${hovered.label} · last seen ${formatSeenAt(hovered.retrievedAt)}`
-    : null;
+  const value = hovered
+    ? `${hovered.displayValue} · ${hovered.label} · last seen ${formatSeenAt(hovered.retrievedAt)}`
+    : idleValue;
   const showValue = !hideValueWhenIdle || hovered != null;
 
   return (
     <div className={compact ? 'identity-cell identity-cell-compact' : 'identity-cell'}>
       <span>{label}</span>
-      {showValue ? <strong>{renderFactValue(field, value)}</strong> : null}
-      {caption ? <small className="identity-source-preview">{caption}</small> : null}
+      <strong
+        className={showValue ? undefined : 'identity-value-reserved'}
+        title={hovered ? sourceVoteTitle(hovered) : undefined}
+      >
+        {showValue ? (hovered ? value : renderFactValue(field, value)) : '\u00a0'}
+      </strong>
       {extra}
       {agreement ? <SourceAgreementChips agreement={agreement} onPreview={setHovered} /> : null}
     </div>
