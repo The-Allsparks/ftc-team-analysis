@@ -140,7 +140,7 @@ describe('buildBasicAuthHeader', () => {
       token: '7eaa6338-a097-4221-ac04-b6120fcc4d49',
     });
     expect(header).toBe(
-      `Basic ${Buffer.from('sampleuser:7eaa6338-a097-4221-ac04-b6120fcc4d49', 'utf8').toString('base64')}`,
+      `Basic ${btoa('sampleuser:7eaa6338-a097-4221-ac04-b6120fcc4d49')}`,
     );
   });
 });

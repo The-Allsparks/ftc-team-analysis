@@ -1,5 +1,6 @@
 import type {
   RecordSummary,
+  SeasonId,
   Team,
   TeamAward,
   TeamEvent,
@@ -261,11 +262,18 @@ export function buildFirstApiUrl(
 
 export function buildBasicAuthHeader(credentials: FirstApiCredentials): string {
   const raw = `${credentials.username}:${credentials.token}`;
-  const encoded =
-    typeof btoa === 'function'
-      ? btoa(raw)
-      : Buffer.from(raw, 'utf8').toString('base64');
-  return `Basic ${encoded}`;
+  // FIRST credentials are ASCII; `btoa` is available in browsers and Node 20+.
+  return `Basic ${btoa(raw)}`;
+}
+
+/** Narrow a typed SourceFailure<T> to SourceFailure (no success data). */
+function stripFailureData(failure: SourceFailure<unknown>): SourceFailure {
+  return {
+    ok: false,
+    state: failure.state,
+    userMessage: failure.userMessage,
+    diagnostics: failure.diagnostics,
+  };
 }
 
 function defaultSleep(ms: number): Promise<void> {
@@ -380,7 +388,7 @@ export async function fetchAllFirstApiTeams(
       query: { ...options.query, page },
     });
     if (!pageResult.ok) {
-      return pageResult;
+      return stripFailureData(pageResult);
     }
 
     const batch = pageResult.data.teams ?? [];
@@ -595,7 +603,7 @@ export async function applyFirstApiCompetitiveEnrichment(
       );
       apiCalls += 1;
       if (!awardsResult.ok) {
-        lastFailure = awardsResult;
+        lastFailure = stripFailureData(awardsResult);
         if (awardsResult.state === 'auth_failure' || awardsResult.state === 'rate_limited') {
           return {
             seasonsTouched,
@@ -603,7 +611,7 @@ export async function applyFirstApiCompetitiveEnrichment(
             eventsRankUpdated,
             recordsUpdated,
             apiCalls,
-            result: awardsResult,
+            result: lastFailure,
           };
         }
         continue;
@@ -642,16 +650,16 @@ export async function applyFirstApiCompetitiveEnrichment(
         );
         apiCalls += 1;
         if (!rankingsResult.ok) {
-          lastFailure = rankingsResult;
+          lastFailure = stripFailureData(rankingsResult);
           if (rankingsResult.state === 'auth_failure' || rankingsResult.state === 'rate_limited') {
-            team.seasons[seasonKey as keyof typeof team.seasons] = nextSeason;
+            team.seasons = { ...team.seasons, [seasonYear as SeasonId]: nextSeason };
             return {
               seasonsTouched,
               awardsReplaced,
               eventsRankUpdated,
               recordsUpdated,
               apiCalls,
-              result: rankingsResult,
+              result: lastFailure,
             };
           }
           continue;
@@ -682,7 +690,7 @@ export async function applyFirstApiCompetitiveEnrichment(
         }
       }
 
-      team.seasons[seasonKey as keyof typeof team.seasons] = nextSeason;
+      team.seasons = { ...team.seasons, [seasonYear as SeasonId]: nextSeason };
     }
 
     if (teamChanged) {
