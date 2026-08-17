@@ -1,0 +1,14 @@
+{
+  "version": 1,
+  "include": [
+    "/ftc-proxy",
+    "/ftc-proxy/*",
+    "/ftcscout-proxy",
+    "/ftcscout-proxy/*",
+    "/portfolio-lab-proxy",
+    "/portfolio-lab-proxy/*",
+    "/ftc-scoring-proxy",
+    "/ftc-scoring-proxy/*"
+  ],
+  "exclude": []
+}

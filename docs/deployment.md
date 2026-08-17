@@ -10,10 +10,10 @@ Edge Cache-Control / throttling: [edge-cache.md](edge-cache.md) (do not duplicat
 
 | Path | Role | Status |
 | --- | --- | --- |
-| **Worker** (`wrangler.jsonc`, `npm run deploy`) | Live production today: static `dist/` + allowlisted proxy (`worker/proxy.ts`) | **Keep using** until cutover is complete |
-| **Pages** (Git-connected project) | Target: production builds from `main`, PR preview URLs, free `*.pages.dev` | Stand up project + static SPA/`/data` first ([#85](https://github.com/The-Allsparks/ftc-team-analysis/issues/85)); proxy via Pages Functions later ([#86](https://github.com/The-Allsparks/ftc-team-analysis/issues/86)) |
+| **Worker** (`wrangler.jsonc`, `npm run deploy`) | Live production today: static `dist/` + allowlisted proxy (`worker/proxy.ts`) | **Keep using** until Pages is the sole production host |
+| **Pages** (Git-connected project) | Target: production builds from `main`, PR preview URLs, free `*.pages.dev`, Functions for live proxies | Stand up project ([#85](https://github.com/The-Allsparks/ftc-team-analysis/issues/85)); Functions + `_routes.json` are in-repo ([#86](https://github.com/The-Allsparks/ftc-team-analysis/issues/86)) |
 
-**Mid-cutover:** the Worker may still be the only host that serves live `/ftc-proxy` (and sibling) prefixes. A Pages production hostname can serve the SPA and static `/data/*` while proxies continue to hit the Worker (or fail until #86). Do not remove or silently abandon `npm run deploy` / `wrangler.jsonc` until the Pages path fully replaces it. Residual status table: [cloudflare-pages.md](cloudflare-pages.md#residual-workers-vs-pages-cutover-85--86).
+**Mid-cutover:** Worker and Pages Functions share `src/lib/liveProxy.ts`. A Pages hostname serves live prefixes only after the project deploys `functions/` (operator: [#85](https://github.com/The-Allsparks/ftc-team-analysis/issues/85)). Until then, Worker deploy remains the live-proxy host. Do not remove `npm run deploy` / `wrangler.jsonc` until Pages is confirmed. Residual status: [cloudflare-pages.md](cloudflare-pages.md#residual-workers-vs-pages-cutover-85--86).
 
 **Do not enable Workers Paid.** Stay on the Workers Free plan. Free-tier overage must fail with Cloudflare **Error 1027**, not incur billing. Enabling Paid / Standard usage to “remove the limit” is out of scope for this project’s hosting policy.
 
@@ -38,7 +38,7 @@ Build always runs `sync:data` (via `npm run build`), then TypeScript + Vite. Out
 | `/portfolio-lab-proxy` | `https://www.ftcportfoliolab.org` |
 | `/ftc-scoring-proxy` | `https://ftc-scoring.firstinspires.org` |
 
-The Worker accepts `GET`/`HEAD` on those prefixes only and never forwards arbitrary browser-supplied destinations. Static page views stay on the asset path (`run_worker_first` limited to proxy prefixes). Local Vite (`npm run dev` / `npm run preview`) mirrors the same prefixes.
+The Worker and Pages Functions accept `GET`/`HEAD` on those prefixes only and never forward arbitrary browser-supplied destinations. Shared implementation: `src/lib/liveProxy.ts`. Static page views stay off the script path (`run_worker_first` / `_routes.json` limited to proxy prefixes). Local Vite (`npm run dev` / `npm run preview`) mirrors the same prefixes.
 
 ## Target path — Cloudflare Pages
 
@@ -60,7 +60,7 @@ After a successful production deploy, the free `*.pages.dev` hostname must serve
 
 Client navigation uses hash routes (`#health`, etc.), so deep links do not require a separate SPA rewrite for normal use. Vite still emits a standard SPA `index.html`.
 
-Static response headers for caching live in [`public/_headers`](../public/_headers) (copied into `dist/` by Vite; honored by Pages). Differentiated TTLs for historical vs current snapshot slices, proxy response headers, and throttling notes: [edge-cache.md](edge-cache.md) ([#89](https://github.com/The-Allsparks/ftc-team-analysis/issues/89)). Tree layout TTLs: [snapshot-tree.md](snapshot-tree.md).
+Static response headers for caching live in [`public/_headers`](../public/_headers) (copied into `dist/` by Vite; honored by Pages). Function invocation routes live in [`public/_routes.json`](../public/_routes.json) (also copied into `dist/`). Differentiated TTLs for historical vs current snapshot slices, proxy response headers, and throttling notes: [edge-cache.md](edge-cache.md) ([#89](https://github.com/The-Allsparks/ftc-team-analysis/issues/89)). Tree layout TTLs: [snapshot-tree.md](snapshot-tree.md). Functions layout + operator verify steps: [cloudflare-pages.md](cloudflare-pages.md#_routesjson-pages-functions-invocation).
 
 ### Operator checklist — create / connect the Pages project
 
@@ -78,7 +78,7 @@ Complete these in the Cloudflare dashboard (requires a Cloudflare login with rig
 5. **PR preview deployments** — With Git integration, preview deployments for pull requests are enabled by default. Confirm under the project **Settings** → **Builds & deployments** (or **Deployments**) that non-`main` branches / PRs produce preview URLs. Leave preview deployments **on**. See [cloudflare-pages.md](cloudflare-pages.md#preview-vs-production).
 6. **Fail open** — Project **Settings** → **Runtime** → **Fail open / closed** → set **Fail open**. Details: [cloudflare-pages.md](cloudflare-pages.md#fail-open).
 7. **Free plan only** — Confirm the account remains on **Workers Free**. Do **not** upgrade to Workers Paid / Standard to lift Functions limits. Overage on free must surface as **Error 1027** (or equivalent free-tier refusal), not a bill.
-8. **Mid-cutover traffic** — Until [#86](https://github.com/The-Allsparks/ftc-team-analysis/issues/86), treat Pages as static-capable. Live enrichments that need `/ftc-proxy` (etc.) still depend on the Worker deploy (or local Vite proxies). Do not point canonical production solely at Pages until proxies are migrated or an explicit dual-host plan is accepted.
+8. **Live proxies on Pages** — After this repo’s `functions/` + `_routes.json` are on `main`, confirm a Pages deploy serves `/ftc-proxy` (etc.) via Functions and that static `/data/**` does not invoke them. Checklist: [cloudflare-pages.md](cloudflare-pages.md#operator-deploy-verification-after-pages-project-exists). Until the project exists, keep Worker deploy for live enrichments; do not point canonical production solely at Pages without that verification.
 
 ### Optional: Wrangler Pages deploy (not required)
 

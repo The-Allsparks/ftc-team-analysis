@@ -1,13 +1,17 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import {
   LIVE_PROXY_BAD_REQUEST,
+  LIVE_PROXY_ROUTES,
   LIVE_PROXY_TIMEOUT_MS,
   LIVE_PROXY_UPSTREAM_TIMEOUT,
   LIVE_PROXY_UPSTREAM_UNAVAILABLE,
+  handleLiveProxyRequest,
   isLiveProxyPath,
   proxyLiveUpstream,
   resolveLiveProxyRequest,
 } from './liveProxy';
+import pagesRoutes from '../../public/_routes.json';
+import { onRequest as pagesOnRequest } from '../../functions/_lib/handleLiveProxy';
 
 describe('resolveLiveProxyRequest', () => {
   it('rewrites each allowlisted prefix to its fixed upstream host', () => {
@@ -159,5 +163,68 @@ describe('proxyLiveUpstream', () => {
     await vi.advanceTimersByTimeAsync(LIVE_PROXY_TIMEOUT_MS);
     const response = await pending;
     expect(response.status).toBe(504);
+  });
+});
+
+describe('handleLiveProxyRequest', () => {
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  it('returns 400 for non-allowlisted paths and forwards allowlisted ones', async () => {
+    const bad = await handleLiveProxyRequest(new Request('https://app.example/not-a-proxy'));
+    expect(bad.status).toBe(400);
+    expect(await bad.text()).toBe(LIVE_PROXY_BAD_REQUEST);
+
+    const fetchImpl = vi.fn(async () => new Response('ok', { status: 200 }));
+    const ok = await handleLiveProxyRequest(
+      new Request('https://app.example/ftc-proxy/2025/team/1'),
+      fetchImpl as unknown as typeof fetch,
+    );
+    expect(ok.status).toBe(200);
+    expect(fetchImpl).toHaveBeenCalledWith(
+      'https://ftc-events.firstinspires.org/2025/team/1',
+      expect.objectContaining({ method: 'GET' }),
+    );
+  });
+});
+
+describe('Pages Functions live proxy parity', () => {
+  afterEach(() => {
+    vi.unstubAllGlobals();
+    vi.restoreAllMocks();
+  });
+
+  it('onRequest uses the same allowlisted forwarding as the Worker', async () => {
+    const fetchImpl = vi.fn(async () => new Response('scout', { status: 200 }));
+    vi.stubGlobal('fetch', fetchImpl);
+
+    const response = await pagesOnRequest({
+      request: new Request('https://pages.example/ftcscout-proxy/api/team/1'),
+    });
+
+    expect(response.status).toBe(200);
+    expect(await response.text()).toBe('scout');
+    expect(fetchImpl).toHaveBeenCalledWith(
+      'https://api.ftcscout.org/api/team/1',
+      expect.objectContaining({ method: 'GET' }),
+    );
+  });
+
+  it('rejects POST through the Pages Function entry', async () => {
+    const response = await pagesOnRequest({
+      request: new Request('https://pages.example/portfolio-lab-proxy/portfolio', { method: 'POST' }),
+    });
+    expect(response.status).toBe(405);
+  });
+});
+
+describe('Pages _routes.json', () => {
+  it('includes only the four proxy prefixes so static and /data never invoke Functions', () => {
+    const expected = LIVE_PROXY_ROUTES.flatMap((route) => [route.prefix, `${route.prefix}/*`]);
+    expect(pagesRoutes.version).toBe(1);
+    expect(pagesRoutes.include).toEqual(expected);
+    expect(pagesRoutes.exclude).toEqual([]);
+    expect(pagesRoutes.include).not.toContain('/*');
   });
 });

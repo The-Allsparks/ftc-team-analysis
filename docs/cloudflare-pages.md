@@ -9,11 +9,11 @@ Operator runbook for parent [#38](https://github.com/The-Allsparks/ftc-team-anal
 | Slice | Issue | Status (as of this runbook) |
 | --- | --- | --- |
 | Docs + build contract + operator checklist | [#85](https://github.com/The-Allsparks/ftc-team-analysis/issues/85) | **Closed in-repo** (checklist in [deployment.md](deployment.md)). **Live Pages project** may still be **operator-pending** (GitHub App + dashboard connect). Do not invent a production `*.pages.dev` URL until the project exists. |
-| Pages Functions + `_routes.json` | [#86](https://github.com/The-Allsparks/ftc-team-analysis/issues/86) | **Open.** Live proxies remain on the **Worker** (`wrangler.jsonc`, `npm run deploy`) until Functions land. |
+| Pages Functions + `_routes.json` | [#86](https://github.com/The-Allsparks/ftc-team-analysis/issues/86) | **In-repo:** `functions/` + `public/_routes.json` share `src/lib/liveProxy.ts` with the Worker. **Live verification** needs a Pages project that deploys Functions ([#85](https://github.com/The-Allsparks/ftc-team-analysis/issues/85)). |
 | Static snapshot tree / loader / edge policy | #87–#90 | **Landed** in-repo; tree regenerates on `sync:data` / build. |
 | This runbook + `source-health.json` | #91 | This document + static health artifact. |
 
-**Mid-cutover rule:** keep `npm run deploy` / `worker/proxy.ts` working. A Pages hostname (when connected) may serve the SPA + static `/data/*` while `/ftc-proxy` (and siblings) still depend on the Worker, fail soft in the UI, or wait for #86. Do not remove the Worker path until Pages Functions fully replace it.
+**Mid-cutover rule:** keep `npm run deploy` / `worker/proxy.ts` working. Once a Pages project deploys this repo, the same allowlisted prefixes are served by **Pages Functions** (`functions/`) with `_routes.json` limiting invocation to those prefixes. Until the Pages project exists, Worker deploy remains the live-proxy host. Do not remove the Worker path until Pages is confirmed as the sole production host.
 
 ## Free-tier limits (Workers Free — do not enable Paid)
 
@@ -58,13 +58,13 @@ Preferred path: **Git-connected** Pages (production + PR previews). Direct `wran
 
 Build contract (both envs): `npm run build` → `dist`, Node **24** (`.nvmrc` and/or `NODE_VERSION=24`). Full checklist: [deployment.md](deployment.md).
 
-Until #86, preview/production Pages hosts may lack live proxies; local Vite / Worker preview (`npm run preview:worker`) remains the live-proxy test path.
+Until the Pages project deploys Functions, preview/production Pages hosts may lack live proxies; local Vite / Worker preview (`npm run preview:worker`) remains a live-proxy test path. After #86 lands on a connected project, PR previews should exercise the same prefixes.
 
-## `_routes.json` (upcoming — #86)
+## `_routes.json` (Pages Functions invocation)
 
-Adding a `functions/` directory makes **all** requests invoke Functions by default. Without a tight include list, directory browsing burns the 100k/day quota.
+Adding a `functions/` directory makes **all** requests invoke Functions by default unless `_routes.json` limits them. Without a tight include list, directory browsing burns the 100k/day quota.
 
-When #86 lands, ship a root (or `dist`) `_routes.json` that **includes only** the four proxy prefixes. `exclude` always wins over `include`. Intended shape (implement in #86 — do not invent a live file until Functions exist):
+This repo ships `public/_routes.json` (copied into `dist/` by Vite). **Include only** the four proxy prefixes. Do **not** use `"exclude": ["/*"]` — exclude always wins over include and would disable Functions entirely.
 
 ```json
 {
@@ -79,11 +79,36 @@ When #86 lands, ship a root (or `dist`) `_routes.json` that **includes only** th
     "/ftc-scoring-proxy",
     "/ftc-scoring-proxy/*"
   ],
-  "exclude": ["/*"]
+  "exclude": []
 }
 ```
 
-Today’s Worker equivalent is `assets.run_worker_first` in `wrangler.jsonc` (same four prefixes). Static `/`, `/assets/*`, and `/data/**` must never invoke Functions. Docs: [Functions invocation routes](https://developers.cloudflare.com/pages/functions/routing/#functions-invocation-routes).
+Static `/`, `/assets/*`, and `/data/**` are outside that include list and never invoke Functions. Worker equivalent: `assets.run_worker_first` in `wrangler.jsonc` (same four prefixes). Docs: [Functions invocation routes](https://developers.cloudflare.com/pages/functions/routing/#functions-invocation-routes).
+
+### Pages Functions layout
+
+| Path | Role |
+| --- | --- |
+| `functions/<prefix>.ts` + `functions/<prefix>/[[path]].ts` | Exact prefix + nested paths for each of the four proxies |
+| `functions/_lib/handleLiveProxy.ts` | Thin `onRequest` → shared `handleLiveProxyRequest` |
+| `src/lib/liveProxy.ts` | Allowlist, path rewrite, GET/HEAD forward (Worker + Functions) |
+
+Handlers stay thin: no large HTML parse on the live path (parsing belongs in `pull:data`).
+
+### Operator deploy verification (after Pages project exists)
+
+On a production or preview URL from the Git-connected Pages project:
+
+1. Confirm deploy logs mention uploading Functions and that `dist/_routes.json` matches the include list above (not a catch-all `/*` include).
+2. `GET /ftc-proxy/<year>/region/USNV` (and one Scout / Portfolio / Scoring prefix) returns upstream content, not SPA `index.html`.
+3. `GET /data/manifest.json` and `/` remain static (no Function invocation needed).
+4. `POST` to a proxy prefix returns **405**.
+
+Until [#85](https://github.com/The-Allsparks/ftc-team-analysis/issues/85) connects the live project, parity is proven in-repo by unit tests + the Worker path (`npm run preview:worker` / `npm run deploy`).
+
+### Secrets (server-side only)
+
+Future authenticated FIRST API credentials ([#17](https://github.com/The-Allsparks/ftc-team-analysis/issues/17)) must live in **Pages Environment variables / secrets** (Production + Preview) or Worker secrets — never in the SPA bundle or `public/`. Today’s proxies use no secrets; they only forward allowlisted public HTTPS.
 
 ## Disable live Functions (static-only)
 
@@ -91,8 +116,8 @@ Use when free-tier pressure, upstream outages, or cutover risk require **directo
 
 | Host | How to disable live |
 | --- | --- |
-| **Worker (today)** | Stop deploying the Worker script for that hostname, or clear `run_worker_first` so only assets serve; or point DNS / bookmarks at a static-only Pages deploy once connected. Client already degrades when proxies fail (#7 / #88). |
-| **Pages + Functions (after #86)** | Remove or rename the `functions/` directory and redeploy; **or** ship `_routes.json` with an empty `include` (no Function routes); **or** temporarily delete Function routes in the dashboard. Confirm Fail open remains on. |
+| **Worker** | Stop deploying the Worker script for that hostname, or clear `run_worker_first` so only assets serve; or point DNS / bookmarks at a static-only Pages deploy. Client already degrades when proxies fail (#7 / #88). |
+| **Pages + Functions** | Remove or rename the `functions/` directory and redeploy; **or** temporarily replace `_routes.json` `include` with a non-proxy path you do not use (Pages requires at least one include rule — prefer removing `functions/` instead); **or** delete Function routes in the dashboard. Confirm Fail open remains on. |
 | **App behavior** | No separate client “kill switch” is required for ops: missing proxies surface as SourceResult / health messaging; `#health` and `/data/source-health.json` remain available from the static snapshot. |
 
 Do **not** enable Workers Paid to keep live proxies under load.

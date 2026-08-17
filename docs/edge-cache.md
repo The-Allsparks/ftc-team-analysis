@@ -26,7 +26,7 @@ When `CURRENT_SEASON` rolls forward in `src/data/seasons.ts`, move the previous 
 
 ## Proxy upstream TTLs
 
-Set on **successful** Worker / future Pages Function responses in `proxyLiveUpstream` (`src/lib/liveProxy.ts`). Errors use `Cache-Control: no-store`.
+Set on **successful** Worker / Pages Function responses in `proxyLiveUpstream` (`src/lib/liveProxy.ts`). Errors use `Cache-Control: no-store`.
 
 | Upstream class | Browser prefix | Successful `Cache-Control` | Rationale |
 | --- | --- | --- | --- |
