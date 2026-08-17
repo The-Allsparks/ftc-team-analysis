@@ -108,6 +108,12 @@ export type SnapshotSourceHealth = {
   generatedAt: string;
   regionCode: string;
   teamCount: number;
+  /** Age of seed `generatedAt` relative to tree emit / validate time (ms). */
+  seedAgeMs: number;
+  /** True when `seedAgeMs` exceeds the #30 stale threshold (8 days). */
+  seedStale: boolean;
+  /** Count of `sourceChecks` with `ok: false`. */
+  sourceCheckFailureCount: number;
   sourceChecks: Array<{
     label: string;
     url: string;
@@ -201,6 +207,9 @@ export const snapshotSourceHealthSchema = v.object({
   generatedAt: v.pipe(v.string(), v.minLength(1)),
   regionCode: v.pipe(v.string(), v.minLength(1)),
   teamCount: v.pipe(v.number(), v.minValue(0)),
+  seedAgeMs: v.pipe(v.number(), v.minValue(0)),
+  seedStale: v.boolean(),
+  sourceCheckFailureCount: v.pipe(v.number(), v.minValue(0)),
   sourceChecks: v.array(
     v.object({
       label: v.string(),

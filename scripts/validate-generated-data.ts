@@ -103,6 +103,43 @@ if (!healthResult.ok) {
   failIssues('source-health.json', healthPath, healthResult.issues);
 }
 
+if (healthResult.data.generatedAt !== seedResult.data.generatedAt) {
+  console.error(
+    `source-health generatedAt ${healthResult.data.generatedAt} does not match seed ${seedResult.data.generatedAt}`,
+  );
+  process.exit(1);
+}
+
+if (healthResult.data.regionCode !== seedResult.data.regionCode) {
+  console.error(
+    `source-health regionCode ${healthResult.data.regionCode} does not match seed ${seedResult.data.regionCode}`,
+  );
+  process.exit(1);
+}
+
+if (healthResult.data.teamCount !== seedResult.data.teams.length) {
+  console.error(
+    `source-health teamCount ${healthResult.data.teamCount} does not match seed teams ${seedResult.data.teams.length}`,
+  );
+  process.exit(1);
+}
+
+const seedSourceChecks = seedResult.data.sourceChecks ?? [];
+if (healthResult.data.sourceChecks.length !== seedSourceChecks.length) {
+  console.error(
+    `source-health sourceChecks length ${healthResult.data.sourceChecks.length} does not match seed ${seedSourceChecks.length}`,
+  );
+  process.exit(1);
+}
+
+const expectedFailures = seedSourceChecks.filter((check) => !check.ok).length;
+if (healthResult.data.sourceCheckFailureCount !== expectedFailures) {
+  console.error(
+    `source-health sourceCheckFailureCount ${healthResult.data.sourceCheckFailureCount} does not match seed failures ${expectedFailures}`,
+  );
+  process.exit(1);
+}
+
 if (manifestResult.data.teamCount !== seedResult.data.teams.length) {
   console.error(
     `manifest teamCount ${manifestResult.data.teamCount} does not match seed teams ${seedResult.data.teams.length}`,

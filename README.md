@@ -19,6 +19,7 @@ Built and maintained by [The Allsparks](https://www.theallsparks.org/). Licensed
 | [docs/snapshot-tree.md](docs/snapshot-tree.md) | Static manifest / region / team snapshot tree (#87) |
 | [docs/edge-cache.md](docs/edge-cache.md) | Edge Cache-Control + live-refresh throttle policy (#89) |
 | [docs/deployment.md](docs/deployment.md) | Deploy overview (Worker today; Pages target + operator checklist → [#38](https://github.com/The-Allsparks/ftc-team-analysis/issues/38) / [#85](https://github.com/The-Allsparks/ftc-team-analysis/issues/85)) |
+| [docs/cloudflare-pages.md](docs/cloudflare-pages.md) | Pages runbook: free-tier, Error 1027, Fail open, `_routes.json`, disable-live, rollback, `source-health.json` ([#91](https://github.com/The-Allsparks/ftc-team-analysis/issues/91)) |
 | [docs/responsible-crawling.md](docs/responsible-crawling.md) | Crawling / refresh traffic policy |
 | [docs/link-discovery.md](docs/link-discovery.md) | Website/social link discovery, ownership confidence, privacy filters |
 | [docs/github-repos.md](docs/github-repos.md) | Public GitHub repo verification + ownership evidence (#22) |
@@ -95,7 +96,7 @@ The empty-fixture dry-run is for gate testing only; it must exit non-zero agains
 
 **Target ([#38](https://github.com/The-Allsparks/ftc-team-analysis/issues/38) / [#85](https://github.com/The-Allsparks/ftc-team-analysis/issues/85)):** Cloudflare **Pages** connected to this GitHub repo — build `npm run build` (includes `sync:data`), output `dist`, Node **24** (`.nvmrc`), production branch `main`, PR preview deployments on, **Fail open** under Settings → Runtime. Stay on **Workers Free** (no Paid); free-tier overage must fail (Error 1027), not bill.
 
-**Mid-cutover:** keep `npm run deploy` working. Pages may serve the SPA + `/data/*` on `*.pages.dev` while live proxies still depend on the Worker until Pages Functions ([#86](https://github.com/The-Allsparks/ftc-team-analysis/issues/86)). Full operator checklist: [docs/deployment.md](docs/deployment.md).
+**Mid-cutover:** keep `npm run deploy` working. Pages may serve the SPA + `/data/*` on `*.pages.dev` while live proxies still depend on the Worker until Pages Functions ([#86](https://github.com/The-Allsparks/ftc-team-analysis/issues/86)). Live Pages project connection may still be operator-pending ([#85](https://github.com/The-Allsparks/ftc-team-analysis/issues/85)). Full operator checklist: [docs/deployment.md](docs/deployment.md). Runbook (limits, Fail open, rollback, disable-live, `source-health.json`): [docs/cloudflare-pages.md](docs/cloudflare-pages.md).
 
 | Browser prefix | Upstream |
 | --- | --- |

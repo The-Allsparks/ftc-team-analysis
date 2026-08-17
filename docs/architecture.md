@@ -1,6 +1,6 @@
 # Architecture overview
 
-High-level layout of Nevada FTC Team Analysis. Hosting runbooks (Worker today, Pages target, free-tier / Fail open) live in [deployment.md](deployment.md) under parent [#38](https://github.com/The-Allsparks/ftc-team-analysis/issues/38); this page stays structural.
+High-level layout of Nevada FTC Team Analysis. Hosting runbooks (Worker today, Pages target, free-tier / Fail open / rollback) live in [deployment.md](deployment.md) and the full [#38](https://github.com/The-Allsparks/ftc-team-analysis/issues/38) operator guide [cloudflare-pages.md](cloudflare-pages.md); this page stays structural.
 
 ## Components
 
@@ -65,6 +65,7 @@ When FTC Events has not published the current region page, the UI selects the la
 - [internet-archive.md](internet-archive.md) — Wayback research: archived website reconstruction only (#25)
 - [onshape.md](onshape.md) — Onshape research: declared CAD links only; no Public Documents crawl (#26)
 - [deployment.md](deployment.md) — deploy commands and proxy table
+- [cloudflare-pages.md](cloudflare-pages.md) — Pages runbook: free-tier, Fail open, `_routes.json`, rollback (#91)
 - [attribution.md](attribution.md) — sources, hierarchy, and residual risks
 - [relationship-graph.md](relationship-graph.md) — evidence-backed team relationship graph model (#28)
 - [canonical-identifiers.md](canonical-identifiers.md) — location/school/org canonical IDs (#16)
