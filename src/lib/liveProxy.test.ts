@@ -220,8 +220,12 @@ describe('Pages Functions live proxy parity', () => {
 });
 
 describe('Pages _routes.json', () => {
-  it('includes only the four proxy prefixes so static and /data never invoke Functions', () => {
-    const expected = LIVE_PROXY_ROUTES.flatMap((route) => [route.prefix, `${route.prefix}/*`]);
+  it('includes public live-data prefixes plus the FIRST API proxy; never catch-all', () => {
+    const expected = [
+      ...LIVE_PROXY_ROUTES.flatMap((route) => [route.prefix, `${route.prefix}/*`]),
+      '/ftc-api-proxy',
+      '/ftc-api-proxy/*',
+    ];
     expect(pagesRoutes.version).toBe(1);
     expect(pagesRoutes.include).toEqual(expected);
     expect(pagesRoutes.exclude).toEqual([]);

@@ -43,19 +43,19 @@ Checkmarks reflect whether the corresponding foundation issue is closed. Open it
 | Field-level provenance / evidence model | Done | [#5](https://github.com/The-Allsparks/ftc-team-analysis/issues/5) |
 | Organization affiliations (school vs sponsors, etc.) | Done — **v1 bar** | [#4](https://github.com/The-Allsparks/ftc-team-analysis/issues/4) |
 | Canonical location / school / org identifiers | Stretch (not a hard v1 blocker) | [#16](https://github.com/The-Allsparks/ftc-team-analysis/issues/16) |
-| Complete official competitive records | Remaining | [#17](https://github.com/The-Allsparks/ftc-team-analysis/issues/17) |
-| Source-health and coverage reporting | Remaining | [#30](https://github.com/The-Allsparks/ftc-team-analysis/issues/30) |
+| Complete official competitive records | Partial (client + secret-injected `/ftc-api-proxy`; live canonical pull still needs operator secrets) | [#17](https://github.com/The-Allsparks/ftc-team-analysis/issues/17) |
+| Source-health and coverage reporting | Done | [#30](https://github.com/The-Allsparks/ftc-team-analysis/issues/30) |
 | Automated tests | Done | [#9](https://github.com/The-Allsparks/ftc-team-analysis/issues/9) |
 | CI workflow on PRs / `main` | Done | [#46](https://github.com/The-Allsparks/ftc-team-analysis/issues/46) |
 | Required checks / branch protection on `main` | Done | [#10](https://github.com/The-Allsparks/ftc-team-analysis/issues/10) |
 | Qualified relationship inference (not implied succession) | Done | [#6](https://github.com/The-Allsparks/ftc-team-analysis/issues/6) |
-| Historical snapshots and change tracking | Remaining | [#29](https://github.com/The-Allsparks/ftc-team-analysis/issues/29) |
+| Historical snapshots and change tracking | Done | [#29](https://github.com/The-Allsparks/ftc-team-analysis/issues/29) |
 
 Related trust foundations already landed (supporting, not separate checklist rows): [#7](https://github.com/The-Allsparks/ftc-team-analysis/issues/7), [#8](https://github.com/The-Allsparks/ftc-team-analysis/issues/8), [#11](https://github.com/The-Allsparks/ftc-team-analysis/issues/11), [#12](https://github.com/The-Allsparks/ftc-team-analysis/issues/12), [#15](https://github.com/The-Allsparks/ftc-team-analysis/issues/15).
 
 ## Review policy: analytics PRs
 
-Until the **Remaining** checklist rows above are satisfied (stretch [#16](https://github.com/The-Allsparks/ftc-team-analysis/issues/16) excepted), maintainers **may reject or request deferral** of pull requests that add new predictive or comparative analytics—especially retention, continuity, trajectories, sponsor networks, coverage-gap products, alliance networks, mechanism prevalence, or peer comparisons.
+Until the **Remaining / Partial** checklist rows above are satisfied (stretch [#16](https://github.com/The-Allsparks/ftc-team-analysis/issues/16) excepted), maintainers **may reject or request deferral** of pull requests that add new predictive or comparative analytics—especially retention, continuity, trajectories, sponsor networks, coverage-gap products, alliance networks, mechanism prevalence, or peer comparisons.
 
 Directory, provenance, ingestion, schema, CI, and qualified-preview hardening work remains welcome.
 

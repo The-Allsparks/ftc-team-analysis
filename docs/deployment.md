@@ -37,6 +37,7 @@ Build always runs `sync:data` (via `npm run build`), then TypeScript + Vite. Out
 | `/ftcscout-proxy` | `https://api.ftcscout.org` |
 | `/portfolio-lab-proxy` | `https://www.ftcportfoliolab.org` |
 | `/ftc-scoring-proxy` | `https://ftc-scoring.firstinspires.org` |
+| `/ftc-api-proxy` | `https://ftc-api.firstinspires.org/v2.0` (Basic auth from server secrets; 503 if unset) |
 
 The Worker and Pages Functions accept `GET`/`HEAD` on those prefixes only and never forward arbitrary browser-supplied destinations. Shared implementation: `src/lib/liveProxy.ts`. Static page views stay off the script path (`run_worker_first` / `_routes.json` limited to proxy prefixes). Local Vite (`npm run dev` / `npm run preview`) mirrors the same prefixes.
 
