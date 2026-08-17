@@ -9,8 +9,8 @@ Browser (React/Vite SPA)
     │  static assets + /data/*.json
     │  /ftc-proxy, /ftcscout-proxy, /portfolio-lab-proxy, /ftc-scoring-proxy
     ▼
-Cloudflare Worker (worker/proxy.ts)     Local Vite dev proxies (same prefixes)
-    │  GET/HEAD only, fixed upstream hosts
+Cloudflare Worker (worker/proxy.ts)     Pages Functions (functions/)     Local Vite dev proxies
+    │  shared src/lib/liveProxy.ts — GET/HEAD only, fixed upstream hosts
     ▼
 FTC Events / FTCScout / Portfolio Lab / FTC Scoring (public HTTP)
 ```
@@ -28,7 +28,9 @@ FTC Events / FTCScout / Portfolio Lab / FTC Scoring (public HTTP)
 | Public data copy | `public/data/` | Served as `/data/...` (via `npm run sync:data`) — mega-seed **and** split snapshot tree (#87) |
 | Snapshot tree | `docs/snapshot-tree.md`, `src/data/snapshotTree*.ts`, `loadDirectoryBootstrap.ts` | Manifest + region summaries boot the directory; per-team JSON loads lazily (#88). Mega-seed is fail-soft fallback only. |
 | Ingestion | `scripts/pull-public-ftc-data.ts` | Public-page pull, publish guards |
-| Worker | `worker/proxy.ts`, `wrangler.jsonc` | Allowlisted live-data proxy + static assets |
+| Live proxy core | `src/lib/liveProxy.ts` | Allowlist + host-fixed GET/HEAD forward (shared) |
+| Worker | `worker/proxy.ts`, `wrangler.jsonc` | Static assets + live proxy (keep during cutover) |
+| Pages Functions | `functions/`, `public/_routes.json` | Same proxy on Pages; invocation limited to four prefixes |
 
 ### Static-first data loading (#88)
 

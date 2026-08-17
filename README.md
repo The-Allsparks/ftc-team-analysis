@@ -94,9 +94,9 @@ The empty-fixture dry-run is for gate testing only; it must exit non-zero agains
 
 **Today (supported):** Cloudflare **Worker** with Vite static assets plus a small allowlisted live-data proxy (`worker/proxy.ts`, `wrangler.jsonc`). Deploy with `npm run deploy` (`build` + `wrangler deploy`). Local Worker preview: `npm run preview:worker`.
 
-**Target ([#38](https://github.com/The-Allsparks/ftc-team-analysis/issues/38) / [#85](https://github.com/The-Allsparks/ftc-team-analysis/issues/85)):** Cloudflare **Pages** connected to this GitHub repo — build `npm run build` (includes `sync:data`), output `dist`, Node **24** (`.nvmrc`), production branch `main`, PR preview deployments on, **Fail open** under Settings → Runtime. Stay on **Workers Free** (no Paid); free-tier overage must fail (Error 1027), not bill.
+**Target ([#38](https://github.com/The-Allsparks/ftc-team-analysis/issues/38) / [#85](https://github.com/The-Allsparks/ftc-team-analysis/issues/85)):** Cloudflare **Pages** connected to this GitHub repo — build `npm run build` (includes `sync:data`), output `dist`, Node **24** (`.nvmrc`), production branch `main`, PR preview deployments on, **Fail open** under Settings → Runtime. Stay on **Workers Free** (no Paid); free-tier overage must fail (Error 1027), not bill. Live proxies: Pages Functions under `functions/` with `public/_routes.json` (shared `src/lib/liveProxy.ts` with the Worker; [#86](https://github.com/The-Allsparks/ftc-team-analysis/issues/86)).
 
-**Mid-cutover:** keep `npm run deploy` working. Pages may serve the SPA + `/data/*` on `*.pages.dev` while live proxies still depend on the Worker until Pages Functions ([#86](https://github.com/The-Allsparks/ftc-team-analysis/issues/86)). Live Pages project connection may still be operator-pending ([#85](https://github.com/The-Allsparks/ftc-team-analysis/issues/85)). Full operator checklist: [docs/deployment.md](docs/deployment.md). Runbook (limits, Fail open, rollback, disable-live, `source-health.json`): [docs/cloudflare-pages.md](docs/cloudflare-pages.md).
+**Mid-cutover:** keep `npm run deploy` working. Pages serves Functions for the four proxy prefixes once the project is connected and deploys this repo; until then, live proxies still depend on the Worker. Live Pages project connection may still be operator-pending ([#85](https://github.com/The-Allsparks/ftc-team-analysis/issues/85)). Full operator checklist: [docs/deployment.md](docs/deployment.md). Runbook (limits, Fail open, `_routes.json`, rollback, disable-live, `source-health.json`): [docs/cloudflare-pages.md](docs/cloudflare-pages.md).
 
 | Browser prefix | Upstream |
 | --- | --- |
@@ -105,7 +105,7 @@ The empty-fixture dry-run is for gate testing only; it must exit non-zero agains
 | `/portfolio-lab-proxy` | `https://www.ftcportfoliolab.org` |
 | `/ftc-scoring-proxy` | `https://ftc-scoring.firstinspires.org` |
 
-Local Vite (`npm run dev` / `npm run preview`) provides the same prefixes. The Worker only accepts `GET`/`HEAD` on those prefixes and never forwards arbitrary browser-supplied destinations. Static page views do not invoke the proxy Worker (`run_worker_first` is limited to the proxy paths).
+Local Vite (`npm run dev` / `npm run preview`) provides the same prefixes. Worker and Pages Functions only accept `GET`/`HEAD` on those prefixes and never forward arbitrary browser-supplied destinations. Static page views do not invoke the proxy script (`run_worker_first` / `_routes.json` limited to the proxy paths).
 
 ## Data Sources
 

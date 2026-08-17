@@ -1,6 +1,7 @@
 /**
  * Production live-data proxy routes (same prefixes as Vite `server.proxy`).
  * Only these fixed upstream hosts are allowed — never browser-supplied destinations.
+ * Shared by the Cloudflare Worker (`worker/proxy.ts`) and Pages Functions (`functions/`).
  *
  * Successful responses set Cache-Control per docs/edge-cache.md (#89). This reduces
  * browser/upstream repeat load; it does not make Function invocations free of quota.
@@ -137,4 +138,21 @@ export async function proxyLiveUpstream(
   } finally {
     clearTimeout(timer);
   }
+}
+
+/**
+ * Thin entry used by the Worker and Pages Functions: resolve the allowlisted
+ * upstream, then forward GET/HEAD only. No HTML parsing on this path.
+ */
+export async function handleLiveProxyRequest(
+  request: Request,
+  fetchImpl: typeof fetch = fetch,
+  timeoutMs = LIVE_PROXY_TIMEOUT_MS,
+): Promise<Response> {
+  const url = new URL(request.url);
+  const resolved = resolveLiveProxyRequest(url.pathname, url.search);
+  if (!resolved) {
+    return new Response(LIVE_PROXY_BAD_REQUEST, { status: 400 });
+  }
+  return proxyLiveUpstream(request, resolved, fetchImpl, timeoutMs);
 }
