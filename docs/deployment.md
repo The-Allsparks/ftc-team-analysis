@@ -92,9 +92,22 @@ Git-connected builds are the preferred path (production + PR previews). Direct `
 
 When Functions exist and free quota is exhausted: static assets continue; Functions are bypassed. When Functions do not exist yet: static hosting is unaffected; still set Fail open so cutover to #86 inherits the right default.
 
+## Snapshot publication vs app deploy
+
+Do not conflate refreshing Nevada JSON with shipping a new SPA build:
+
+| Concern | Operator action | Outcome |
+| --- | --- | --- |
+| **Publish a newer snapshot** | Let data-refresh open a PR (or run `npm run pull:data` locally) → review → merge to `main` | Checked-in mega-seed + observations update. Empty/drop publishes remain blocked by `publishGuard` + `validate:data`. |
+| **Deploy the app** | Merge app changes to `main` (Pages) and/or `npm run deploy` (Worker) | Build runs `sync:data`, regenerates `public/data/**` (mega-seed copy **and** snapshot tree), then ships `dist/`. |
+
+The data-refresh workflow never deploys Cloudflare. Merging a data PR alone is enough for the **next** production build to serve updated `/data/*`; if Pages auto-builds on `main`, that happens automatically after merge. Tree files are not committed — see [snapshot-tree.md](snapshot-tree.md) and [ingestion.md](ingestion.md).
+
 ## Related
 
 - [architecture.md](architecture.md)
+- [snapshot-tree.md](snapshot-tree.md) (publication vs deploy)
+- [ingestion.md](ingestion.md) (pull + guards + refresh workflow)
 - [dependency-policy.md](dependency-policy.md) (Node / `.nvmrc`)
 - README “Production” section
 - Parent hosting epic [#38](https://github.com/The-Allsparks/ftc-team-analysis/issues/38)

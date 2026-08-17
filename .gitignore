@@ -10,3 +10,4 @@ public/data/**
 .wrangler
 .dev.vars
 data-refresh-report.md
+snapshot-tree-report.md

@@ -1,9 +1,10 @@
-import { readFileSync, readdirSync, existsSync } from 'node:fs';
+import { readFileSync, readdirSync, existsSync, writeFileSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { GENERATED_DATA_SCHEMA_VERSION, parseGeneratedSeed } from '../src/data/generatedSeedSchema';
 import { parseTeamObservations } from '../src/data/teamObservationsSchema';
 import { TEAM_OBSERVATIONS_SCHEMA_VERSION } from '../src/lib/teamObservations';
+import { formatSizeComparisonMarkdown } from '../src/data/snapshotTree';
 import { writeSnapshotTree } from './snapshotTreeWrite';
 import {
   parseRegionSeasonSummary,
@@ -71,6 +72,12 @@ try {
 
 const built = await writeSnapshotTree(publicDataDir, seedResult.data, { previous: seedRaw });
 console.log(`OK: regenerated snapshot tree (${built.fileCount} files) for validation`);
+const sizeMarkdown = formatSizeComparisonMarkdown(
+  built.sizes,
+  built.manifest.teamCount,
+  built.manifest.generatedAt,
+);
+console.log(sizeMarkdown);
 
 function readJson(path: string): unknown {
   return JSON.parse(readFileSync(path, 'utf8')) as unknown;
@@ -174,6 +181,25 @@ if (existsSync(teamsRoot)) {
   }
 }
 
-console.log(
-  `OK: snapshot tree (manifest + source-health + ${regionFiles} region summaries + ${teamIndexFiles} team indexes + ${teamSeasonFiles} team-season files)`,
+const treeSummary = `OK: snapshot tree (manifest + source-health + ${regionFiles} region summaries + ${teamIndexFiles} team indexes + ${teamSeasonFiles} team-season files)`;
+console.log(treeSummary);
+
+const reportPath = resolve(root, 'snapshot-tree-report.md');
+writeFileSync(
+  reportPath,
+  [
+    '# Snapshot tree validation report',
+    '',
+    `- ${treeSummary}`,
+    `- Tree file count: **${built.fileCount}**`,
+    `- Manifest \`generatedAt\`: \`${manifestResult.data.generatedAt}\``,
+    `- Manifest \`treeGeneratedAt\`: \`${manifestResult.data.treeGeneratedAt}\``,
+    `- Region: \`${manifestResult.data.regionCode}\` · current season: **${manifestResult.data.currentSeason}**`,
+    '',
+    'The split tree under `public/data/` is **gitignored** and regenerated from the canonical mega-seed by `pull:data` / `sync:data` / `validate:data` / `npm run build`. Data-refresh PRs commit seed + observations only; Pages/Worker builds emit the tree at deploy time.',
+    '',
+    sizeMarkdown,
+  ].join('\n'),
+  'utf8',
 );
+console.log(`Wrote ${reportPath}`);
