@@ -16,7 +16,7 @@ Built and maintained by [The Allsparks](https://www.theallsparks.org/). Licensed
 | [docs/school-community-context.md](docs/school-community-context.md) | Aggregate school/community context policy (#27; no student profiling) |
 | [docs/architecture.md](docs/architecture.md) | System layout |
 | [docs/ingestion.md](docs/ingestion.md) | Seed pull and publish guards |
-| [docs/deployment.md](docs/deployment.md) | Deploy overview (Cloudflare runbooks → [#38](https://github.com/The-Allsparks/ftc-team-analysis/issues/38)) |
+| [docs/deployment.md](docs/deployment.md) | Deploy overview (Worker today; Pages target + operator checklist → [#38](https://github.com/The-Allsparks/ftc-team-analysis/issues/38) / [#85](https://github.com/The-Allsparks/ftc-team-analysis/issues/85)) |
 | [docs/responsible-crawling.md](docs/responsible-crawling.md) | Crawling / refresh traffic policy |
 | [docs/link-discovery.md](docs/link-discovery.md) | Website/social link discovery, ownership confidence, privacy filters |
 | [docs/github-repos.md](docs/github-repos.md) | Public GitHub repo verification + ownership evidence (#22) |
@@ -87,9 +87,13 @@ npm run pull:data -- --dry-run --candidate-fixture=src/data/fixtures/empty-gener
 
 The empty-fixture dry-run is for gate testing only; it must exit non-zero against the real seed. Live upstream refresh is intended via Actions `workflow_dispatch` after this pipeline lands—not via unit tests.
 
-## Production (Cloudflare Workers)
+## Production (Cloudflare)
 
-The app deploys as a Cloudflare Worker with Vite static assets plus a small allowlisted live-data proxy (`worker/proxy.ts`, `wrangler.jsonc`).
+**Today (supported):** Cloudflare **Worker** with Vite static assets plus a small allowlisted live-data proxy (`worker/proxy.ts`, `wrangler.jsonc`). Deploy with `npm run deploy` (`build` + `wrangler deploy`). Local Worker preview: `npm run preview:worker`.
+
+**Target ([#38](https://github.com/The-Allsparks/ftc-team-analysis/issues/38) / [#85](https://github.com/The-Allsparks/ftc-team-analysis/issues/85)):** Cloudflare **Pages** connected to this GitHub repo — build `npm run build` (includes `sync:data`), output `dist`, Node **24** (`.nvmrc`), production branch `main`, PR preview deployments on, **Fail open** under Settings → Runtime. Stay on **Workers Free** (no Paid); free-tier overage must fail (Error 1027), not bill.
+
+**Mid-cutover:** keep `npm run deploy` working. Pages may serve the SPA + `/data/*` on `*.pages.dev` while live proxies still depend on the Worker until Pages Functions ([#86](https://github.com/The-Allsparks/ftc-team-analysis/issues/86)). Full operator checklist: [docs/deployment.md](docs/deployment.md).
 
 | Browser prefix | Upstream |
 | --- | --- |
@@ -98,7 +102,7 @@ The app deploys as a Cloudflare Worker with Vite static assets plus a small allo
 | `/portfolio-lab-proxy` | `https://www.ftcportfoliolab.org` |
 | `/ftc-scoring-proxy` | `https://ftc-scoring.firstinspires.org` |
 
-Local Vite (`npm run dev` / `npm run preview`) provides the same prefixes. Production uses `npm run deploy` (`build` + `wrangler deploy`). The Worker only accepts `GET`/`HEAD` on those prefixes and never forwards arbitrary browser-supplied destinations. Static page views do not invoke the proxy Worker (`run_worker_first` is limited to the proxy paths).
+Local Vite (`npm run dev` / `npm run preview`) provides the same prefixes. The Worker only accepts `GET`/`HEAD` on those prefixes and never forwards arbitrary browser-supplied destinations. Static page views do not invoke the proxy Worker (`run_worker_first` is limited to the proxy paths).
 
 ## Data Sources
 

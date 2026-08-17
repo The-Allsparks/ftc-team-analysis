@@ -1,6 +1,6 @@
 # Architecture overview
 
-High-level layout of Nevada FTC Team Analysis. Hosting runbooks (Pages vs Workers free-tier limits, cache TTLs, rollback) are deferred to [#38](https://github.com/The-Allsparks/ftc-team-analysis/issues/38); this page stays structural.
+High-level layout of Nevada FTC Team Analysis. Hosting runbooks (Worker today, Pages target, free-tier / Fail open) live in [deployment.md](deployment.md) under parent [#38](https://github.com/The-Allsparks/ftc-team-analysis/issues/38); this page stays structural.
 
 ## Components
 
