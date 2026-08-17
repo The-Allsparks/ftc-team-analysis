@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-16T16:17:01.259Z",
+  "generatedAt": "2026-08-17T16:07:30.253Z",
   "targetSeasons": [
     2026,
     2025,
@@ -8590,7 +8590,7 @@
               "name": "University of Nevada Cooperative Extension",
               "season": 2026,
               "source": "ftc-events-sponsors",
-              "retrievedAt": "2026-08-16T16:17:01.259Z",
+              "retrievedAt": "2026-08-17T16:07:29.923Z",
               "confidence": "high",
               "confirmationState": "unconfirmed",
               "sourceText": "University of Nevada Cooperative Extension/TESLA/Gene Hauss Foundation/National Security Site&4-H"
@@ -8600,7 +8600,7 @@
               "name": "TESLA",
               "season": 2026,
               "source": "ftc-events-sponsors",
-              "retrievedAt": "2026-08-16T16:17:01.259Z",
+              "retrievedAt": "2026-08-17T16:07:29.923Z",
               "confidence": "high",
               "confirmationState": "unconfirmed",
               "sourceText": "University of Nevada Cooperative Extension/TESLA/Gene Hauss Foundation/National Security Site&4-H"
@@ -8610,7 +8610,7 @@
               "name": "Gene Hauss Foundation",
               "season": 2026,
               "source": "ftc-events-sponsors",
-              "retrievedAt": "2026-08-16T16:17:01.259Z",
+              "retrievedAt": "2026-08-17T16:07:29.923Z",
               "confidence": "high",
               "confirmationState": "unconfirmed",
               "sourceText": "University of Nevada Cooperative Extension/TESLA/Gene Hauss Foundation/National Security Site&4-H"
@@ -8620,7 +8620,7 @@
               "name": "National Security Site",
               "season": 2026,
               "source": "ftc-events-sponsors",
-              "retrievedAt": "2026-08-16T16:17:01.259Z",
+              "retrievedAt": "2026-08-17T16:07:29.923Z",
               "confidence": "high",
               "confirmationState": "unconfirmed",
               "sourceText": "University of Nevada Cooperative Extension/TESLA/Gene Hauss Foundation/National Security Site&4-H"
@@ -8630,7 +8630,7 @@
               "name": "4-H",
               "season": 2026,
               "source": "ftc-events-sponsors",
-              "retrievedAt": "2026-08-16T16:17:01.259Z",
+              "retrievedAt": "2026-08-17T16:07:29.923Z",
               "confidence": "high",
               "confirmationState": "unconfirmed",
               "sourceText": "University of Nevada Cooperative Extension/TESLA/Gene Hauss Foundation/National Security Site&4-H"
@@ -10174,7 +10174,7 @@
               "name": "Gene Hess Foundation",
               "season": 2026,
               "source": "ftc-events-sponsors",
-              "retrievedAt": "2026-08-16T16:16:59.064Z",
+              "retrievedAt": "2026-08-17T16:07:29.709Z",
               "confidence": "high",
               "confirmationState": "unconfirmed",
               "sourceText": "Gene Hess Foundation&4-H"
@@ -10184,7 +10184,7 @@
               "name": "4-H",
               "season": 2026,
               "source": "ftc-events-sponsors",
-              "retrievedAt": "2026-08-16T16:16:59.064Z",
+              "retrievedAt": "2026-08-17T16:07:29.709Z",
               "confidence": "high",
               "confirmationState": "unconfirmed",
               "sourceText": "Gene Hess Foundation&4-H"
@@ -14966,7 +14966,7 @@
               "name": "The Meadows School",
               "season": 2026,
               "source": "ftc-events-sponsors",
-              "retrievedAt": "2026-08-16T16:16:58.966Z",
+              "retrievedAt": "2026-08-17T16:07:29.647Z",
               "confidence": "high",
               "confirmationState": "unconfirmed",
               "sourceText": "The Meadows School"
@@ -18912,7 +18912,7 @@
               "name": "Gene Haas Foundation",
               "season": 2026,
               "source": "ftc-events-sponsors",
-              "retrievedAt": "2026-08-16T16:16:58.979Z",
+              "retrievedAt": "2026-08-17T16:07:29.674Z",
               "confidence": "high",
               "confirmationState": "unconfirmed",
               "sourceText": "Gene Haas Foundation&Foothill High School"
@@ -18922,7 +18922,7 @@
               "name": "Foothill High School",
               "season": 2026,
               "source": "ftc-events-sponsors",
-              "retrievedAt": "2026-08-16T16:16:58.979Z",
+              "retrievedAt": "2026-08-17T16:07:29.674Z",
               "confidence": "high",
               "confirmationState": "unconfirmed",
               "sourceText": "Gene Haas Foundation&Foothill High School"
@@ -24509,7 +24509,7 @@
               "name": "Tract",
               "season": 2026,
               "source": "ftc-events-sponsors",
-              "retrievedAt": "2026-08-16T16:16:59.079Z",
+              "retrievedAt": "2026-08-17T16:07:29.726Z",
               "confidence": "high",
               "confirmationState": "unconfirmed",
               "sourceText": "Tract/401 - IBEW/Gene Haas Foundation/SendCutSend/REV Robotics&Family/Community"
@@ -24519,7 +24519,7 @@
               "name": "401 - IBEW",
               "season": 2026,
               "source": "ftc-events-sponsors",
-              "retrievedAt": "2026-08-16T16:16:59.079Z",
+              "retrievedAt": "2026-08-17T16:07:29.726Z",
               "confidence": "high",
               "confirmationState": "unconfirmed",
               "sourceText": "Tract/401 - IBEW/Gene Haas Foundation/SendCutSend/REV Robotics&Family/Community"
@@ -24529,7 +24529,7 @@
               "name": "Gene Haas Foundation",
               "season": 2026,
               "source": "ftc-events-sponsors",
-              "retrievedAt": "2026-08-16T16:16:59.079Z",
+              "retrievedAt": "2026-08-17T16:07:29.726Z",
               "confidence": "high",
               "confirmationState": "unconfirmed",
               "sourceText": "Tract/401 - IBEW/Gene Haas Foundation/SendCutSend/REV Robotics&Family/Community"
@@ -24539,7 +24539,7 @@
               "name": "SendCutSend",
               "season": 2026,
               "source": "ftc-events-sponsors",
-              "retrievedAt": "2026-08-16T16:16:59.079Z",
+              "retrievedAt": "2026-08-17T16:07:29.726Z",
               "confidence": "high",
               "confirmationState": "unconfirmed",
               "sourceText": "Tract/401 - IBEW/Gene Haas Foundation/SendCutSend/REV Robotics&Family/Community"
@@ -24549,7 +24549,7 @@
               "name": "REV Robotics",
               "season": 2026,
               "source": "ftc-events-sponsors",
-              "retrievedAt": "2026-08-16T16:16:59.079Z",
+              "retrievedAt": "2026-08-17T16:07:29.726Z",
               "confidence": "high",
               "confirmationState": "unconfirmed",
               "sourceText": "Tract/401 - IBEW/Gene Haas Foundation/SendCutSend/REV Robotics&Family/Community"
@@ -24559,7 +24559,7 @@
               "name": "Family/Community",
               "season": 2026,
               "source": "ftc-events-sponsors",
-              "retrievedAt": "2026-08-16T16:16:59.079Z",
+              "retrievedAt": "2026-08-17T16:07:29.726Z",
               "confidence": "high",
               "confirmationState": "unconfirmed",
               "sourceText": "Tract/401 - IBEW/Gene Haas Foundation/SendCutSend/REV Robotics&Family/Community"
@@ -33494,7 +33494,7 @@
               "name": "Adelson Educational Campus",
               "season": 2026,
               "source": "ftc-events-sponsors",
-              "retrievedAt": "2026-08-16T16:16:59.448Z",
+              "retrievedAt": "2026-08-17T16:07:30.042Z",
               "confidence": "high",
               "confirmationState": "unconfirmed",
               "sourceText": "Adelson Educational Campus"
@@ -34620,7 +34620,7 @@
               "name": "Meadows School",
               "season": 2026,
               "source": "ftc-events-sponsors",
-              "retrievedAt": "2026-08-16T16:17:00.382Z",
+              "retrievedAt": "2026-08-17T16:07:29.877Z",
               "confidence": "high",
               "confirmationState": "unconfirmed",
               "sourceText": "Meadows School"
@@ -40053,7 +40053,7 @@
               "name": "Tesla",
               "season": 2026,
               "source": "ftc-events-sponsors",
-              "retrievedAt": "2026-08-16T16:16:59.393Z",
+              "retrievedAt": "2026-08-17T16:07:29.858Z",
               "confidence": "high",
               "confirmationState": "unconfirmed",
               "sourceText": "Tesla&Helen C Cannon Middle School"
@@ -40063,7 +40063,7 @@
               "name": "Helen C Cannon Middle School",
               "season": 2026,
               "source": "ftc-events-sponsors",
-              "retrievedAt": "2026-08-16T16:16:59.393Z",
+              "retrievedAt": "2026-08-17T16:07:29.858Z",
               "confidence": "high",
               "confirmationState": "unconfirmed",
               "sourceText": "Tesla&Helen C Cannon Middle School"
@@ -40721,7 +40721,7 @@
               "name": "Central Technical Training Academy",
               "season": 2026,
               "source": "ftc-events-sponsors",
-              "retrievedAt": "2026-08-16T16:17:00.365Z",
+              "retrievedAt": "2026-08-17T16:07:29.903Z",
               "confidence": "high",
               "confirmationState": "unconfirmed",
               "sourceText": "Central Technical Training Academy"
@@ -43526,7 +43526,7 @@
               "name": "Tesla",
               "season": 2026,
               "source": "ftc-events-sponsors",
-              "retrievedAt": "2026-08-16T16:17:00.563Z",
+              "retrievedAt": "2026-08-17T16:07:29.985Z",
               "confidence": "high",
               "confirmationState": "unconfirmed",
               "sourceText": "Tesla&Meadow Valley Middle School"
@@ -43536,7 +43536,7 @@
               "name": "Meadow Valley Middle School",
               "season": 2026,
               "source": "ftc-events-sponsors",
-              "retrievedAt": "2026-08-16T16:17:00.563Z",
+              "retrievedAt": "2026-08-17T16:07:29.985Z",
               "confidence": "high",
               "confirmationState": "unconfirmed",
               "sourceText": "Tesla&Meadow Valley Middle School"
@@ -45220,7 +45220,7 @@
               "name": "Tesla",
               "season": 2026,
               "source": "ftc-events-sponsors",
-              "retrievedAt": "2026-08-16T16:17:00.005Z",
+              "retrievedAt": "2026-08-17T16:07:30.252Z",
               "confidence": "high",
               "confirmationState": "unconfirmed",
               "sourceText": "Tesla/Gene Haas Foundation/Sensus Social/Ken and Alicia Lund, Ferrari-Lund Real Estate/Lake Buddy/Galena High School PTO&Galena High School"
@@ -45230,7 +45230,7 @@
               "name": "Gene Haas Foundation",
               "season": 2026,
               "source": "ftc-events-sponsors",
-              "retrievedAt": "2026-08-16T16:17:00.005Z",
+              "retrievedAt": "2026-08-17T16:07:30.252Z",
               "confidence": "high",
               "confirmationState": "unconfirmed",
               "sourceText": "Tesla/Gene Haas Foundation/Sensus Social/Ken and Alicia Lund, Ferrari-Lund Real Estate/Lake Buddy/Galena High School PTO&Galena High School"
@@ -45240,7 +45240,7 @@
               "name": "Sensus Social",
               "season": 2026,
               "source": "ftc-events-sponsors",
-              "retrievedAt": "2026-08-16T16:17:00.005Z",
+              "retrievedAt": "2026-08-17T16:07:30.252Z",
               "confidence": "high",
               "confirmationState": "unconfirmed",
               "sourceText": "Tesla/Gene Haas Foundation/Sensus Social/Ken and Alicia Lund, Ferrari-Lund Real Estate/Lake Buddy/Galena High School PTO&Galena High School"
@@ -45250,7 +45250,7 @@
               "name": "Ken and Alicia Lund, Ferrari-Lund Real Estate",
               "season": 2026,
               "source": "ftc-events-sponsors",
-              "retrievedAt": "2026-08-16T16:17:00.005Z",
+              "retrievedAt": "2026-08-17T16:07:30.252Z",
               "confidence": "high",
               "confirmationState": "unconfirmed",
               "sourceText": "Tesla/Gene Haas Foundation/Sensus Social/Ken and Alicia Lund, Ferrari-Lund Real Estate/Lake Buddy/Galena High School PTO&Galena High School"
@@ -45260,7 +45260,7 @@
               "name": "Lake Buddy",
               "season": 2026,
               "source": "ftc-events-sponsors",
-              "retrievedAt": "2026-08-16T16:17:00.005Z",
+              "retrievedAt": "2026-08-17T16:07:30.252Z",
               "confidence": "high",
               "confirmationState": "unconfirmed",
               "sourceText": "Tesla/Gene Haas Foundation/Sensus Social/Ken and Alicia Lund, Ferrari-Lund Real Estate/Lake Buddy/Galena High School PTO&Galena High School"
@@ -45270,7 +45270,7 @@
               "name": "Galena High School PTO",
               "season": 2026,
               "source": "ftc-events-sponsors",
-              "retrievedAt": "2026-08-16T16:17:00.005Z",
+              "retrievedAt": "2026-08-17T16:07:30.252Z",
               "confidence": "high",
               "confirmationState": "unconfirmed",
               "sourceText": "Tesla/Gene Haas Foundation/Sensus Social/Ken and Alicia Lund, Ferrari-Lund Real Estate/Lake Buddy/Galena High School PTO&Galena High School"
@@ -45280,7 +45280,7 @@
               "name": "Galena High School",
               "season": 2026,
               "source": "ftc-events-sponsors",
-              "retrievedAt": "2026-08-16T16:17:00.005Z",
+              "retrievedAt": "2026-08-17T16:07:30.252Z",
               "confidence": "high",
               "confirmationState": "unconfirmed",
               "sourceText": "Tesla/Gene Haas Foundation/Sensus Social/Ken and Alicia Lund, Ferrari-Lund Real Estate/Lake Buddy/Galena High School PTO&Galena High School"
@@ -45777,7 +45777,7 @@
               "name": "Tesla",
               "season": 2026,
               "source": "ftc-events-sponsors",
-              "retrievedAt": "2026-08-16T16:17:00.638Z",
+              "retrievedAt": "2026-08-17T16:07:30.045Z",
               "confidence": "high",
               "confirmationState": "unconfirmed",
               "sourceText": "Tesla&Amplus Academy Durango"
@@ -45787,7 +45787,7 @@
               "name": "Amplus Academy Durango",
               "season": 2026,
               "source": "ftc-events-sponsors",
-              "retrievedAt": "2026-08-16T16:17:00.638Z",
+              "retrievedAt": "2026-08-17T16:07:30.045Z",
               "confidence": "high",
               "confirmationState": "unconfirmed",
               "sourceText": "Tesla&Amplus Academy Durango"
@@ -49792,7 +49792,7 @@
               "name": "Nasri Academy for Gifted Children",
               "season": 2026,
               "source": "ftc-events-sponsors",
-              "retrievedAt": "2026-08-16T16:17:00.698Z",
+              "retrievedAt": "2026-08-17T16:07:30.127Z",
               "confidence": "high",
               "confirmationState": "unconfirmed",
               "sourceText": "Nasri Academy for Gifted Children"
@@ -52702,28 +52702,28 @@
     {
       "label": "FTC Events region USNV 2026",
       "url": "https://ftc-events.firstinspires.org/2026/region/USNV",
-      "checkedAt": "2026-08-16T16:16:57.579Z",
+      "checkedAt": "2026-08-17T16:07:28.716Z",
       "ok": true,
       "detail": "13 teams, 14 events, 2 leagues"
     },
     {
       "label": "League rankings 2026 Northern Nevada",
       "url": "https://ftc-events.firstinspires.org/2026/region/USNV/league/NN",
-      "checkedAt": "2026-08-16T16:16:58.091Z",
+      "checkedAt": "2026-08-17T16:07:29.184Z",
       "ok": true,
       "detail": "0 rankings"
     },
     {
       "label": "League rankings 2026 Southern Nevada",
       "url": "https://ftc-events.firstinspires.org/2026/region/USNV/league/SN",
-      "checkedAt": "2026-08-16T16:16:58.422Z",
+      "checkedAt": "2026-08-17T16:07:29.365Z",
       "ok": true,
       "detail": "0 rankings"
     },
     {
       "label": "FTC Events public team pages",
       "url": "https://ftc-events.firstinspires.org/2026/team/16158",
-      "checkedAt": "2026-08-16T16:17:01.259Z",
+      "checkedAt": "2026-08-17T16:07:30.252Z",
       "ok": true,
       "detail": "Fetched 13 team pages"
     }
