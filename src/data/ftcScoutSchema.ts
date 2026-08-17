@@ -5,7 +5,7 @@
  * parse failures (mapped to SourceResult `parse_failure` by the fetch layer).
  */
 import * as v from 'valibot';
-import { ScoutEventParticipation, ScoutQuickStats } from './ftcScout';
+import { ScoutEventParticipation, ScoutQuickStats, ScoutTeamProfile } from './ftcScout';
 
 export type ScoutIssue = {
   path: string;
@@ -27,6 +27,7 @@ export type ParseScoutEventsResult =
 
 export const SCOUT_EVENTS_NOT_ARRAY = 'FTCScout events payload is not an array.';
 export const SCOUT_QUICK_STATS_NOT_OBJECT = 'FTCScout quick-stats payload is not an object.';
+export const SCOUT_TEAM_PROFILE_NOT_OBJECT = 'FTCScout team profile payload is not an object.';
 
 export function scoutEventsAllQuarantinedMessage(count: number): string {
   return `FTCScout events payload has no valid records; ${count} invalid event(s) were quarantined.`;
@@ -76,6 +77,24 @@ const scoutEventParticipationSchema = v.looseObject({
   teamNumber: v.number(),
   stats: v.nullable(scoutEventStatsSchema),
 });
+
+const optionalNullableString = v.optional(v.nullable(v.string()));
+
+const scoutTeamProfileSchema = v.looseObject({
+  number: v.number(),
+  name: optionalNullableString,
+  schoolName: optionalNullableString,
+  city: optionalNullableString,
+  state: optionalNullableString,
+  country: optionalNullableString,
+  website: optionalNullableString,
+  rookieYear: optionalNullableNumber,
+  updatedAt: optionalNullableString,
+});
+
+export type ParseScoutTeamProfileResult =
+  | { ok: true; data: ScoutTeamProfile }
+  | { ok: false; issues: ScoutIssue[] };
 
 /** Wire shape before normalize maps `dev.totalPoints` → `scoreSpread`. */
 type ScoutEventStatsWire = {
@@ -227,4 +246,42 @@ export function parseScoutEvents(raw: unknown): ParseScoutEventsResult {
   }
 
   return { ok: true, data: valid, quarantined, quarantinedRecordCount };
+}
+
+function trimNullable(value: string | null | undefined): string | null {
+  if (value == null) {
+    return null;
+  }
+  const trimmed = value.trim();
+  return trimmed ? trimmed : null;
+}
+
+export function parseScoutTeamProfile(raw: unknown): ParseScoutTeamProfileResult {
+  if (!isPlainObject(raw)) {
+    return {
+      ok: false,
+      issues: [{ path: '(root)', message: SCOUT_TEAM_PROFILE_NOT_OBJECT }],
+    };
+  }
+
+  const parsed = v.safeParse(scoutTeamProfileSchema, raw);
+  if (!parsed.success) {
+    return { ok: false, issues: issuesFromValibot(parsed.issues) };
+  }
+
+  const wire = parsed.output;
+  return {
+    ok: true,
+    data: {
+      number: wire.number,
+      name: trimNullable(wire.name),
+      schoolName: trimNullable(wire.schoolName),
+      city: trimNullable(wire.city),
+      state: trimNullable(wire.state),
+      country: trimNullable(wire.country),
+      website: trimNullable(wire.website),
+      rookieYear: wire.rookieYear ?? null,
+      updatedAt: trimNullable(wire.updatedAt),
+    },
+  };
 }

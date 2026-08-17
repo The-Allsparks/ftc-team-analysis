@@ -15,7 +15,7 @@ Project code and original documentation are MIT-licensed ([LICENSE](../LICENSE))
 
 ### FTCScout coverage notes (#18)
 
-- **In use (REST via `/ftcscout-proxy`):** `GET /rest/v1/teams/{n}/quick-stats?season=` and `GET /rest/v1/teams/{n}/events/{season}`. Ranking scope is **world-only** for now. Retained fields include season OPR components, world ranks, sample size (`count`), event record/OPR/avg, and optional **score spread** from `dev.totalPoints`.
+- **In use (REST via `/ftcscout-proxy`):** `GET /rest/v1/teams/{n}/quick-stats?season=`, `GET /rest/v1/teams/{n}/events/{season}`, and `GET /rest/v1/teams/{n}` (identity/`schoolName`, fail-soft). Ranking scope is **world-only** for now. Retained fields include season OPR components, world ranks, sample size (`count`), event record/OPR/avg, optional **score spread** from `dev.totalPoints`, and team profile identity fields used for source-agreement chips.
 - **Documented but not used in this app yet:** GraphQL at `https://api.ftcscout.org/graphql`. The production live proxy allows **GET/HEAD only**, and GraphQL requires POST — a follow-up would need a **scoped** POST allowlist for `/ftcscout-proxy/graphql` (not broad proxy POST).
 - **Metadata:** Upstream payloads do not expose formula/version fields. Local catalog version `v1` in `src/data/ftcScoutMeta.ts` links definitions to [FTCScout API docs](https://ftcscout.org/api).
 | FTC Portfolio Lab | Optional enrichment only (not identity-critical) | [FTC Portfolio Lab](https://www.ftcportfoliolab.org/) | Public `/api/search` for search hits; full catalog fields from public `/portfolio` HTML embedding. **No documented full-catalog API.** HTML/RSC format drift and third-party terms are **residual risks (not a legal clearance)**. |

@@ -430,7 +430,7 @@ function normalizeOrganizationText(value: string | null): string | null {
   return normalized || null;
 }
 
-function classifyTeamType(name: string, organization: string | null): TeamSeason['teamType'] {
+export function classifyTeamType(name: string, organization: string | null): TeamSeason['teamType'] {
   const combined = `${name} ${organization ?? ''}`.toLowerCase();
 
   if (/\b(high school|middle school|elementary|academy|school|sch|charter|college|university|campus|high|hs|ms)\b/.test(combined)) {

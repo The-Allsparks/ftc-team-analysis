@@ -52,6 +52,18 @@ export type ScoutEventParticipation = {
   stats: ScoutEventStats | null;
 };
 
+export type ScoutTeamProfile = {
+  number: number;
+  name: string | null;
+  schoolName: string | null;
+  city: string | null;
+  state: string | null;
+  country: string | null;
+  website: string | null;
+  rookieYear: number | null;
+  updatedAt: string | null;
+};
+
 export type TeamScoutData = {
   fetchedAt: string;
   season: SeasonId;
@@ -60,6 +72,8 @@ export type TeamScoutData = {
   metaCatalogVersion: typeof SCOUT_META_CATALOG_VERSION;
   quickStats: ScoutQuickStats | null;
   events: ScoutEventParticipation[];
+  /** Identity fields from `GET /rest/v1/teams/{n}`; fail-soft when missing. */
+  profile: ScoutTeamProfile | null;
 };
 
 export const FTCSCOUT_BASE_URL = 'https://ftcscout.org';
@@ -108,5 +122,6 @@ export function emptyTeamScoutData(
     metaCatalogVersion: SCOUT_META_CATALOG_VERSION,
     quickStats: null,
     events: [],
+    profile: null,
   };
 }
