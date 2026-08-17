@@ -6,7 +6,7 @@ The lockfile (`package-lock.json`) is the source of truth for installs. Use `npm
 
 - Intended Node version: `.nvmrc` (`24`). Local development was verified on Node 24.17.0 with npm 11.13.0.
 - Compatibility floor: `package.json` `engines` (`node`: `^20.19.0 || >=22.12.0`, matching Vite 8; `npm`: `>=11`).
-- CI (`.github/workflows/ci.yml`) consumes `.nvmrc` rather than an unpinned image or an ad-hoc `NODE_VERSION`, and installs with `npm ci`. Future Cloudflare Pages builds should do the same.
+- CI (`.github/workflows/ci.yml`) consumes `.nvmrc` rather than an unpinned image or an ad-hoc `NODE_VERSION`, and installs with `npm ci`. Cloudflare Pages should use the same Node **24** pin (`.nvmrc` and/or Pages env `NODE_VERSION=24`; see [deployment.md](deployment.md)).
 
 ## Dependabot
 

@@ -1,0 +1,18 @@
+# Cloudflare Pages static headers (copied into dist/ by Vite).
+# Safe defaults for SPA shell + hashed assets + /data seed JSON.
+
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/data/*
+  Cache-Control: public, max-age=300, stale-while-revalidate=86400
+
+/
+  Cache-Control: public, max-age=0, must-revalidate
+
+/index.html
+  Cache-Control: public, max-age=0, must-revalidate
+
+/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
