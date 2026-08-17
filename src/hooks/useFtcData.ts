@@ -1,6 +1,12 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { loadRegionSeasonSummary, loadTeamSeasonDetail, loadTeamSnapshotIndex } from '../data/loadSnapshotAssets';
 import { loadStoredRegionCode, regionLabel, storeRegionCode } from '../data/regions';
-import { CURRENT_SEASON, GeneratedData, SeasonId } from '../data/schema';
+import { CURRENT_SEASON, GeneratedData, SeasonId, Team } from '../data/schema';
+import {
+  isTeamSeasonDetailLoaded,
+  mergeRegionSummaryIntoData,
+  mergeTeamSeasonDetail,
+} from '../data/snapshotDirectory';
 import {
   createEmptyRegionData,
   LiveRefreshProgress,
@@ -36,6 +42,8 @@ type UseFtcDataResult = {
   refreshSeason: (season: SeasonId, force?: boolean) => Promise<void>;
   refreshTeam: (season: SeasonId, teamNumber: number, force?: boolean) => Promise<void>;
   ensureSeasonData: (season: SeasonId) => Promise<void>;
+  /** Load static team-season JSON when the directory only has a summary stub. */
+  ensureTeamSeasonDetail: (season: SeasonId, teamNumber: number) => Promise<void>;
   clearSeasonFallback: () => void;
 };
 
@@ -68,6 +76,34 @@ function fallbackFromResolved(resolved: {
   };
 }
 
+function indexFieldsFromSnapshot(index: {
+  latestName: string;
+  latestLocation: string;
+  latestCity: string | null;
+  latestState: string | null;
+  latestCountry: string | null;
+  latestRookieYear: number | null;
+  latestOrganization: string | null;
+  latestWebsite: string | null;
+  latestTeamType: Team['latestTeamType'];
+  latestLeague: string | null;
+  latestRegion: string | null;
+}): Partial<Team> {
+  return {
+    latestName: index.latestName,
+    latestLocation: index.latestLocation,
+    latestCity: index.latestCity,
+    latestState: index.latestState,
+    latestCountry: index.latestCountry,
+    latestRookieYear: index.latestRookieYear,
+    latestOrganization: index.latestOrganization,
+    latestWebsite: index.latestWebsite,
+    latestTeamType: index.latestTeamType,
+    latestLeague: index.latestLeague,
+    latestRegion: index.latestRegion,
+  };
+}
+
 export function useFtcData(seedData: GeneratedData): UseFtcDataResult {
   const [regionCode, setRegionCode] = useState(() => loadStoredRegionCode(seedData.regionCode));
   const [data, setData] = useState(() => dataForRegion(seedData, loadStoredRegionCode(seedData.regionCode)));
@@ -78,9 +114,12 @@ export function useFtcData(seedData: GeneratedData): UseFtcDataResult {
   const [seasonFallback, setSeasonFallback] = useState<SeasonFallbackState | null>(null);
   const dataRef = useRef(data);
   const regionRef = useRef(regionCode);
+  const seedRegionRef = useRef(seedData.regionCode);
   const autoPullKeysRef = useRef(new Set<string>());
+  const detailLoadKeysRef = useRef(new Set<string>());
   dataRef.current = data;
   regionRef.current = regionCode;
+  seedRegionRef.current = seedData.regionCode;
 
   const clearSeasonFallback = useCallback(() => {
     setSeasonFallback(null);
@@ -184,6 +223,19 @@ export function useFtcData(seedData: GeneratedData): UseFtcDataResult {
 
       autoPullKeysRef.current.add(key);
       try {
+        // Static-first: try region summary before live proxy when on the seeded region.
+        if (regionRef.current === seedRegionRef.current) {
+          const summary = await loadRegionSeasonSummary(regionRef.current, season);
+          if (summary.ok && summary.data.teamCount > 0) {
+            setData((current) => {
+              const next = mergeRegionSummaryIntoData(current, summary.data);
+              dataRef.current = next;
+              return next;
+            });
+            return;
+          }
+        }
+
         await refreshSeason(season, true, false);
       } catch {
         autoPullKeysRef.current.delete(key);
@@ -277,6 +329,41 @@ export function useFtcData(seedData: GeneratedData): UseFtcDataResult {
     }
   }, []);
 
+  const ensureTeamSeasonDetail = useCallback(
+    async (season: SeasonId, teamNumber: number) => {
+      const team = dataRef.current.teams.find((row) => row.number === teamNumber);
+      if (isTeamSeasonDetailLoaded(team, season)) {
+        return;
+      }
+
+      const key = `${teamNumber}:${season}`;
+      if (detailLoadKeysRef.current.has(key)) {
+        return;
+      }
+      detailLoadKeysRef.current.add(key);
+
+      try {
+        const detail = await loadTeamSeasonDetail(teamNumber, season);
+        if (detail.ok) {
+          const index = await loadTeamSnapshotIndex(teamNumber);
+          const indexLatest = index.ok ? indexFieldsFromSnapshot(index.data) : undefined;
+          setData((current) => {
+            const next = mergeTeamSeasonDetail(current, teamNumber, detail.data, indexLatest);
+            dataRef.current = next;
+            return next;
+          });
+          return;
+        }
+
+        // Snapshot missing/invalid — live proxy only when static detail is unavailable.
+        await refreshTeam(season, teamNumber, false);
+      } finally {
+        detailLoadKeysRef.current.delete(key);
+      }
+    },
+    [refreshTeam],
+  );
+
   const changeRegion = useCallback(
     async (nextRegionCode: string) => {
       if (nextRegionCode === regionRef.current) {
@@ -287,6 +374,7 @@ export function useFtcData(seedData: GeneratedData): UseFtcDataResult {
       setRegionCode(nextRegionCode);
       regionRef.current = nextRegionCode;
       autoPullKeysRef.current.clear();
+      detailLoadKeysRef.current.clear();
       setSeasonFallback(null);
 
       const shell = {
@@ -341,6 +429,7 @@ export function useFtcData(seedData: GeneratedData): UseFtcDataResult {
     refreshSeason,
     refreshTeam,
     ensureSeasonData,
+    ensureTeamSeasonDetail,
     clearSeasonFallback,
   };
 }

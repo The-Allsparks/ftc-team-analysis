@@ -2,7 +2,7 @@
 
 Split static JSON layout for Nevada FTC Team Analysis ([#87](https://github.com/The-Allsparks/ftc-team-analysis/issues/87), parent [#38](https://github.com/The-Allsparks/ftc-team-analysis/issues/38)).
 
-The **canonical mega-seed** remains `src/data/nv-ftc-teams.generated.json` (served as `/data/nv-ftc-teams.generated.json`). The snapshot tree is **generated alongside** that path during `npm run sync:data` / `npm run generate:snapshots` / successful `pull:data` public sync. The app loader still uses the mega-seed today ([#88](https://github.com/The-Allsparks/ftc-team-analysis/issues/88) will consume this tree).
+The **canonical mega-seed** remains `src/data/nv-ftc-teams.generated.json` (served as `/data/nv-ftc-teams.generated.json`). The snapshot tree is **generated alongside** that path during `npm run sync:data` / `npm run generate:snapshots` / successful `pull:data` public sync. The app boots **static-first** from the tree ([#88](https://github.com/The-Allsparks/ftc-team-analysis/issues/88)): manifest + region summaries for the directory, per-team JSON on demand, with mega-seed as a fail-soft fallback when the tree is missing.
 
 ## On-disk layout
 
@@ -105,9 +105,21 @@ Re-measured from the checked-in seed (`generatedAt` `2026-08-16T16:17:01.259Z`, 
 
 Tree emit: **474** files (manifest + source-health + 8 region summaries + 113 team indexes + 351 team-season files). Still practical for static hosting.
 
+## App load path (static-first, #88)
+
+| Step | Asset | When |
+| --- | --- | --- |
+| 1 | `/data/manifest.json` | Directory boot |
+| 2 | `/data/regions/{region}/{season}/summary.json` | Directory boot (all seasons listed in the manifest) |
+| 3 | `/data/teams/{number}/{season}.json` (+ optional `index.json`) | When a team/season is selected |
+| Fallback | `/data/nv-ftc-teams.generated.json` | Tree missing/invalid — fail soft, still no JS-bundled seed |
+| Live proxies | `/ftc-proxy` (and Scout/Portfolio/Scoring prefixes) | Explicit Refresh, missing snapshot slice, empty season, or non-seeded region |
+
+Degraded mode keeps a valid directory snapshot on screen and surfaces SourceResult-style failure UX for proxy/upstream errors. The directory remains useful if all live Functions/Worker proxies are unavailable.
+
 ## Related
 
-- [architecture.md](architecture.md) — system layout
+- [architecture.md](architecture.md) — system layout (static-first note)
 - [ingestion.md](ingestion.md) — pull + guards + data-refresh (#90)
 - [deployment.md](deployment.md) — Pages/`/data` serving; snapshot vs app deploy
-- App loader rewrite: #88 (out of scope here)
+- App loader: #88 (this document)

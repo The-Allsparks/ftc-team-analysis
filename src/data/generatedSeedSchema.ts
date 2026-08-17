@@ -18,6 +18,7 @@ import {
   RegionEvent,
   SUPPORTED_SEASONS,
   Team,
+  TeamSeason,
 } from './schema';
 
 export const GENERATED_DATA_SCHEMA_VERSION = 1;
@@ -470,4 +471,15 @@ export function parseGeneratedSeed(raw: unknown): ParseGeneratedSeedResult {
   };
 
   return { ok: true, data, quarantined };
+}
+
+/** Validate a single TeamSeason record (e.g. snapshot tree `detail`). */
+export function parseTeamSeasonDetail(
+  raw: unknown,
+): { ok: true; data: TeamSeason } | { ok: false; issues: SeedIssue[] } {
+  const parsed = v.safeParse(teamSeasonSchema, raw);
+  if (!parsed.success) {
+    return { ok: false, issues: issuesFromValibot(parsed.issues, 'detail') };
+  }
+  return { ok: true, data: parsed.output as TeamSeason };
 }

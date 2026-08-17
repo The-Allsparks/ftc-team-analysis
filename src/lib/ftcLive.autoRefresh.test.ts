@@ -117,7 +117,7 @@ describe('seasonHasTeamData / shouldAutoRefreshRegion', () => {
     expect(shouldAutoRefreshRegion(2026, emptyData())).toBe(true);
   });
 
-  it('skips auto-refresh when season data exists and region cache is fresh', () => {
+  it('skips auto-refresh when season data exists (static-first; live cache not required)', () => {
     const data = emptyData({
       teams: [
         {
@@ -162,12 +162,6 @@ describe('seasonHasTeamData / shouldAutoRefreshRegion', () => {
           },
         },
       ],
-    });
-
-    setCached(cacheKey('region', 'USNV', '2026'), {
-      teams: [{ number: 1 }],
-      regionEvents: [],
-      leagues: [],
     });
 
     expect(shouldAutoRefreshRegion(2026, data)).toBe(false);

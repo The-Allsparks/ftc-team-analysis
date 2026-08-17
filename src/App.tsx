@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react';
-import { GeneratedData } from './data/schema';
-import { loadGeneratedSeed, LoadGeneratedSeedResult } from './data/loadGeneratedSeed';
-import { loadTeamObservations } from './data/loadTeamObservations';
+import {
+  loadDirectoryBootstrap,
+  type DirectoryBootstrapResult,
+} from './data/loadDirectoryBootstrap';
+import type { GeneratedData } from './data/schema';
+import type { DirectorySnapshotSource } from './data/snapshotDirectory';
 import { regionCatalogResult } from './data/regions';
-import { attachObservationsToData } from './lib/teamObservations';
 import { AppDirectory } from './components/AppDirectory';
 import {
   RegionCatalogEnvelopeError,
@@ -14,8 +16,13 @@ import {
 
 type SeedLoadState =
   | { status: 'loading' }
-  | { status: 'ready'; data: GeneratedData }
-  | { status: 'error'; result: Extract<LoadGeneratedSeedResult, { ok: false }> };
+  | {
+      status: 'ready';
+      data: GeneratedData;
+      source: DirectorySnapshotSource;
+      warnings: string[];
+    }
+  | { status: 'error'; result: Extract<DirectoryBootstrapResult, { ok: false }> };
 
 export default function App() {
   const [seedState, setSeedState] = useState<SeedLoadState>({ status: 'loading' });
@@ -24,40 +31,29 @@ export default function App() {
     let cancelled = false;
 
     void (async () => {
-      const seedResult = await loadGeneratedSeed();
+      const result = await loadDirectoryBootstrap();
       if (cancelled) {
         return;
       }
 
-      if (!seedResult.ok) {
-        setSeedState({ status: 'error', result: seedResult });
+      if (!result.ok) {
+        setSeedState({ status: 'error', result });
         return;
       }
 
-      if (seedResult.quarantined.length > 0) {
-        console.warn('[generated-seed] quarantined invalid records', seedResult.quarantined);
+      if (result.quarantined.length > 0) {
+        console.warn('[generated-seed] quarantined invalid records', result.quarantined);
+      }
+      if (result.warnings.length > 0) {
+        console.warn('[directory-bootstrap]', result.warnings);
       }
 
-      const observationsResult = await loadTeamObservations(
-        undefined,
-        fetch,
-        seedResult.data.regionCode,
-      );
-      if (cancelled) {
-        return;
-      }
-
-      let data = seedResult.data;
-      if (observationsResult.ok) {
-        if (observationsResult.quarantined.length > 0) {
-          console.warn('[observations] quarantined invalid records', observationsResult.quarantined);
-        }
-        data = attachObservationsToData(data, observationsResult.data);
-      } else {
-        console.warn('[observations]', observationsResult.message, observationsResult.issues);
-      }
-
-      setSeedState({ status: 'ready', data });
+      setSeedState({
+        status: 'ready',
+        data: result.data,
+        source: result.source,
+        warnings: result.warnings,
+      });
     })();
 
     return () => {
@@ -87,5 +83,11 @@ export default function App() {
     );
   }
 
-  return <AppDirectory seedData={seedState.data} />;
+  return (
+    <AppDirectory
+      seedData={seedState.data}
+      snapshotSource={seedState.source}
+      bootstrapWarnings={seedState.warnings}
+    />
+  );
 }

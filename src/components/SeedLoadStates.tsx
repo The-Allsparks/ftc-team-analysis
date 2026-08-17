@@ -45,7 +45,8 @@ export function SeedLoadError({
         </ul>
       ) : null}
       <p className="empty-note">
-        Check your network connection, then reload the page. The app serves the snapshot from{' '}
+        Check your network connection, then reload the page. The app prefers the static snapshot tree
+        under <code>/data/manifest.json</code> and region summaries, with a mega-seed fallback at{' '}
         <code>/data/nv-ftc-teams.generated.json</code>.
       </p>
     </main>
@@ -56,7 +57,7 @@ export function SeedLoading() {
   return (
     <main className="app-shell">
       <h1>Loading Nevada FTC teams</h1>
-      <p className="empty-note">Downloading the region snapshot…</p>
+      <p className="empty-note">Downloading the directory snapshot (manifest + region summaries)…</p>
     </main>
   );
 }
