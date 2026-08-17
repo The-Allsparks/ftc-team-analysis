@@ -47,7 +47,7 @@ Checkmarks reflect whether the corresponding foundation issue is closed. Open it
 | Source-health and coverage reporting | Remaining | [#30](https://github.com/The-Allsparks/ftc-team-analysis/issues/30) |
 | Automated tests | Done | [#9](https://github.com/The-Allsparks/ftc-team-analysis/issues/9) |
 | CI workflow on PRs / `main` | Done | [#46](https://github.com/The-Allsparks/ftc-team-analysis/issues/46) |
-| Required checks / branch protection on `main` | Remaining (ops) | [#10](https://github.com/The-Allsparks/ftc-team-analysis/issues/10) |
+| Required checks / branch protection on `main` | Done | [#10](https://github.com/The-Allsparks/ftc-team-analysis/issues/10) |
 | Qualified relationship inference (not implied succession) | Done | [#6](https://github.com/The-Allsparks/ftc-team-analysis/issues/6) |
 | Historical snapshots and change tracking | Remaining | [#29](https://github.com/The-Allsparks/ftc-team-analysis/issues/29) |
 

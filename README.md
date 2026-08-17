@@ -26,6 +26,7 @@ Built and maintained by [The Allsparks](https://www.theallsparks.org/). Licensed
 | [docs/relationship-graph.md](docs/relationship-graph.md) | Evidence-backed team relationship graph model (#28; derived view, not a graph DB) |
 | [docs/canonical-identifiers.md](docs/canonical-identifiers.md) | Location/school/org canonical IDs (#16; ISO + curated NCES, fail-soft) |
 | [docs/orange-alliance.md](docs/orange-alliance.md) | The Orange Alliance research (#21; corroboration only; FIRST stays canonical) |
+| [docs/first-api.md](docs/first-api.md) | Authenticated FIRST FTC Events API (#17; credential-optional; API canonical when configured) |
 | [docs/internet-archive.md](docs/internet-archive.md) | Internet Archive / Wayback research (#25; archived website reconstruction only) |
 | [docs/onshape.md](docs/onshape.md) | Onshape CAD research (#26; declared links only; no Public Documents crawl) |
 | [docs/team-corrections.md](docs/team-corrections.md) | Team-submitted corrections + moderation (#32; never auto-overwrite seed) |
@@ -63,7 +64,7 @@ npm run validate:data
 
 `check:bundle` enforces primary JS size budgets and confirms the Nevada seed is served as a static `/data/` asset rather than embedded in the main chunk.
 
-These checks are not yet required on `main` (branch protection remains a follow-up of [#10](https://github.com/The-Allsparks/ftc-team-analysis/issues/10)).
+These checks are **required** on `main`: branch protection requires the `ci` status check to pass and the branch to be up to date ([#10](https://github.com/The-Allsparks/ftc-team-analysis/issues/10)).
 
 ## Scheduled data refresh
 
