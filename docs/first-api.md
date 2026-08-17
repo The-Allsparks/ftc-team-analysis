@@ -11,7 +11,7 @@ Related: [ingestion.md](ingestion.md), [attribution.md](attribution.md), [archit
 | Client module + fixtures + merge rules | **In repo** (`src/lib/firstEventsApi.ts`) |
 | Opt-in `pull:data --enrich-first-api` | **In repo** (no-op / fail-soft without secrets) |
 | CI / scheduled refresh using live API | **Off** — no `FIRST_API_*` secrets required for green CI |
-| Production Pages/Worker secret injection for browser live pulls | **Not wired** — still depends on production-safe secret handling ([#2](https://github.com/The-Allsparks/ftc-team-analysis/issues/2) / [#38](https://github.com/The-Allsparks/ftc-team-analysis/issues/38)) |
+| Production Pages/Worker secret injection for browser live pulls | **In repo** as `/ftc-api-proxy` — injects Basic auth from `FIRST_API_USERNAME` / `FIRST_API_TOKEN` env; returns 503 without secrets. Operator must still set those secrets in Cloudflare. |
 | Operator-held FIRST username + token | **Required** for live canonical pull |
 
 ## Official docs
@@ -53,9 +53,9 @@ Synthetic fixture values in `src/lib/fixtures/first-api-sample.json` are **not**
 | --- | --- |
 | Local maintainer pull | Shell env or gitignored `.env` loaded only by the Node process (repo already ignores `.env`) |
 | GitHub Actions (future protected job) | Repository or environment **secrets** `FIRST_API_USERNAME` / `FIRST_API_TOKEN` — not on public PRs from forks |
-| Cloudflare Pages / Worker (future) | Encrypted **Environment variables / secrets** (Production + Preview). Inject only into a GET-allowlisted Function that forwards to `ftc-api.firstinspires.org` — never into the SPA |
+| Cloudflare Pages / Worker | Encrypted **Environment variables / secrets** `FIRST_API_USERNAME` / `FIRST_API_TOKEN` (Production + Preview). Injected only by `/ftc-api-proxy` toward `ftc-api.firstinspires.org` — never into the SPA |
 
-Today’s public live proxies (`/ftc-proxy`, etc.) forward **unauthenticated** HTML/REST hosts only. They must **not** be pointed at `ftc-api.firstinspires.org` with shared credentials until a dedicated, secret-injected path exists.
+Public HTML proxies (`/ftc-proxy`, etc.) stay unauthenticated. Do **not** point them at `ftc-api.firstinspires.org`. Use `/ftc-api-proxy/<season>/…` for allowlisted API paths (`/v2.0` is added server-side). Without secrets the Function/Worker returns **503** and does not call FIRST.
 
 ## Canonical vs fallback
 
@@ -113,9 +113,8 @@ Without credentials, `--enrich-first-api` records a fail-soft `sourceChecks` row
 
 1. Obtain FIRST API username + token via registration.
 2. Store as GitHub Actions secrets and/or Cloudflare encrypted secrets (never in git).
-3. Land production-safe secret injection for any browser-facing path ([#2](https://github.com/The-Allsparks/ftc-team-analysis/issues/2) / [#38](https://github.com/The-Allsparks/ftc-team-analysis/issues/38)).
-4. Optionally add a protected Actions job that runs `--enrich-first-api` with secrets and verifies browser bundles still contain no token material (`npm run check:bundle`).
-5. Confirm redistribution/attribution constraints with maintainers against current FIRST API terms.
+3. Optionally add a protected Actions job that runs `--enrich-first-api` with secrets and verifies browser bundles still contain no token material (`npm run check:bundle`).
+4. Confirm redistribution/attribution constraints with maintainers against current FIRST API terms.
 
 ## Code
 
@@ -124,5 +123,5 @@ Without credentials, `--enrich-first-api` records a fail-soft `sourceChecks` row
 | `src/lib/firstEventsApi.ts` | Basic auth, allowlist, SourceResult fetch, pagination, merge rules, opt-in enrichment |
 | `src/lib/firstEventsApi.test.ts` | Missing-key / 401 / 429 / success merge with fixtures |
 | `src/lib/fixtures/first-api-sample.json` | Synthetic public-shaped JSON (no secrets) |
-| `scripts/pull-public-ftc-data.ts` | `--enrich-first-api` wiring |
+| `src/lib/firstApiProxy.ts` | Worker/Pages `/ftc-api-proxy` — injects Basic auth from env; GET/HEAD + path allowlist |
 | `src/data/pullArgs.ts` | CLI flag |

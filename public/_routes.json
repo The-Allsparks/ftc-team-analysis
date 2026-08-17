@@ -8,7 +8,9 @@
     "/portfolio-lab-proxy",
     "/portfolio-lab-proxy/*",
     "/ftc-scoring-proxy",
-    "/ftc-scoring-proxy/*"
+    "/ftc-scoring-proxy/*",
+    "/ftc-api-proxy",
+    "/ftc-api-proxy/*"
   ],
   "exclude": []
 }

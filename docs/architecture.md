@@ -8,11 +8,14 @@ High-level layout of Nevada FTC Team Analysis. Hosting runbooks (Worker today, P
 Browser (React/Vite SPA)
     │  static assets + /data/*.json
     │  /ftc-proxy, /ftcscout-proxy, /portfolio-lab-proxy, /ftc-scoring-proxy
+    │  /ftc-api-proxy  (FIRST API; Basic auth from server env only)
     ▼
 Cloudflare Worker (worker/proxy.ts)     Pages Functions (functions/)     Local Vite dev proxies
-    │  shared src/lib/liveProxy.ts — GET/HEAD only, fixed upstream hosts
+    │  shared src/lib/liveProxy.ts — GET/HEAD only, fixed public upstream hosts
+    │  src/lib/firstApiProxy.ts — GET/HEAD allowlisted API paths + env Basic auth
     ▼
 FTC Events / FTCScout / Portfolio Lab / FTC Scoring (public HTTP)
+FTC Events API (ftc-api.firstinspires.org) when FIRST_API_* secrets are set
 ```
 
 | Piece | Location | Role |
@@ -28,9 +31,10 @@ FTC Events / FTCScout / Portfolio Lab / FTC Scoring (public HTTP)
 | Public data copy | `public/data/` | Served as `/data/...` (via `npm run sync:data`) — mega-seed **and** split snapshot tree (#87) |
 | Snapshot tree | `docs/snapshot-tree.md`, `src/data/snapshotTree*.ts`, `loadDirectoryBootstrap.ts` | Manifest + region summaries boot the directory; per-team JSON loads lazily (#88). Mega-seed is fail-soft fallback only. |
 | Ingestion | `scripts/pull-public-ftc-data.ts` | Public-page pull (default); optional `--enrich-first-api` when server credentials exist |
-| Live proxy core | `src/lib/liveProxy.ts` | Allowlist + host-fixed GET/HEAD forward (shared; public hosts only today) |
+| Live proxy core | `src/lib/liveProxy.ts` | Allowlist + host-fixed GET/HEAD forward for public hosts |
+| FIRST API proxy | `src/lib/firstApiProxy.ts` | `/ftc-api-proxy` injects Basic auth from env; 503 if secrets absent |
 | Worker | `worker/proxy.ts`, `wrangler.jsonc` | Static assets + live proxy (keep during cutover) |
-| Pages Functions | `functions/`, `public/_routes.json` | Same proxy on Pages; invocation limited to four prefixes |
+| Pages Functions | `functions/`, `public/_routes.json` | Same proxies on Pages; invocation limited to public prefixes + `/ftc-api-proxy` |
 
 ### Static-first data loading (#88)
 
@@ -40,7 +44,7 @@ Normal browsing prefers static `/data` snapshots. Live proxy prefixes (`/ftc-pro
 
 - **Identity-critical path:** public FTC Events–backed seed + runtime schema validation; fail closed on broken envelopes. When operators configure `FIRST_API_USERNAME` / `FIRST_API_TOKEN` and pass `--enrich-first-api`, authenticated FIRST API competitive fields (awards / ranks / qualification records) are preferred over HTML for those facts ([first-api.md](first-api.md) / #17). CI and scheduled refresh stay public-page-only without secrets.
 - **Optional enrichment:** FTCScout, Portfolio Lab, avatars — failures surface as availability states, not empty “success” caches.
-- **Credentialed FIRST API:** implemented as a **credential-optional** Node enrichment module. Secrets never enter the Vite client bundle. Browser/Worker secret injection for live API still depends on [#2](https://github.com/The-Allsparks/ftc-team-analysis/issues/2) / [#38](https://github.com/The-Allsparks/ftc-team-analysis/issues/38).
+- **Credentialed FIRST API:** Node `--enrich-first-api` plus Worker/Pages `/ftc-api-proxy` (secrets from env, never the SPA). Without secrets the proxy returns 503 and does not call FIRST. Live canonical seed enrichment still needs operator-held `FIRST_API_USERNAME` / `FIRST_API_TOKEN`.
 - **The Orange Alliance:** researched only (#21); **not** wired. Future role is non-canonical corroboration/enrichment; **FIRST remains canonical** for official results. See [orange-alliance.md](orange-alliance.md) and source hierarchy in [attribution.md](attribution.md).
 - **Internet Archive / Wayback:** researched only (#25); **not** wired. Future role is optional reconstruction of **archived** public team website facts; never treated as current live truth. See [internet-archive.md](internet-archive.md).
 - **Onshape:** researched only (#26); **not** wired as a crawler. CAD appears only as outbound `TeamLink` `cad` URLs when teams declare them (website / OA / GM0). Public Documents mining is **NO-GO**. See [onshape.md](onshape.md).

@@ -64,7 +64,7 @@ Until the Pages project deploys Functions, preview/production Pages hosts may la
 
 Adding a `functions/` directory makes **all** requests invoke Functions by default unless `_routes.json` limits them. Without a tight include list, directory browsing burns the 100k/day quota.
 
-This repo ships `public/_routes.json` (copied into `dist/` by Vite). **Include only** the four proxy prefixes. Do **not** use `"exclude": ["/*"]` — exclude always wins over include and would disable Functions entirely.
+This repo ships `public/_routes.json` (copied into `dist/` by Vite). **Include only** the public live-data prefixes plus `/ftc-api-proxy`. Do **not** use `"exclude": ["/*"]` — exclude always wins over include and would disable Functions entirely.
 
 ```json
 {
@@ -77,21 +77,25 @@ This repo ships `public/_routes.json` (copied into `dist/` by Vite). **Include o
     "/portfolio-lab-proxy",
     "/portfolio-lab-proxy/*",
     "/ftc-scoring-proxy",
-    "/ftc-scoring-proxy/*"
+    "/ftc-scoring-proxy/*",
+    "/ftc-api-proxy",
+    "/ftc-api-proxy/*"
   ],
   "exclude": []
 }
 ```
 
-Static `/`, `/assets/*`, and `/data/**` are outside that include list and never invoke Functions. Worker equivalent: `assets.run_worker_first` in `wrangler.jsonc` (same four prefixes). Docs: [Functions invocation routes](https://developers.cloudflare.com/pages/functions/routing/#functions-invocation-routes).
+Static `/`, `/assets/*`, and `/data/**` are outside that include list and never invoke Functions. Worker equivalent: `assets.run_worker_first` in `wrangler.jsonc` (same prefixes). Docs: [Functions invocation routes](https://developers.cloudflare.com/pages/functions/routing/#functions-invocation-routes).
 
 ### Pages Functions layout
 
 | Path | Role |
 | --- | --- |
-| `functions/<prefix>.ts` + `functions/<prefix>/[[path]].ts` | Exact prefix + nested paths for each of the four proxies |
+| `functions/<prefix>.ts` + `functions/<prefix>/[[path]].ts` | Exact prefix + nested paths for public proxies and `/ftc-api-proxy` |
 | `functions/_lib/handleLiveProxy.ts` | Thin `onRequest` → shared `handleLiveProxyRequest` |
-| `src/lib/liveProxy.ts` | Allowlist, path rewrite, GET/HEAD forward (Worker + Functions) |
+| `functions/_lib/handleFirstApiProxy.ts` | Thin `onRequest` → `handleFirstApiProxyRequest` (env Basic auth) |
+| `src/lib/liveProxy.ts` | Public-host allowlist, path rewrite, GET/HEAD forward |
+| `src/lib/firstApiProxy.ts` | FIRST API path allowlist + secret injection |
 
 Handlers stay thin: no large HTML parse on the live path (parsing belongs in `pull:data`).
 
@@ -108,7 +112,7 @@ Until [#85](https://github.com/The-Allsparks/ftc-team-analysis/issues/85) connec
 
 ### Secrets (server-side only)
 
-Authenticated FIRST API credentials ([#17](https://github.com/The-Allsparks/ftc-team-analysis/issues/17)) must live in **Pages Environment variables / secrets** (Production + Preview) or Worker secrets — never in the SPA bundle or `public/`. Documented env names: `FIRST_API_USERNAME` / `FIRST_API_TOKEN` ([first-api.md](first-api.md)). Today’s public HTML/REST proxies use no secrets; they only forward allowlisted public HTTPS. A dedicated GET-allowlisted Function that injects Basic auth toward `ftc-api.firstinspires.org` is still a follow-up under [#2](https://github.com/The-Allsparks/ftc-team-analysis/issues/2) / [#38](https://github.com/The-Allsparks/ftc-team-analysis/issues/38).
+Authenticated FIRST API credentials ([#17](https://github.com/The-Allsparks/ftc-team-analysis/issues/17)) must live in **Pages Environment variables / secrets** (Production + Preview) or Worker secrets — never in the SPA bundle or `public/`. Names: `FIRST_API_USERNAME` / `FIRST_API_TOKEN` ([first-api.md](first-api.md)). `/ftc-api-proxy` injects Basic auth toward `ftc-api.firstinspires.org` for allowlisted `/v2.0` paths only; without secrets it returns **503** and does not call FIRST. Public HTML/REST prefixes stay unauthenticated.
 
 ## Disable live Functions (static-only)
 
