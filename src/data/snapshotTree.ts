@@ -101,6 +101,11 @@ function buildTeamIndex(data: GeneratedData, team: Team): TeamSnapshotIndex {
     seasons,
     seasonPaths,
     indexPath: teamIndexPath(team.number),
+    links: team.links ?? [],
+    ...(team.codeRepositories && team.codeRepositories.length > 0
+      ? { codeRepositories: team.codeRepositories }
+      : {}),
+    ...(team.videoResources && team.videoResources.length > 0 ? { videoResources: team.videoResources } : {}),
   };
 }
 

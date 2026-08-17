@@ -38,7 +38,14 @@ function tinySeed() {
         latestTeamType: 'school' as const,
         latestLeague: null,
         latestRegion: 'Nevada',
-        links: [],
+        links: [
+          {
+            type: 'website' as const,
+            label: 'Team site',
+            url: 'https://example-team.example',
+            source: 'FTC Events',
+          },
+        ],
         seasons: {
           2025: {
             season: 2025 as const,
@@ -142,6 +149,16 @@ describe('snapshot tree', () => {
 
     const index = parseTeamSnapshotIndex(built.teamIndexes[0]);
     expect(index.ok).toBe(true);
+    if (index.ok) {
+      expect(index.data.links).toEqual([
+        {
+          type: 'website',
+          label: 'Team site',
+          url: 'https://example-team.example',
+          source: 'FTC Events',
+        },
+      ]);
+    }
     expect(built.teamSeasons).toHaveLength(2);
     for (const seasonFile of built.teamSeasons) {
       expect(parseTeamSeasonSnapshot(seasonFile).ok).toBe(true);
