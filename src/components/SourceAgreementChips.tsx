@@ -112,6 +112,7 @@ export function IdentityFactCell({
   extra,
   compact = false,
   hideValueWhenIdle = false,
+  preferDisplayedValue = false,
 }: {
   label: string;
   season: TeamSeason;
@@ -123,13 +124,16 @@ export function IdentityFactCell({
   extra?: ReactNode;
   compact?: boolean;
   hideValueWhenIdle?: boolean;
+  /** When true, idle text keeps `displayedValue` (e.g. parsed School / Host names) instead of majority org evidence. */
+  preferDisplayedValue?: boolean;
 }) {
   const [hovered, setHovered] = useState<SourceVote | null>(null);
   const extras: FieldAgreementExtras = { scout, teamNumber };
   const agreement = fieldAgreement(season, field, displayedValue, extras);
-  const value = hovered
-    ? hovered.displayValue
+  const idleValue = preferDisplayedValue
+    ? displayedValue || agreement?.majorityDisplay || emptyLabel
     : agreement?.majorityDisplay || displayedValue || emptyLabel;
+  const value = hovered ? hovered.displayValue : idleValue;
   const caption = hovered
     ? `${hovered.label} · last seen ${formatSeenAt(hovered.retrievedAt)}`
     : null;
@@ -139,7 +143,8 @@ export function IdentityFactCell({
     <div className={compact ? 'identity-cell identity-cell-compact' : 'identity-cell'}>
       <span>{label}</span>
       {showValue ? <strong>{renderFactValue(field, value)}</strong> : null}
-      {caption ? <small className="identity-source-preview">{caption}</small> : extra}
+      {caption ? <small className="identity-source-preview">{caption}</small> : null}
+      {extra}
       {agreement ? <SourceAgreementChips agreement={agreement} onPreview={setHovered} /> : null}
     </div>
   );

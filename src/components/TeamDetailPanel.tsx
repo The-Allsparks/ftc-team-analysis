@@ -119,6 +119,7 @@ function OrganizationIdentity({
         displayedValue={formatAffiliationNames(hosts.map((row) => row.name))}
         scout={scout}
         teamNumber={teamNumber}
+        preferDisplayedValue
         extra={
           hosts.some((row) => row.confidence === 'low') ? (
             <small className="record-key">Parsed from public sponsor line; low confidence</small>

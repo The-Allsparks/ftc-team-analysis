@@ -167,7 +167,9 @@ export type FieldAgreementExtras = {
 };
 
 function hasCatalogSource(rows: FieldEvidence[], sourceId: string): boolean {
-  return rows.some((row) => catalogSourceId(row.sourceType) === sourceId);
+  return rows.some(
+    (row) => row.status !== 'superseded' && catalogSourceId(row.sourceType) === sourceId,
+  );
 }
 
 function formatScoutLocation(profile: NonNullable<TeamScoutData['profile']>): string | null {
