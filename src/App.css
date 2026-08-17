@@ -579,9 +579,16 @@ button:focus-visible {
   position: relative;
 }
 
-.identity-grid strong {
+.identity-grid strong,
+.identity-cell strong {
   overflow: hidden;
   text-overflow: ellipsis;
+  white-space: nowrap;
+  min-height: 1.25em;
+}
+
+.identity-value-reserved {
+  visibility: hidden;
 }
 
 .identity-cell-compact {
@@ -592,12 +599,6 @@ button:focus-visible {
 
 .identity-cell-compact span:first-child {
   display: none;
-}
-
-.identity-source-preview {
-  color: #66758a;
-  font-size: 0.75rem;
-  font-weight: 600;
 }
 
 .source-agreement {
@@ -620,7 +621,7 @@ button:focus-visible {
 
 .source-agreement-row {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   gap: 4px;
   align-items: center;
 }
