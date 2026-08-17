@@ -168,7 +168,7 @@ export type FieldAgreementExtras = {
 
 function hasCatalogSource(rows: FieldEvidence[], sourceId: string): boolean {
   return rows.some(
-    (row) => row.status !== 'superseded' && catalogSourceId(row.sourceType) === sourceId,
+    (row) => row.status === 'current' && catalogSourceId(row.sourceType) === sourceId,
   );
 }
 

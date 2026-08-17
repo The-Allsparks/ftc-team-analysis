@@ -215,7 +215,7 @@ export default function TeamDetailPanel({
                   scout={selectedScoutData}
                   teamNumber={selectedTeam.number}
                   compact
-                  hideValueWhenIdle
+                  hideValueWhenIdle={selectedSeason.name === selectedTeam.latestName}
                 />
                 <IdentityFactCell
                   label="Location"
