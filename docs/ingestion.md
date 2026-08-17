@@ -7,8 +7,9 @@ How the Nevada snapshot is built and refreshed from **public** FTC pages. See al
 | Command | Purpose |
 | --- | --- |
 | `npm run pull:data` | Refresh `src/data/nv-ftc-teams.generated.json` from public FTC Events pages; updates `nv-ftc-team-observations.generated.json` |
-| `npm run sync:data` | Copy canonical seed **and** observations side store into `public/data/` for static serve |
-| `npm run validate:data` | CLI check against the generated-seed runtime schema (and observations side store when present) |
+| `npm run sync:data` | Copy canonical seed **and** observations into `public/data/`, then generate the split snapshot tree |
+| `npm run generate:snapshots` | Regenerate `manifest.json` / region summaries / per-team JSON only |
+| `npm run validate:data` | CLI check against the generated-seed runtime schema, observations (when present), and snapshot-tree schemas |
 
 Common flags:
 
@@ -31,6 +32,8 @@ Before overwriting the seed, `pull:data` refuses a candidate that:
 - has 0 teams, or
 - drops below 50% of the previous team count when the previous snapshot had at least 10 teams.
 
+The same empty/drop guard runs before writing the split snapshot tree under `public/data/` (see [snapshot-tree.md](snapshot-tree.md)). Mega-seed publication and tree emission stay aligned during the #12 → #87 transition.
+
 Scheduled GitHub Actions (`.github/workflows/data-refresh.yml`) run the same pull path, then `validate:data`, write a change report artifact, and open a PR when the seed changes (never force-push to `main`).
 
 ## Source checks
@@ -48,7 +51,7 @@ Maintainers can open a secondary **Data health** view from the footer link or `#
 - optional browser last-seen team count (localStorage) for visit-to-visit deltas
 - **session-only** live `SourceResult` statuses already observed in-app (does not probe upstreams on open)
 
-Refresh-to-refresh field observations are stored in the append-only side store `nv-ftc-team-observations.generated.json` (see [#29](https://github.com/The-Allsparks/ftc-team-analysis/issues/29) and [field-evidence.md](field-evidence.md)). Hosting/edge source-health metadata stays with [#38](https://github.com/The-Allsparks/ftc-team-analysis/issues/38).
+Refresh-to-refresh field observations are stored in the append-only side store `nv-ftc-team-observations.generated.json` (see [#29](https://github.com/The-Allsparks/ftc-team-analysis/issues/29) and [field-evidence.md](field-evidence.md)). Hosting/edge source-health metadata stays with [#38](https://github.com/The-Allsparks/ftc-team-analysis/issues/38); a static `source-health.json` slice is emitted with the snapshot tree ([snapshot-tree.md](snapshot-tree.md)).
 
 ## What is not ingested
 

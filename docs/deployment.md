@@ -52,11 +52,11 @@ The Worker accepts `GET`/`HEAD` on those prefixes only and never forwards arbitr
 After a successful production deploy, the free `*.pages.dev` hostname must serve:
 
 - The SPA (`index.html` + hashed `/assets/*`)
-- Static seed JSON under `/data/*` (copied into `dist` by `sync:data` during build)
+- Static seed JSON under `/data/*` (copied into `dist` by `sync:data` during build), including the transitional mega-seed **and** the split snapshot tree (`manifest.json`, `regions/`, `teams/`) — see [snapshot-tree.md](snapshot-tree.md)
 
 Client navigation uses hash routes (`#health`, etc.), so deep links do not require a separate SPA rewrite for normal use. Vite still emits a standard SPA `index.html`.
 
-Static response headers for caching basics live in [`public/_headers`](../public/_headers) (copied into `dist/` by Vite; honored by Pages).
+Static response headers for caching basics live in [`public/_headers`](../public/_headers) (copied into `dist/` by Vite; honored by Pages). Intended differentiated TTLs for historical vs current snapshot slices are documented in [snapshot-tree.md](snapshot-tree.md); path-specific header wiring may land with [#89](https://github.com/The-Allsparks/ftc-team-analysis/issues/89).
 
 ### Operator checklist — create / connect the Pages project
 

@@ -10,6 +10,7 @@
   },
   "scripts": {
     "sync:data": "tsx scripts/sync-public-data.ts",
+    "generate:snapshots": "tsx scripts/generate-snapshot-tree.ts",
     "dev": "npm run sync:data && vite",
     "build": "npm run sync:data && tsc && vite build",
     "preview": "vite preview",

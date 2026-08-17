@@ -1,5 +1,6 @@
 # Cloudflare Pages static headers (copied into dist/ by Vite).
 # Safe defaults for SPA shell + hashed assets + /data seed JSON.
+# Intended historical vs current snapshot TTLs: docs/snapshot-tree.md (#87 / #89).
 
 /assets/*
   Cache-Control: public, max-age=31536000, immutable
