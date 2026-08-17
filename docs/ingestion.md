@@ -51,7 +51,7 @@ Maintainers can open a secondary **Data health** view from the footer link or `#
 - optional browser last-seen team count (localStorage) for visit-to-visit deltas
 - **session-only** live `SourceResult` statuses already observed in-app (does not probe upstreams on open)
 
-Refresh-to-refresh field observations are stored in the append-only side store `nv-ftc-team-observations.generated.json` (see [#29](https://github.com/The-Allsparks/ftc-team-analysis/issues/29) and [field-evidence.md](field-evidence.md)). Hosting/edge source-health metadata stays with [#38](https://github.com/The-Allsparks/ftc-team-analysis/issues/38); a static `source-health.json` slice is emitted with the snapshot tree ([snapshot-tree.md](snapshot-tree.md)).
+Refresh-to-refresh field observations are stored in the append-only side store `nv-ftc-team-observations.generated.json` (see [#29](https://github.com/The-Allsparks/ftc-team-analysis/issues/29) and [field-evidence.md](field-evidence.md)). Hosting ops (Fail open, rollback, disable-live) live in [cloudflare-pages.md](cloudflare-pages.md) ([#91](https://github.com/The-Allsparks/ftc-team-analysis/issues/91) / [#38](https://github.com/The-Allsparks/ftc-team-analysis/issues/38)). A static `source-health.json` slice (seed `sourceChecks` + stale/age helpers) is emitted with the snapshot tree ([snapshot-tree.md](snapshot-tree.md)) and validated by `validate:data`.
 
 ## What is not ingested
 

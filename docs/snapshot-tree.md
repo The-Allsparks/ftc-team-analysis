@@ -71,7 +71,7 @@ Valibot: `src/data/snapshotTreeSchema.ts` (`SNAPSHOT_TREE_SCHEMA_VERSION = 1`).
 - **Region summary** — per season: `number`, `name`, `location`, `teamType`, `league`, `city`, `active` (small-first directory load).
 - **Team index** — latest scalars + `seasons` + `seasonPaths`.
 - **Team season** — `{ schemaVersion, number, season, generatedAt, detail }` where `detail` is the seed `TeamSeason` object.
-- **source-health.json** — `generatedAt`, `regionCode`, `teamCount`, seed `sourceChecks` (edge/dashboard metadata slice for [#30](https://github.com/The-Allsparks/ftc-team-analysis/issues/30) / #38).
+- **source-health.json** — `schemaVersion`, `generatedAt`, `regionCode`, `teamCount`, `seedAgeMs`, `seedStale`, `sourceCheckFailureCount`, and seed `sourceChecks` (static operator/edge slice for [#30](https://github.com/The-Allsparks/ftc-team-analysis/issues/30) / [#91](https://github.com/The-Allsparks/ftc-team-analysis/issues/91); full dashboard coverage stays in-app).
 
 ## Intended cache TTLs
 
@@ -123,4 +123,5 @@ Degraded mode keeps a valid directory snapshot on screen and surfaces SourceResu
 - [edge-cache.md](edge-cache.md) — static + proxy Cache-Control / throttle policy (#89)
 - [ingestion.md](ingestion.md) — pull + guards + data-refresh (#90)
 - [deployment.md](deployment.md) — Pages/`/data` serving; snapshot vs app deploy
+- [cloudflare-pages.md](cloudflare-pages.md) — Pages runbook + `source-health.json` (#91)
 - App loader: #88 (this document)

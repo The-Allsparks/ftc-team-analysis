@@ -53,7 +53,7 @@ Live refresh remains **opt-in / degraded-mode** relative to static-first loading
 
 Live Pages project may still be pending ([#85](https://github.com/The-Allsparks/ftc-team-analysis/issues/85)). Do **not** invent `Cf-Cache-Status` evidence. When a preview exists:
 
-1. Confirm Fail open is set ([deployment.md](deployment.md)).
+1. Confirm Fail open is set ([cloudflare-pages.md](cloudflare-pages.md#fail-open)).
 2. Load SPA + `/data/manifest.json` and a historical team-season JSON; confirm response `Cache-Control` matches the table above (DevTools → Network).
 3. Hit an allowlisted proxy once Functions (#86) or the Worker is in front; confirm successful responses include the proxy `Cache-Control` values.
 4. Optionally inspect `Cf-Cache-Status`. Treat **HIT** as interesting for upstream savings only — **do not** treat HIT as “this request was free of Function quota” unless Cloudflare docs for that host prove otherwise (still open for Pages Functions + Workers Caching).
@@ -63,5 +63,6 @@ Live Pages project may still be pending ([#85](https://github.com/The-Allsparks/
 
 - [snapshot-tree.md](snapshot-tree.md) — tree layout + TTL cross-link
 - [deployment.md](deployment.md) — Worker today / Pages target
+- [cloudflare-pages.md](cloudflare-pages.md) — Pages runbook (#91)
 - [architecture.md](architecture.md) — static-first data path
 - Parent [#38](https://github.com/The-Allsparks/ftc-team-analysis/issues/38) behavior comment

@@ -149,6 +149,56 @@ describe('snapshot tree', () => {
 
     expect(parseSnapshotSourceHealth(built.sourceHealth).ok).toBe(true);
     expect(built.sourceHealth.sourceChecks).toHaveLength(1);
+    expect(built.sourceHealth.sourceCheckFailureCount).toBe(0);
+    expect(built.sourceHealth.seedStale).toBe(false);
+    expect(built.sourceHealth.seedAgeMs).toBeGreaterThan(0);
+  });
+
+  it('marks source-health stale and counts failed sourceChecks via health helpers', () => {
+    const seed = tinySeed();
+    seed.generatedAt = '2019-01-01T00:00:00.000Z';
+    seed.sourceChecks = [
+      {
+        label: 'ok source',
+        url: 'https://example.com/ok',
+        checkedAt: '2019-01-01T00:00:00.000Z',
+        ok: true,
+      },
+      {
+        label: 'failed source',
+        url: 'https://example.com/fail',
+        checkedAt: '2019-01-01T00:00:00.000Z',
+        ok: false,
+        detail: 'timeout',
+      },
+    ];
+    const parsed = parseGeneratedSeed(seed);
+    expect(parsed.ok).toBe(true);
+    if (!parsed.ok) {
+      return;
+    }
+
+    const built = buildSnapshotTree(parsed.data, '2026-01-02T00:00:00.000Z');
+    const health = parseSnapshotSourceHealth(built.sourceHealth);
+    expect(health.ok).toBe(true);
+    if (!health.ok) {
+      return;
+    }
+    expect(health.data.seedStale).toBe(true);
+    expect(health.data.sourceCheckFailureCount).toBe(1);
+    expect(health.data.sourceChecks).toHaveLength(2);
+  });
+
+  it('rejects source-health payloads missing age / failure fields', () => {
+    const bad = {
+      schemaVersion: SNAPSHOT_TREE_SCHEMA_VERSION,
+      generatedAt: '2026-01-01T00:00:00.000Z',
+      regionCode: 'USNV',
+      teamCount: 1,
+      sourceChecks: [],
+    };
+    const result = parseSnapshotSourceHealth(bad);
+    expect(result.ok).toBe(false);
   });
 
   it('refuses empty candidates via the same publish guard as mega-seed writes', () => {

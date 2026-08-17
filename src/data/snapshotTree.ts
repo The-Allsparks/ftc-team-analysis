@@ -2,6 +2,7 @@
  * Build the static snapshot tree from a validated GeneratedData mega-seed (#87).
  * Filesystem writes live in scripts/snapshotTreeWrite.ts (Node-only).
  */
+import { STALE_SEED_MAX_AGE_MS } from '../lib/sourceHealthReport';
 import type { GeneratedData, Team, TeamSeason } from './schema';
 import { availableSeasons, CURRENT_SEASON, isSupportedSeason, type SeasonId } from './seasons';
 import {
@@ -118,13 +119,26 @@ function buildTeamSeason(
   };
 }
 
-function buildSourceHealth(data: GeneratedData): SnapshotSourceHealth {
+/** Static `/data/source-health.json` slice from seed `sourceChecks` + #30 age helpers. */
+export function buildSourceHealth(
+  data: GeneratedData,
+  now: Date | string | number = Date.now(),
+): SnapshotSourceHealth {
+  const nowMs = now instanceof Date ? now.getTime() : new Date(now).getTime();
+  const generatedMs = new Date(data.generatedAt).getTime();
+  const seedAgeMs = Number.isFinite(generatedMs) ? Math.max(0, nowMs - generatedMs) : 0;
+  const sourceChecks = data.sourceChecks ?? [];
+  const sourceCheckFailureCount = sourceChecks.filter((check) => !check.ok).length;
+
   return {
     schemaVersion: SNAPSHOT_TREE_SCHEMA_VERSION,
     generatedAt: data.generatedAt,
     regionCode: data.regionCode,
     teamCount: data.teams.length,
-    sourceChecks: data.sourceChecks ?? [],
+    seedAgeMs,
+    seedStale: seedAgeMs > STALE_SEED_MAX_AGE_MS,
+    sourceCheckFailureCount,
+    sourceChecks,
   };
 }
 
@@ -184,7 +198,7 @@ export function buildSnapshotTree(
     }
   }
 
-  const sourceHealth = buildSourceHealth(data);
+  const sourceHealth = buildSourceHealth(data, treeGeneratedAt);
   const manifest = buildManifest(data, treeGeneratedAt, seasons);
   const fileCount =
     2 /* manifest + source-health */ + regionSummaries.length + teamIndexes.length + teamSeasons.length;
