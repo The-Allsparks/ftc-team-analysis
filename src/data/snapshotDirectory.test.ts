@@ -137,6 +137,65 @@ describe('snapshotDirectory', () => {
     expect(next.teams[0]?.latestName).toBe('Alpha Full');
   });
 
+  it('copies team-level links from the snapshot index when merging detail', () => {
+    const shell = buildDirectoryDataFromTree(manifest, [summary2026]);
+    expect(shell.teams[0]?.links).toEqual([]);
+
+    const detail = fullSeason({ season: 2026, name: 'Alpha Full' });
+    const next = mergeTeamSeasonDetail(shell, 1, detail, {
+      links: [
+        {
+          type: 'website',
+          label: 'Team site',
+          url: 'https://example-team.example',
+          source: 'FTC Events',
+        },
+      ],
+    });
+
+    expect(next.teams[0]?.links).toEqual([
+      {
+        type: 'website',
+        label: 'Team site',
+        url: 'https://example-team.example',
+        source: 'FTC Events',
+      },
+    ]);
+  });
+
+  it('does not wipe existing links when the snapshot index has an empty links array', () => {
+    const shell = buildDirectoryDataFromTree(manifest, [summary2026]);
+    const withLinks = {
+      ...shell,
+      teams: shell.teams.map((team) =>
+        team.number === 1
+          ? {
+              ...team,
+              links: [
+                {
+                  type: 'website' as const,
+                  label: 'Kept site',
+                  url: 'https://kept.example',
+                  source: 'Mega seed',
+                },
+              ],
+            }
+          : team,
+      ),
+    };
+    const detail = fullSeason({ season: 2026, name: 'Alpha Full' });
+    const next = mergeTeamSeasonDetail(withLinks, 1, detail, { links: [] });
+
+    expect(next.teams[0]?.links).toEqual([
+      {
+        type: 'website',
+        label: 'Kept site',
+        url: 'https://kept.example',
+        source: 'Mega seed',
+      },
+    ]);
+  });
+
   it('merges an additional region summary into existing directory data', () => {
     const shell = buildDirectoryDataFromTree(manifest, [summary2025]);
     expect(shell.teams.some((team) => team.seasons[2026])).toBe(false);

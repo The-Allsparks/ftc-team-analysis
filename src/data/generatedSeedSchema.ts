@@ -213,7 +213,7 @@ const videoResourceEvidenceKindSchema = v.picklist([
   'search-corroborated',
 ]);
 
-const teamLinkSchema = v.looseObject({
+export const teamLinkSchema = v.looseObject({
   type: teamLinkTypeSchema,
   label: v.string(),
   url: v.string(),
@@ -228,7 +228,7 @@ const teamLinkSchema = v.looseObject({
   liveness: v.optional(linkLivenessSchema),
 });
 
-const teamCodeRepositorySchema = v.looseObject({
+export const teamCodeRepositorySchema = v.looseObject({
   url: v.string(),
   owner: v.string(),
   name: v.string(),
@@ -246,7 +246,7 @@ const teamCodeRepositorySchema = v.looseObject({
   retrievedAt: v.optional(nullableString),
 });
 
-const teamVideoResourceSchema = v.looseObject({
+export const teamVideoResourceSchema = v.looseObject({
   url: v.string(),
   kind: videoResourceKindSchema,
   title: v.optional(nullableString),

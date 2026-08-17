@@ -69,7 +69,7 @@ Valibot: `src/data/snapshotTreeSchema.ts` (`SNAPSHOT_TREE_SCHEMA_VERSION = 1`).
 ## Region summary / team files
 
 - **Region summary** — per season: `number`, `name`, `location`, `teamType`, `league`, `city`, `active` (small-first directory load).
-- **Team index** — latest scalars + `seasons` + `seasonPaths`.
+- **Team index** — latest scalars + `seasons` + `seasonPaths`, plus team-level `links` / `codeRepositories` / `videoResources` when present.
 - **Team season** — `{ schemaVersion, number, season, generatedAt, detail }` where `detail` is the seed `TeamSeason` object.
 - **source-health.json** — `schemaVersion`, `generatedAt`, `regionCode`, `teamCount`, `seedAgeMs`, `seedStale`, `sourceCheckFailureCount`, and seed `sourceChecks` (static operator/edge slice for [#30](https://github.com/The-Allsparks/ftc-team-analysis/issues/30) / [#91](https://github.com/The-Allsparks/ftc-team-analysis/issues/91); full dashboard coverage stays in-app).
 

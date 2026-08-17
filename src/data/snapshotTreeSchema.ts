@@ -5,6 +5,12 @@
  * See docs/snapshot-tree.md.
  */
 import * as v from 'valibot';
+import {
+  teamCodeRepositorySchema,
+  teamLinkSchema,
+  teamVideoResourceSchema,
+} from './generatedSeedSchema';
+import type { TeamCodeRepository, TeamLink, TeamVideoResource } from './schema';
 import { CURRENT_SEASON, SUPPORTED_SEASONS, type SeasonId } from './seasons';
 
 export const SNAPSHOT_TREE_SCHEMA_VERSION = 1;
@@ -92,6 +98,10 @@ export type TeamSnapshotIndex = {
   seasons: SeasonId[];
   seasonPaths: Record<string, string>;
   indexPath: string;
+  /** Team-level enrichments copied from the mega-seed (not season rows). */
+  links: TeamLink[];
+  codeRepositories?: TeamCodeRepository[];
+  videoResources?: TeamVideoResource[];
 };
 
 export type TeamSeasonSnapshot = {
@@ -192,6 +202,9 @@ export const teamSnapshotIndexSchema = v.object({
   seasons: v.array(seasonIdSchema),
   seasonPaths: v.record(v.string(), v.string()),
   indexPath: v.string(),
+  links: v.optional(v.array(teamLinkSchema), []),
+  codeRepositories: v.optional(v.array(teamCodeRepositorySchema)),
+  videoResources: v.optional(v.array(teamVideoResourceSchema)),
 });
 
 export const teamSeasonSnapshotSchema = v.object({
