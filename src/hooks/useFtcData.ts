@@ -104,9 +104,15 @@ function indexFieldsFromSnapshot(index: {
     latestTeamType: index.latestTeamType,
     latestLeague: index.latestLeague,
     latestRegion: index.latestRegion,
-    ...(index.links ? { links: index.links } : {}),
-    ...(index.codeRepositories ? { codeRepositories: index.codeRepositories } : {}),
-    ...(index.videoResources ? { videoResources: index.videoResources } : {}),
+    // Only forward non-empty enrichments. Legacy indexes may omit `links` and Valibot
+    // defaults it to []; treating that as authoritative would wipe mega-seed / in-memory links.
+    ...(index.links && index.links.length > 0 ? { links: index.links } : {}),
+    ...(index.codeRepositories && index.codeRepositories.length > 0
+      ? { codeRepositories: index.codeRepositories }
+      : {}),
+    ...(index.videoResources && index.videoResources.length > 0
+      ? { videoResources: index.videoResources }
+      : {}),
   };
 }
 

@@ -164,9 +164,16 @@ export function mergeTeamSeasonDetail(
       ...team,
       ...(indexLatest ?? {}),
       number: teamNumber,
-      links: indexLatest?.links ?? team.links,
-      codeRepositories: indexLatest?.codeRepositories ?? team.codeRepositories,
-      videoResources: indexLatest?.videoResources ?? team.videoResources,
+      links:
+        indexLatest?.links && indexLatest.links.length > 0 ? indexLatest.links : team.links,
+      codeRepositories:
+        indexLatest?.codeRepositories && indexLatest.codeRepositories.length > 0
+          ? indexLatest.codeRepositories
+          : team.codeRepositories,
+      videoResources:
+        indexLatest?.videoResources && indexLatest.videoResources.length > 0
+          ? indexLatest.videoResources
+          : team.videoResources,
       seasons: {
         ...team.seasons,
         [season]: {
@@ -185,6 +192,16 @@ export function mergeTeamSeasonDetail(
         ...shell,
         ...(indexLatest ?? {}),
         number: teamNumber,
+        links:
+          indexLatest?.links && indexLatest.links.length > 0 ? indexLatest.links : shell.links,
+        codeRepositories:
+          indexLatest?.codeRepositories && indexLatest.codeRepositories.length > 0
+            ? indexLatest.codeRepositories
+            : shell.codeRepositories,
+        videoResources:
+          indexLatest?.videoResources && indexLatest.videoResources.length > 0
+            ? indexLatest.videoResources
+            : shell.videoResources,
         seasons: { [season]: seasonDetail },
       },
       seasonDetail,
