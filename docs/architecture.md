@@ -57,6 +57,7 @@ When FTC Events has not published the current region page, the UI selects the la
 
 - [ingestion.md](ingestion.md) — pull pipeline and guards
 - [snapshot-tree.md](snapshot-tree.md) — static manifest / region / team JSON layout (#87)
+- [edge-cache.md](edge-cache.md) — static + proxy Cache-Control and live-refresh coalesce (#89)
 - [link-discovery.md](link-discovery.md) — website/social link discovery, confidence, dead-link checks
 - [open-alliance.md](open-alliance.md) — optional Open Alliance team-declared resource enrichment
 - [gm0.md](gm0.md) — optional Game Manual 0 gallery resource enrichment

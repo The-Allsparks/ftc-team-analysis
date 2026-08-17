@@ -1,12 +1,75 @@
 # Cloudflare Pages static headers (copied into dist/ by Vite).
-# Safe defaults for SPA shell + hashed assets + /data seed JSON.
-# Intended historical vs current snapshot TTLs: docs/snapshot-tree.md (#87 / #89).
+# Policy: docs/edge-cache.md (#89). When bumping CURRENT_SEASON in src/data/seasons.ts,
+# move the prior year from "Current season slices" into the Historical blocks below
+# (edgeCachePolicy.test.ts asserts historical seasons stay listed).
 
 /assets/*
   Cache-Control: public, max-age=31536000, immutable
 
+# Default short TTL for volatile /data (manifest, mega-seed, team index, unmatched paths).
 /data/*
   Cache-Control: public, max-age=300, stale-while-revalidate=86400
+
+# Current season slices stay short (explicit; matches CURRENT_SEASON = 2026).
+/data/regions/*/2026/summary.json
+  Cache-Control: public, max-age=300, stale-while-revalidate=86400
+
+/data/teams/*/2026.json
+  Cache-Control: public, max-age=300, stale-while-revalidate=86400
+
+/data/teams/*/index.json
+  Cache-Control: public, max-age=300, stale-while-revalidate=86400
+
+/data/manifest.json
+  Cache-Control: public, max-age=300, stale-while-revalidate=86400
+
+/data/source-health.json
+  Cache-Control: public, max-age=300, stale-while-revalidate=86400
+
+# Historical season region summaries + team-season JSON (long immutable TTL).
+# Last matching rule wins on Pages — these override the /data/* default.
+
+/data/regions/*/2019/summary.json
+  Cache-Control: public, max-age=2592000, immutable
+
+/data/teams/*/2019.json
+  Cache-Control: public, max-age=2592000, immutable
+
+/data/regions/*/2020/summary.json
+  Cache-Control: public, max-age=2592000, immutable
+
+/data/teams/*/2020.json
+  Cache-Control: public, max-age=2592000, immutable
+
+/data/regions/*/2021/summary.json
+  Cache-Control: public, max-age=2592000, immutable
+
+/data/teams/*/2021.json
+  Cache-Control: public, max-age=2592000, immutable
+
+/data/regions/*/2022/summary.json
+  Cache-Control: public, max-age=2592000, immutable
+
+/data/teams/*/2022.json
+  Cache-Control: public, max-age=2592000, immutable
+
+/data/regions/*/2023/summary.json
+  Cache-Control: public, max-age=2592000, immutable
+
+/data/teams/*/2023.json
+  Cache-Control: public, max-age=2592000, immutable
+
+/data/regions/*/2024/summary.json
+  Cache-Control: public, max-age=2592000, immutable
+
+/data/teams/*/2024.json
+  Cache-Control: public, max-age=2592000, immutable
+
+/data/regions/*/2025/summary.json
+  Cache-Control: public, max-age=2592000, immutable
+
+/data/teams/*/2025.json
+  Cache-Control: public, max-age=2592000, immutable
 
 /
   Cache-Control: public, max-age=0, must-revalidate
