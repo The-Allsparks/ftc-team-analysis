@@ -70,12 +70,10 @@ function formatAffiliationNames(names: string[]): string {
 
 function OrganizationIdentity({
   season,
-  currentOrganization,
   scout,
   teamNumber,
 }: {
   season: TeamSeason;
-  currentOrganization?: string | null;
   scout?: TeamScoutData | null;
   teamNumber?: number;
 }) {
@@ -89,7 +87,7 @@ function OrganizationIdentity({
         label="Organization / Sponsors"
         season={season}
         field="organization"
-        displayedValue={currentOrganization}
+        displayedValue={season.organization}
         emptyLabel="Not available publicly yet"
         scout={scout}
         teamNumber={teamNumber}
@@ -259,7 +257,6 @@ export default function TeamDetailPanel({
           <div className="identity-grid">
             <OrganizationIdentity
               season={selectedSeason}
-              currentOrganization={selectedTeam.latestOrganization}
               scout={selectedScoutData}
               teamNumber={selectedTeam.number}
             />
