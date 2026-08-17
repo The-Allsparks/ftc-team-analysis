@@ -37,6 +37,7 @@ import {
 import {
   isOpenAllianceLinkSource,
   openAllianceLinkAttribution,
+  type OpenAllianceFtcTeam,
 } from '../lib/openAlliance';
 import {
   advancementLabel,
@@ -72,10 +73,20 @@ function OrganizationIdentity({
   season,
   scout,
   teamNumber,
+  team,
+  portfolios,
+  portfolioFetchedAt,
+  openAlliance,
+  openAllianceRetrievedAt,
 }: {
   season: TeamSeason;
   scout?: TeamScoutData | null;
   teamNumber?: number;
+  team?: Team | null;
+  portfolios?: PortfolioLabEntry[] | null;
+  portfolioFetchedAt?: string | null;
+  openAlliance?: OpenAllianceFtcTeam | null;
+  openAllianceRetrievedAt?: string | null;
 }) {
   const hosts = hostAffiliations(season);
   const sponsors = sponsorAffiliations(season);
@@ -91,6 +102,11 @@ function OrganizationIdentity({
         emptyLabel="Not available publicly yet"
         scout={scout}
         teamNumber={teamNumber}
+        team={team}
+        portfolios={portfolios}
+        portfolioFetchedAt={portfolioFetchedAt}
+        openAlliance={openAlliance}
+        openAllianceRetrievedAt={openAllianceRetrievedAt}
       />
     );
   }
@@ -104,6 +120,11 @@ function OrganizationIdentity({
         displayedValue={season.organization}
         scout={scout}
         teamNumber={teamNumber}
+        team={team}
+        portfolios={portfolios}
+        portfolioFetchedAt={portfolioFetchedAt}
+        openAlliance={openAlliance}
+        openAllianceRetrievedAt={openAllianceRetrievedAt}
       />
     );
   }
@@ -118,6 +139,11 @@ function OrganizationIdentity({
         agreementDisplayedValue={season.organization}
         scout={scout}
         teamNumber={teamNumber}
+        team={team}
+        portfolios={portfolios}
+        portfolioFetchedAt={portfolioFetchedAt}
+        openAlliance={openAlliance}
+        openAllianceRetrievedAt={openAllianceRetrievedAt}
         preferDisplayedValue
         extra={
           hosts.some((row) => row.confidence === 'low') ? (
@@ -151,6 +177,9 @@ export type TeamDetailPanelProps = {
   loadTeamScout: (season: SeasonId, teamNumber: number, force?: boolean) => Promise<TeamScoutData | null>;
   selectedLineage: TeamLineage | null;
   selectedPortfolios: PortfolioLabEntry[];
+  portfolioFetchedAt?: string | null;
+  openAllianceListing?: OpenAllianceFtcTeam | null;
+  openAllianceRetrievedAt?: string | null;
   portfolioStatus: 'idle' | 'loading' | 'ready' | 'error';
   refreshPortfolioCatalog: (force?: boolean) => Promise<unknown>;
   onCorrectionSubmitted: (record: ModerationRecord) => void;
@@ -174,6 +203,9 @@ export default function TeamDetailPanel({
   loadTeamScout,
   selectedLineage,
   selectedPortfolios,
+  portfolioFetchedAt = null,
+  openAllianceListing = null,
+  openAllianceRetrievedAt = null,
   portfolioStatus,
   refreshPortfolioCatalog,
   onCorrectionSubmitted,
@@ -191,6 +223,15 @@ export default function TeamDetailPanel({
       )
     : [];
   const scoutSampleCaption = scoutSampleSizeCaption(selectedScoutData?.quickStats?.count);
+  const identitySources = {
+    scout: selectedScoutData,
+    teamNumber: selectedTeam?.number,
+    team: selectedTeam,
+    portfolios: selectedPortfolios,
+    portfolioFetchedAt,
+    openAlliance: openAllianceListing,
+    openAllianceRetrievedAt,
+  };
 
   return (
     <section className="detail-panel" aria-label="Team details">
@@ -212,8 +253,7 @@ export default function TeamDetailPanel({
                   season={selectedSeason}
                   field="name"
                   displayedValue={selectedSeason.name}
-                  scout={selectedScoutData}
-                  teamNumber={selectedTeam.number}
+                  {...identitySources}
                   compact
                   hideValueWhenIdle={selectedSeason.name === selectedTeam.latestName}
                 />
@@ -222,8 +262,7 @@ export default function TeamDetailPanel({
                   season={selectedSeason}
                   field="location"
                   displayedValue={selectedSeason.location}
-                  scout={selectedScoutData}
-                  teamNumber={selectedTeam.number}
+                  {...identitySources}
                   compact
                 />
               </div>
@@ -257,32 +296,28 @@ export default function TeamDetailPanel({
           <div className="identity-grid">
             <OrganizationIdentity
               season={selectedSeason}
-              scout={selectedScoutData}
-              teamNumber={selectedTeam.number}
+              {...identitySources}
             />
             <IdentityFactCell
               label="Website"
               season={selectedSeason}
               field="website"
               displayedValue={selectedSeason.website}
-              scout={selectedScoutData}
-              teamNumber={selectedTeam.number}
+              {...identitySources}
             />
             <IdentityFactCell
               label="League"
               season={selectedSeason}
               field="league"
               displayedValue={selectedSeason.league}
-              scout={selectedScoutData}
-              teamNumber={selectedTeam.number}
+              {...identitySources}
             />
             <IdentityFactCell
               label="Region"
               season={selectedSeason}
               field="region"
               displayedValue={selectedSeason.region}
-              scout={selectedScoutData}
-              teamNumber={selectedTeam.number}
+              {...identitySources}
             />
             <IdentityFactCell
               label="Listed this season"
@@ -290,8 +325,7 @@ export default function TeamDetailPanel({
               field="active"
               displayedValue={selectedSeason.active ? 'true' : 'false'}
               emptyLabel="Unknown"
-              scout={selectedScoutData}
-              teamNumber={selectedTeam.number}
+              {...identitySources}
             />
             <IdentityFactCell
               label="Rookie Year"
@@ -299,16 +333,14 @@ export default function TeamDetailPanel({
               field="rookieYear"
               displayedValue={selectedSeason.rookieYear != null ? String(selectedSeason.rookieYear) : null}
               emptyLabel="Unknown"
-              scout={selectedScoutData}
-              teamNumber={selectedTeam.number}
+              {...identitySources}
             />
             <IdentityFactCell
               label="Team Type"
               season={selectedSeason}
               field="teamType"
               displayedValue={selectedSeason.teamType}
-              scout={selectedScoutData}
-              teamNumber={selectedTeam.number}
+              {...identitySources}
             />
             <div className="identity-cell">
               <span>Advancement</span>
@@ -320,8 +352,7 @@ export default function TeamDetailPanel({
               field="record"
               displayedValue={selectedSeason.record?.text}
               emptyLabel="Not parsed yet"
-              scout={selectedScoutData}
-              teamNumber={selectedTeam.number}
+              {...identitySources}
               extra={
                 selectedSeason.record ? (
                   <small className="record-key">W-L-T = wins-losses-ties</small>
@@ -333,8 +364,7 @@ export default function TeamDetailPanel({
               season={selectedSeason}
               field="robot"
               displayedValue={selectedSeason.robot}
-              scout={selectedScoutData}
-              teamNumber={selectedTeam.number}
+              {...identitySources}
             />
           </div>
 
