@@ -14,6 +14,7 @@ import {
   formatScoutIssues,
   parseScoutEvents,
   parseScoutQuickStats,
+  parseScoutTeamProfile,
   ScoutIssue,
 } from '../data/ftcScoutSchema';
 import { CURRENT_SEASON, SeasonId } from '../data/schema';
@@ -35,8 +36,8 @@ export function toFtcScoutProxyUrl(path: string): string {
 }
 
 function scoutCacheKey(season: SeasonId, teamNumber: number): string {
-  // v4: rankingScope + metaCatalogVersion + event scoreSpread retention
-  return cacheKey('ftcscout-v4', String(season), String(teamNumber));
+  // v5: team profile (schoolName / identity) alongside quick-stats + events
+  return cacheKey('ftcscout-v5', String(season), String(teamNumber));
 }
 
 function scoutTtl(season: SeasonId): number {
@@ -110,6 +111,15 @@ async function fetchValidatedEvents(season: SeasonId, teamNumber: number): Promi
     quarantined: parsed.quarantined,
     quarantinedRecordCount: parsed.quarantinedRecordCount,
   };
+}
+
+async function fetchValidatedTeamProfile(teamNumber: number): Promise<NonNullable<TeamScoutData['profile']>> {
+  const raw = await fetchScoutJson(`/rest/v1/teams/${teamNumber}`);
+  const parsed = parseScoutTeamProfile(raw);
+  if (!parsed.ok) {
+    throw new Error(`FTCScout team profile parse failure: ${formatScoutIssues(parsed.issues)}`);
+  }
+  return parsed.data;
 }
 
 function normalizeQuickStats(payload: ScoutQuickStats): ScoutQuickStats {
@@ -205,16 +215,17 @@ export async function fetchTeamScoutData(
     if (cached) {
       return {
         ok: true,
-        state: cached.quickStats || cached.events.length > 0 ? 'available' : 'no_record',
+        state: cached.quickStats || cached.events.length > 0 || cached.profile ? 'available' : 'no_record',
         data: cached,
         diagnostics: 'Loaded from local cache.',
       };
     }
   }
 
-  const [quickStatsSettled, eventsSettled] = await Promise.allSettled([
+  const [quickStatsSettled, eventsSettled, profileSettled] = await Promise.allSettled([
     fetchValidatedQuickStats(season, teamNumber),
     fetchValidatedEvents(season, teamNumber),
+    fetchValidatedTeamProfile(teamNumber),
   ]);
 
   const quickArm = settleScoutArm(quickStatsSettled, null);
@@ -223,6 +234,7 @@ export async function fetchTeamScoutData(
     quarantined: [],
     quarantinedRecordCount: 0,
   });
+  const profileArm = settleScoutArm(profileSettled, null);
 
   const quickStats =
     quickArm.ok && quickArm.data ? normalizeQuickStats(quickArm.data) : null;
@@ -232,6 +244,7 @@ export async function fetchTeamScoutData(
           .map(normalizeEventParticipation)
           .sort((a, b) => a.eventCode.localeCompare(b.eventCode))
       : [];
+  const profile = profileArm.ok && profileArm.data ? profileArm.data : null;
   const eventQuarantineDiagnostics =
     eventsArm.ok && eventsArm.data && eventsArm.data.quarantinedRecordCount > 0
       ? `Quarantined ${eventsArm.data.quarantinedRecordCount} invalid FTCScout event record(s): ${formatScoutIssues(eventsArm.data.quarantined)}`
@@ -243,6 +256,7 @@ export async function fetchTeamScoutData(
     metaCatalogVersion: SCOUT_META_CATALOG_VERSION,
     quickStats,
     events,
+    profile,
   };
 
   const hardFailures = [quickArm, eventsArm].filter((arm) => !arm.ok);
@@ -266,7 +280,7 @@ export async function fetchTeamScoutData(
     };
   }
 
-  const state = data.quickStats || data.events.length > 0 ? 'available' : 'no_record';
+  const state = data.quickStats || data.events.length > 0 || data.profile ? 'available' : 'no_record';
   const result: SourceResult<TeamScoutData> = {
     ok: true,
     state,
@@ -290,7 +304,7 @@ export function scoutRestApiBaseUrl(): string {
   return FTCSCOUT_API_BASE_URL;
 }
 
-/** Test helper: current scout cache key namespace (v4 retains scoreSpread + meta). */
+/** Test helper: current scout cache key namespace (v5 includes team profile). */
 export function scoutTeamCacheKeyForTests(season: SeasonId, teamNumber: number): string {
   return scoutCacheKey(season, teamNumber);
 }

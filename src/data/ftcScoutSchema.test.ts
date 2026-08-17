@@ -3,8 +3,10 @@ import {
   formatScoutIssues,
   parseScoutEvents,
   parseScoutQuickStats,
+  parseScoutTeamProfile,
   SCOUT_EVENTS_NOT_ARRAY,
   SCOUT_QUICK_STATS_NOT_OBJECT,
+  SCOUT_TEAM_PROFILE_NOT_OBJECT,
   scoutEventsAllQuarantinedMessage,
 } from './ftcScoutSchema';
 
@@ -191,5 +193,36 @@ describe('parseScoutEvents', () => {
     expect(result.data[0]?.stats?.scoreSpread).toBeNull();
     expect(result.data[0]?.stats?.opr?.autoPoints).toBeNull();
     expect(result.data[0]?.stats?.avg).toBeNull();
+  });
+});
+
+describe('parseScoutTeamProfile', () => {
+  it('accepts schoolName and identity fields from the team endpoint', () => {
+    const result = parseScoutTeamProfile({
+      number: 16158,
+      name: 'VC Silver Circuits',
+      schoolName: 'Family/Community',
+      city: 'Virginia City Highlands',
+      state: 'NV',
+      country: 'USA',
+      website: null,
+      rookieYear: 2018,
+      updatedAt: '2026-08-04T06:43:41.830Z',
+      extra: true,
+    });
+    expect(result.ok).toBe(true);
+    if (!result.ok) {
+      return;
+    }
+    expect(result.data.schoolName).toBe('Family/Community');
+    expect(result.data.rookieYear).toBe(2018);
+    expect(result.data.website).toBeNull();
+  });
+
+  it('fails closed when the payload is not an object', () => {
+    expect(parseScoutTeamProfile([])).toEqual({
+      ok: false,
+      issues: [{ path: '(root)', message: SCOUT_TEAM_PROFILE_NOT_OBJECT }],
+    });
   });
 });

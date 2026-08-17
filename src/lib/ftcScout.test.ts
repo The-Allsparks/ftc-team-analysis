@@ -150,7 +150,7 @@ describe('fetchTeamScoutData', () => {
       expect(result.data.quickStats?.count).toBe(10);
     }
     expect(getCached(scoutTeamCacheKeyForTests(2025, 16158), 60_000)).toEqual(result.ok ? result.data : null);
-    expect(scoutTeamCacheKeyForTests(2025, 16158)).toContain('ftcscout-v4');
+    expect(scoutTeamCacheKeyForTests(2025, 16158)).toContain('ftcscout-v5');
   });
 
   it('retains event score spread from optional dev.totalPoints', async () => {
@@ -308,5 +308,63 @@ describe('fetchTeamScoutData', () => {
       expect(result.data?.events).toEqual([]);
     }
     expect(getCached(scoutTeamCacheKeyForTests(2025, 16158), 60_000)).toBeNull();
+  });
+
+  it('stores the team profile fail-soft without failing stats arms', async () => {
+    const fetchMock = vi.mocked(fetch);
+    fetchMock.mockImplementation(async (input) => {
+      const url = String(input);
+      if (url.includes('quick-stats')) {
+        return jsonResponse(200, sampleQuickStats);
+      }
+      if (url.includes('/events/')) {
+        return jsonResponse(200, []);
+      }
+      return jsonResponse(200, {
+        number: 16158,
+        name: 'VC Silver Circuits',
+        schoolName: 'Family/Community',
+        city: 'Virginia City Highlands',
+        state: 'NV',
+        country: 'USA',
+        website: null,
+        rookieYear: 2018,
+        updatedAt: '2026-08-04T06:43:41.830Z',
+      });
+    });
+
+    const result = await fetchTeamScoutData(2025, 16158, { force: true });
+    expect(result.ok).toBe(true);
+    if (!result.ok) {
+      return;
+    }
+    expect(result.data.profile).toMatchObject({
+      number: 16158,
+      schoolName: 'Family/Community',
+      city: 'Virginia City Highlands',
+      updatedAt: '2026-08-04T06:43:41.830Z',
+    });
+  });
+
+  it('keeps stats when the team profile arm is missing', async () => {
+    const fetchMock = vi.mocked(fetch);
+    fetchMock.mockImplementation(async (input) => {
+      const url = String(input);
+      if (url.includes('quick-stats')) {
+        return jsonResponse(200, sampleQuickStats);
+      }
+      if (url.includes('/events/')) {
+        return jsonResponse(200, []);
+      }
+      return jsonResponse(404, { message: 'missing' });
+    });
+
+    const result = await fetchTeamScoutData(2025, 16158, { force: true });
+    expect(result.ok).toBe(true);
+    if (!result.ok) {
+      return;
+    }
+    expect(result.data.quickStats?.tot.value).toBe(100);
+    expect(result.data.profile).toBeNull();
   });
 });

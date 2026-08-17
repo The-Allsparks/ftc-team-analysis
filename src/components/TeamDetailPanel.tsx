@@ -15,15 +15,7 @@ import {
   scoutSampleSizeCaption,
 } from '../data/ftcScoutMeta';
 import { PortfolioLabEntry, portfolioCoverUrl, portfolioLabSearchUrl } from '../data/portfolioLab';
-import {
-  RegionEvent,
-  SeasonId,
-  Team,
-  TeamAward,
-  TeamFactField,
-  TeamSeason,
-} from '../data/schema';
-import { evidenceForSeasonField, formatObservationScopeLabel, formatProvenanceSummary } from '../lib/fieldEvidence';
+import { RegionEvent, SeasonId, Team, TeamAward, TeamSeason } from '../data/schema';
 import { LiveRefreshStatus } from '../lib/ftcLive';
 import {
   hostAffiliations,
@@ -51,7 +43,6 @@ import {
   advancementStatus,
   eventKey,
   seasonLabel,
-  teamTypeLabel,
 } from '../lib/teamDirectory';
 import {
   formatRelationshipTypeLabel,
@@ -65,64 +56,9 @@ import {
   createSubmission,
 } from '../lib/teamCorrections';
 import { CorrectionSubmissionForm } from './CorrectionSubmissionForm';
+import { IdentityFactCell } from './SourceAgreementChips';
 import { TeamAvatar } from './TeamAvatar';
 import { SourceStatusBlock } from './SourceStatusBlock';
-
-function FactProvenance({
-  season,
-  field,
-  currentProfileValue,
-}: {
-  season: TeamSeason;
-  field: TeamFactField;
-  /** When set and different from the season current value, show a Current label. */
-  currentProfileValue?: string | null;
-}) {
-  const rows = evidenceForSeasonField(season, field);
-  if (rows.length === 0) {
-    return null;
-  }
-
-  const current = rows.find((row) => row.status === 'current') ?? rows[0];
-  const historical = rows.filter((row) => row.status === 'superseded' || row.status === 'conflicting');
-  const summary = formatProvenanceSummary(rows);
-  const showCurrent =
-    currentProfileValue != null &&
-    currentProfileValue.trim() !== '' &&
-    current != null &&
-    currentProfileValue.replace(/\s+/g, ' ').trim().toLowerCase() !==
-      current.value.replace(/\s+/g, ' ').trim().toLowerCase();
-
-  return (
-    <small className="fact-provenance">
-      {showCurrent && (
-        <span className="fact-provenance-row">
-          <span className="fact-provenance-label">{formatObservationScopeLabel('current')}</span>
-          <span>{currentProfileValue}</span>
-        </span>
-      )}
-      <span className="fact-provenance-row">
-        <span className="fact-provenance-label">{formatObservationScopeLabel('season')}</span>
-        {current?.sourceUrl ? (
-          <a href={current.sourceUrl} target="_blank" rel="noreferrer">
-            {summary}
-          </a>
-        ) : (
-          <span>{summary}</span>
-        )}
-      </span>
-      {historical.slice(0, 3).map((row) => (
-        <span key={row.id} className="fact-provenance-row fact-provenance-historical">
-          <span className="fact-provenance-label">{formatObservationScopeLabel('historical')}</span>
-          <span>
-            {row.value}
-            {row.retrievedAt ? ` · ${row.retrievedAt.slice(0, 10)}` : ''}
-          </span>
-        </span>
-      ))}
-    </small>
-  );
-}
 
 function awardKey(award: Partial<TeamAward>, index: number) {
   return `${award.name ?? 'award'}-${award.eventName ?? 'event'}-${index}`;
@@ -135,9 +71,13 @@ function formatAffiliationNames(names: string[]): string {
 function OrganizationIdentity({
   season,
   currentOrganization,
+  scout,
+  teamNumber,
 }: {
   season: TeamSeason;
   currentOrganization?: string | null;
+  scout?: TeamScoutData | null;
+  teamNumber?: number;
 }) {
   const hosts = hostAffiliations(season);
   const sponsors = sponsorAffiliations(season);
@@ -145,54 +85,49 @@ function OrganizationIdentity({
 
   if (!season.organization && !hasStructured) {
     return (
-      <div>
-        <span>Organization / Sponsors</span>
-        <strong>Not available publicly yet</strong>
-        <FactProvenance
-          season={season}
-          field="organization"
-          currentProfileValue={currentOrganization}
-        />
-      </div>
+      <IdentityFactCell
+        label="Organization / Sponsors"
+        season={season}
+        field="organization"
+        displayedValue={currentOrganization}
+        emptyLabel="Not available publicly yet"
+        scout={scout}
+        teamNumber={teamNumber}
+      />
     );
   }
 
   if (!hasStructured) {
     return (
-      <div>
-        <span>Organization / Sponsors</span>
-        <strong>{season.organization}</strong>
-        <FactProvenance
-          season={season}
-          field="organization"
-          currentProfileValue={currentOrganization}
-        />
-      </div>
+      <IdentityFactCell
+        label="Organization / Sponsors"
+        season={season}
+        field="organization"
+        displayedValue={season.organization}
+        scout={scout}
+        teamNumber={teamNumber}
+      />
     );
   }
 
   return (
     <>
-      <div>
-        <span>School / Host</span>
-        <strong>{formatAffiliationNames(hosts.map((row) => row.name))}</strong>
-        {hosts.some((row) => row.confidence === 'low') && (
-          <small className="record-key">Parsed from public sponsor line; low confidence</small>
-        )}
-        <FactProvenance
-          season={season}
-          field="organization"
-          currentProfileValue={currentOrganization}
-        />
-      </div>
-      <div>
+      <IdentityFactCell
+        label="School / Host"
+        season={season}
+        field="organization"
+        displayedValue={formatAffiliationNames(hosts.map((row) => row.name))}
+        scout={scout}
+        teamNumber={teamNumber}
+        extra={
+          hosts.some((row) => row.confidence === 'low') ? (
+            <small className="record-key">Parsed from public sponsor line; low confidence</small>
+          ) : null
+        }
+      />
+      <div className="identity-cell">
         <span>Sponsors</span>
         <strong>{formatAffiliationNames(sponsors.map((row) => row.name))}</strong>
-        <FactProvenance
-          season={season}
-          field="organization"
-          currentProfileValue={currentOrganization}
-        />
       </div>
     </>
   );
@@ -272,19 +207,24 @@ export default function TeamDetailPanel({
               <div>
                 <p className="eyebrow">Team {selectedTeam.number}</p>
                 <h2>{selectedTeam.latestName}</h2>
-                <FactProvenance
+                <IdentityFactCell
+                  label="Name this season"
                   season={selectedSeason}
                   field="name"
-                  currentProfileValue={selectedTeam.latestName}
+                  displayedValue={selectedSeason.name}
+                  scout={selectedScoutData}
+                  teamNumber={selectedTeam.number}
+                  compact
+                  hideValueWhenIdle
                 />
-                <p>
-                  {selectedSeason.location}
-                  {selectedSeason.league ? ` - ${selectedSeason.league}` : ''}
-                </p>
-                <FactProvenance
+                <IdentityFactCell
+                  label="Location"
                   season={selectedSeason}
                   field="location"
-                  currentProfileValue={selectedTeam.latestLocation}
+                  displayedValue={selectedSeason.location}
+                  scout={selectedScoutData}
+                  teamNumber={selectedTeam.number}
+                  compact
                 />
               </div>
             </div>
@@ -318,70 +258,85 @@ export default function TeamDetailPanel({
             <OrganizationIdentity
               season={selectedSeason}
               currentOrganization={selectedTeam.latestOrganization}
+              scout={selectedScoutData}
+              teamNumber={selectedTeam.number}
             />
-            <div>
-              <span>Website</span>
-              <strong>
-                {selectedSeason.website ? (
-                  <a href={selectedSeason.website} target="_blank" rel="noreferrer">
-                    {selectedSeason.website.replace(/^https?:\/\//, '')}
-                  </a>
-                ) : (
-                  'Not listed'
-                )}
-              </strong>
-              <FactProvenance
-                season={selectedSeason}
-                field="website"
-                currentProfileValue={selectedTeam.latestWebsite}
-              />
-            </div>
-            <div>
-              <span>League / Region</span>
-              <strong>
-                {[selectedSeason.league, selectedSeason.region].filter(Boolean).join(' · ') ||
-                  'Not listed'}
-              </strong>
-              <FactProvenance
-                season={selectedSeason}
-                field="league"
-                currentProfileValue={selectedTeam.latestLeague}
-              />
-              <FactProvenance
-                season={selectedSeason}
-                field="region"
-                currentProfileValue={selectedTeam.latestRegion}
-              />
-            </div>
-            <div>
-              <span>Listed this season</span>
-              <strong>{selectedSeason.active ? 'Active' : 'Not listed / inactive'}</strong>
-              <FactProvenance season={selectedSeason} field="active" />
-            </div>
-            <div>
-              <span>Rookie Year</span>
-              <strong>{selectedSeason.rookieYear ?? 'Unknown'}</strong>
-            </div>
-            <div>
-              <span>Team Type</span>
-              <strong>{teamTypeLabel(selectedSeason.teamType)}</strong>
-              <FactProvenance season={selectedSeason} field="teamType" />
-            </div>
-            <div>
+            <IdentityFactCell
+              label="Website"
+              season={selectedSeason}
+              field="website"
+              displayedValue={selectedSeason.website}
+              scout={selectedScoutData}
+              teamNumber={selectedTeam.number}
+            />
+            <IdentityFactCell
+              label="League"
+              season={selectedSeason}
+              field="league"
+              displayedValue={selectedSeason.league}
+              scout={selectedScoutData}
+              teamNumber={selectedTeam.number}
+            />
+            <IdentityFactCell
+              label="Region"
+              season={selectedSeason}
+              field="region"
+              displayedValue={selectedSeason.region}
+              scout={selectedScoutData}
+              teamNumber={selectedTeam.number}
+            />
+            <IdentityFactCell
+              label="Listed this season"
+              season={selectedSeason}
+              field="active"
+              displayedValue={selectedSeason.active ? 'true' : 'false'}
+              emptyLabel="Unknown"
+              scout={selectedScoutData}
+              teamNumber={selectedTeam.number}
+            />
+            <IdentityFactCell
+              label="Rookie Year"
+              season={selectedSeason}
+              field="rookieYear"
+              displayedValue={selectedSeason.rookieYear != null ? String(selectedSeason.rookieYear) : null}
+              emptyLabel="Unknown"
+              scout={selectedScoutData}
+              teamNumber={selectedTeam.number}
+            />
+            <IdentityFactCell
+              label="Team Type"
+              season={selectedSeason}
+              field="teamType"
+              displayedValue={selectedSeason.teamType}
+              scout={selectedScoutData}
+              teamNumber={selectedTeam.number}
+            />
+            <div className="identity-cell">
               <span>Advancement</span>
               <strong>{advancementLabel(advancementStatus(selectedSeason, regionCode))}</strong>
             </div>
-            <div>
-              <span>Season Record</span>
-              <strong>{selectedSeason.record?.text ?? 'Not parsed yet'}</strong>
-              {selectedSeason.record && <small className="record-key">W-L-T = wins-losses-ties</small>}
-              <FactProvenance season={selectedSeason} field="record" />
-            </div>
-            <div>
-              <span>Robot</span>
-              <strong>{selectedSeason.robot ?? 'Not listed'}</strong>
-              <FactProvenance season={selectedSeason} field="robot" />
-            </div>
+            <IdentityFactCell
+              label="Season Record"
+              season={selectedSeason}
+              field="record"
+              displayedValue={selectedSeason.record?.text}
+              emptyLabel="Not parsed yet"
+              scout={selectedScoutData}
+              teamNumber={selectedTeam.number}
+              extra={
+                selectedSeason.record ? (
+                  <small className="record-key">W-L-T = wins-losses-ties</small>
+                ) : null
+              }
+            />
+            <IdentityFactCell
+              label="Robot"
+              season={selectedSeason}
+              field="robot"
+              displayedValue={selectedSeason.robot}
+              scout={selectedScoutData}
+              teamNumber={selectedTeam.number}
+            />
           </div>
 
           {selectedSeason.summary && <p className="summary">{selectedSeason.summary}</p>}
