@@ -399,20 +399,12 @@ export async function refreshSeasonDetails(
   };
 }
 
+/**
+ * Static-first (#88): auto live pull only when the static snapshot has no rows
+ * for the season. Fresh localStorage cache is no longer required to skip live
+ * proxy traffic — explicit Refresh buttons still force live paths.
+ */
 export function shouldAutoRefreshRegion(season: SeasonId, data: GeneratedData): boolean {
   // Empty season datasets (e.g. seed still on DECODE while BIOBUZZ is published) must pull.
-  if (!seasonHasTeamData(data, season)) {
-    return true;
-  }
-
-  const latestSeason = latestConfiguredSeason(data);
-  const regionCacheKey = cacheKey('region', data.regionCode, String(season));
-  const ttl = seasonTtl(
-    season,
-    latestSeason,
-    CACHE_TTL.currentSeasonRegionMs,
-    CACHE_TTL.olderSeasonRegionMs,
-  );
-
-  return getCached(regionCacheKey, ttl) === null;
+  return !seasonHasTeamData(data, season);
 }

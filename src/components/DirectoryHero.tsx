@@ -1,4 +1,5 @@
 import { GeneratedData, SeasonId } from '../data/schema';
+import type { DirectorySnapshotSource } from '../data/snapshotDirectory';
 import { SeasonFallbackState } from '../hooks/useFtcData';
 import { LiveRefreshProgress, LiveRefreshStatus } from '../lib/ftcLive';
 import { ALL_SEASONS, SeasonFilter, seasonLabel } from '../lib/teamDirectory';
@@ -15,6 +16,8 @@ export type DirectoryHeroProps = {
   liveDiagnostics: string | null;
   liveProgress: LiveRefreshProgress | null;
   seasonFallback: SeasonFallbackState | null;
+  snapshotSource?: DirectorySnapshotSource;
+  bootstrapWarnings?: string[];
   refreshRegion: (season: SeasonId, force?: boolean) => Promise<void>;
   refreshSeason: (season: SeasonId, force?: boolean) => Promise<void>;
   portfolioStatus: 'idle' | 'loading' | 'ready' | 'error';
@@ -36,6 +39,8 @@ export function DirectoryHero({
   liveDiagnostics,
   liveProgress,
   seasonFallback,
+  snapshotSource = 'mega-seed',
+  bootstrapWarnings = [],
   refreshRegion,
   refreshSeason,
   portfolioStatus,
@@ -56,13 +61,15 @@ export function DirectoryHero({
         </p>
         <h1>{regionName} FTC Team Analysis</h1>
         <p className="hero-copy">
-          Explore {regionName}-region FTC teams across seasons. Empty seasons (like a brand-new BIOBUZZ snapshot)
-          pull automatically from FTC Events. Nevada also keeps the checked-in multi-season snapshot.
+          Explore {regionName}-region FTC teams from the static snapshot first. Live FTC Events refresh runs when you
+          ask for it, when a season or team slice is missing, or when you switch to a region without a local tree.
         </p>
       </div>
       <div className="source-card">
         <span>Snapshot</span>
         <strong>{new Date(data.generatedAt).toLocaleString()}</strong>
+        <span>Load path</span>
+        <strong>{snapshotSource === 'tree' ? 'Static tree (summary first)' : 'Mega-seed fallback'}</strong>
         {data.liveRefreshedAt && (
           <>
             <span>Live cache</span>
@@ -90,6 +97,13 @@ export function DirectoryHero({
             {seasonLabel(seasonFallback.requestedSeason)} is not yet published on FTC Events. Showing{' '}
             {seasonLabel(seasonFallback.activeSeason)} instead.
           </p>
+        )}
+        {bootstrapWarnings.length > 0 && (
+          <SourceStatusBlock
+            statusClass="live-status idle"
+            message={bootstrapWarnings[0] ?? null}
+            diagnostics={bootstrapWarnings.length > 1 ? bootstrapWarnings.slice(1).join('\n') : null}
+          />
         )}
         {liveMessage && (
           <SourceStatusBlock

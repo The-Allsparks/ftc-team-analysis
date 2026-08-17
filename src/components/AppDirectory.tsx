@@ -8,6 +8,7 @@ import {
   isCurrentSeason,
   seasonOptions,
 } from '../data/schema';
+import type { DirectorySnapshotSource } from '../data/snapshotDirectory';
 import { useFtcData } from '../hooks/useFtcData';
 import { useFtcScout } from '../hooks/useFtcScout';
 import { usePortfolioLab } from '../hooks/usePortfolioLab';
@@ -53,7 +54,15 @@ const ModerationQueuePanel = lazy(() =>
   import('./ModerationQueuePanel').then((module) => ({ default: module.ModerationQueuePanel })),
 );
 
-export function AppDirectory({ seedData }: { seedData: GeneratedData }) {
+export function AppDirectory({
+  seedData,
+  snapshotSource = 'mega-seed',
+  bootstrapWarnings = [],
+}: {
+  seedData: GeneratedData;
+  snapshotSource?: DirectorySnapshotSource;
+  bootstrapWarnings?: string[];
+}) {
   const {
     data,
     regionCode,
@@ -68,6 +77,7 @@ export function AppDirectory({ seedData }: { seedData: GeneratedData }) {
     refreshSeason,
     refreshTeam,
     ensureSeasonData,
+    ensureTeamSeasonDetail,
   } = useFtcData(seedData);
   const {
     portfoliosByTeam,
@@ -463,8 +473,9 @@ export function AppDirectory({ seedData }: { seedData: GeneratedData }) {
     }
 
     lastTeamRefreshKey.current = refreshKey;
-    void refreshTeam(selectedSeason.season, selectedTeam.number);
-  }, [liveStatus, refreshTeam, selectedSeason?.season, selectedTeam?.number]);
+    // Static-first: load per-team JSON; live proxy only if the snapshot slice is missing.
+    void ensureTeamSeasonDetail(selectedSeason.season, selectedTeam.number);
+  }, [ensureTeamSeasonDetail, liveStatus, selectedSeason?.season, selectedTeam?.number]);
 
   useEffect(() => {
     if (!selectedSeason || !selectedTeam) {
@@ -550,6 +561,8 @@ export function AppDirectory({ seedData }: { seedData: GeneratedData }) {
         liveDiagnostics={liveDiagnostics}
         liveProgress={liveProgress}
         seasonFallback={seasonFallback}
+        snapshotSource={snapshotSource}
+        bootstrapWarnings={bootstrapWarnings}
         refreshRegion={refreshRegion}
         refreshSeason={refreshSeason}
         portfolioStatus={portfolioStatus}

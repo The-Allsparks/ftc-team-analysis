@@ -1,6 +1,5 @@
 /**
- * Optional helper for future loaders (#88): fetch + validate `/data/manifest.json`.
- * The app still loads the mega-seed today; this does not change App.tsx.
+ * Fetch + validate `/data/manifest.json` (#87 / #88).
  */
 import {
   parseSnapshotManifest,

@@ -26,9 +26,13 @@ FTC Events / FTCScout / Portfolio Lab / FTC Scoring (public HTTP)
 | Canonical identity | `src/lib/canonicalNormalization.ts`, `src/lib/canonicalIdentity.ts`, `src/data/ncesSchoolCatalog.ts` | Optional registered-location + org/school IDs (#16); derive-on-read or `--enrich-canonical-ids` |
 | Aggregate school context | `src/data/aggregateSchoolContext.ts` | Allowlisted institution/geography fields only (#27); no live Census seed; fetch pipeline deferred |
 | Public data copy | `public/data/` | Served as `/data/...` (via `npm run sync:data`) — mega-seed **and** split snapshot tree (#87) |
-| Snapshot tree | `docs/snapshot-tree.md`, `src/data/snapshotTree*.ts` | `manifest.json`, region summaries, per-team JSON (generated at sync) |
+| Snapshot tree | `docs/snapshot-tree.md`, `src/data/snapshotTree*.ts`, `loadDirectoryBootstrap.ts` | Manifest + region summaries boot the directory; per-team JSON loads lazily (#88). Mega-seed is fail-soft fallback only. |
 | Ingestion | `scripts/pull-public-ftc-data.ts` | Public-page pull, publish guards |
 | Worker | `worker/proxy.ts`, `wrangler.jsonc` | Allowlisted live-data proxy + static assets |
+
+### Static-first data loading (#88)
+
+Normal browsing prefers static `/data` snapshots. Live proxy prefixes (`/ftc-proxy`, `/ftcscout-proxy`, `/portfolio-lab-proxy`, `/ftc-scoring-proxy`) are used when the user refreshes, when a snapshot slice is missing, when a season has no static rows, or when switching to a region without a tree. If live proxies fail, the validated snapshot remains on screen with clear SourceResult / health messaging (#7 / #30).
 
 ## Trust boundaries
 
