@@ -312,6 +312,15 @@ export function fieldAgreement(
       latestBySource.set(sourceId, row);
       continue;
     }
+    const existingCurrent = existing.status === 'current';
+    const nextCurrent = row.status === 'current';
+    if (nextCurrent && !existingCurrent) {
+      latestBySource.set(sourceId, row);
+      continue;
+    }
+    if (!nextCurrent && existingCurrent) {
+      continue;
+    }
     const existingTs = existing.retrievedAt ? Date.parse(existing.retrievedAt) : 0;
     const nextTs = row.retrievedAt ? Date.parse(row.retrievedAt) : 0;
     if (nextTs >= existingTs) {
