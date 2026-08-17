@@ -8,15 +8,15 @@ This issue is **research + conflict rules**, not a live TOA ingestion pipeline. 
 
 | Dependency | State |
 | --- | --- |
-| [#17](https://github.com/The-Allsparks/ftc-team-analysis/issues/17) authenticated FIRST FTC Events API (canonical competitive) | **Open / blocked** (credentials) — required before any **competitive** corroboration implementation |
+| [#17](https://github.com/The-Allsparks/ftc-team-analysis/issues/17) authenticated FIRST FTC Events API (canonical competitive) | **Client + docs landed** (credential-optional); live production secret path still needs operator secrets + [#2](https://github.com/The-Allsparks/ftc-team-analysis/issues/2) — see [first-api.md](first-api.md) |
 | TOA research / go-no-go / conflict rules | **This document** |
 | Live TOA fetch in `pull:data` or Worker proxy | **Out of scope** (#21) |
 
-**Blocked → ready for competitive corroboration:** After #17 lands and FIRST remains the sole authority for official scores, awards, and rankings, a follow-up may optionally call TOA for soft corroboration and non-competitive enrichment. Media/stream enrichment could be designed earlier, but still needs secrets handling and is **not** part of #21.
+**Blocked → ready for competitive corroboration:** After FIRST API credentials are configured in production so FIRST remains the sole authority for official scores, awards, and rankings ([first-api.md](first-api.md)), a follow-up may optionally call TOA for soft corroboration and non-competitive enrichment. Media/stream enrichment could be designed earlier, but still needs secrets handling and is **not** part of #21.
 
 ## Source hierarchy (explicit)
 
-1. **FIRST / FTC Events (official)** — canonical for official match scores, awards, rankings, alliance results, and other competitive outcomes. Remains canonical whether obtained from public pages (today) or the authenticated API (#17).
+1. **FIRST / FTC Events (official)** — canonical for official match scores, awards, rankings, alliance results, and other competitive outcomes. Remains canonical from public pages by default, or from the authenticated API when configured ([first-api.md](first-api.md) / #17).
 2. **This project’s Nevada seed** — identity-critical roster/history derived from public FTC Events pages (publish-guarded).
 3. **FTCScout** — optional live **community-calculated** stats (OPR, etc.); never official FIRST results.
 4. **The Orange Alliance** — optional **non-canonical** corroboration and enrichment only (media, livestreams, soft cross-checks). **Never overrides FIRST.**
@@ -70,7 +70,7 @@ Unlike Open Alliance’s public `GET /teams/ftc`, TOA’s JSON API is **account-
 | Team identity (number, name, city, region) | Seed source (public pages) | Team keyed by number | Team keyed by `team_key` / number; website field |
 | Media (GitHub, CAD, robot reveal, logos) | Limited / avatars via Scoring | Not primary | **Differentiator** (`/team/.../media`, `/event/.../media`) |
 | Livestream / watch links | Not in our seed | Not primary | **Differentiator** (`/streams`, event streams; match `video_url`) |
-| Auth model | Public pages today; API credentials in #17 | Public REST (proxied) | myTOA API key required |
+| Auth model | Public pages default; optional API credentials ([first-api.md](first-api.md)) | Public REST (proxied) | myTOA API key required |
 
 **Practical niche if we proceed later:** attributed media and stream/video links, plus soft “TOA also shows X” corroboration after #17 — not a second competitive warehouse.
 

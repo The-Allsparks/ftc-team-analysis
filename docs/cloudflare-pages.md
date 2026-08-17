@@ -108,7 +108,7 @@ Until [#85](https://github.com/The-Allsparks/ftc-team-analysis/issues/85) connec
 
 ### Secrets (server-side only)
 
-Future authenticated FIRST API credentials ([#17](https://github.com/The-Allsparks/ftc-team-analysis/issues/17)) must live in **Pages Environment variables / secrets** (Production + Preview) or Worker secrets — never in the SPA bundle or `public/`. Today’s proxies use no secrets; they only forward allowlisted public HTTPS.
+Authenticated FIRST API credentials ([#17](https://github.com/The-Allsparks/ftc-team-analysis/issues/17)) must live in **Pages Environment variables / secrets** (Production + Preview) or Worker secrets — never in the SPA bundle or `public/`. Documented env names: `FIRST_API_USERNAME` / `FIRST_API_TOKEN` ([first-api.md](first-api.md)). Today’s public HTML/REST proxies use no secrets; they only forward allowlisted public HTTPS. A dedicated GET-allowlisted Function that injects Basic auth toward `ftc-api.firstinspires.org` is still a follow-up under [#2](https://github.com/The-Allsparks/ftc-team-analysis/issues/2) / [#38](https://github.com/The-Allsparks/ftc-team-analysis/issues/38).
 
 ## Disable live Functions (static-only)
 

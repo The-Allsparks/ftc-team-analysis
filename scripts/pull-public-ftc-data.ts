@@ -72,6 +72,13 @@ import {
   applyYoutubeVideoEnrichment,
   readYoutubeApiKey,
 } from '../src/lib/youtubeVideos';
+import {
+  FIRST_API_BASE_URL,
+  FIRST_API_INFO_URL,
+  FIRST_API_SOURCE,
+  applyFirstApiCompetitiveEnrichment,
+  readFirstApiCredentials,
+} from '../src/lib/firstEventsApi';
 
 const TEAM_SEARCH_URL = `https://www.firstinspires.org/team-event-search?content=teams&season=${CURRENT_SEASON}&country=United+States&state=NV&programs=FIRST+Tech+Challenge&indices=teams_*`;
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
@@ -99,8 +106,8 @@ const DEFAULT_SOURCES: GeneratedData['sources'] = [
   },
   {
     label: 'FTC Events API Information',
-    url: `${BASE_URL}/services/API`,
-    note: 'The authenticated API remains the better source for complete structured data, but this project is public-only for now.',
+    url: FIRST_API_INFO_URL,
+    note: 'Authenticated FIRST FTC Events API (Basic auth). Opt-in via --enrich-first-api when FIRST_API_USERNAME + FIRST_API_TOKEN are set server-side; API wins for awards/ranks/records when present. Public HTML remains the default/CI canonical path without secrets. See docs/first-api.md.',
   },
   {
     label: 'Open Alliance (FTC team-declared resources)',
@@ -126,16 +133,17 @@ const DEFAULT_SOURCES: GeneratedData['sources'] = [
 
 const DEFAULT_LIMITATIONS: string[] = [
   'FIRST Team/Event Search is used as a registration seed when FTC Events Nevada region pages are unavailable for a season.',
-  'Organization is parsed from the public season sponsor line when available because the authenticated team API is not being used.',
+  'Organization is parsed from the public season sponsor line when available; --enrich-first-api can overlay competitive awards/ranks/records from the authenticated API when credentials are configured (see docs/first-api.md).',
   'Organization strings are also split into typed affiliations (school, sponsors, community/host) with confidence flags; the raw organization text is retained. Ambiguous parses stay unconfirmed/low confidence.',
   'Core season facts support optional per-field evidence. Cross-refresh history is stored in nv-ftc-team-observations.generated.json (append-only side store); the checked-in mega seed omits evidence arrays and the UI derives or joins provenance on read. Organization affiliations remain a parallel model. Social/resource Team.links history is not yet tracked.',
-  'Match-level details are limited to what appears on public team pages. The script stores event participation, ranks, records, playoff summaries, awards, per-event points, and official league RS/rank where visible.',
+  'Match-level details default to what appears on public team pages. With --enrich-first-api and server-side FIRST_API_USERNAME/FIRST_API_TOKEN, official awards, event ranks, and qualification records from the FIRST API replace scraped values when present. Scheduled refreshes leave API enrichment off by default.',
   'External team links are discovered from public FTC On The Web URLs plus a bounded crawl of each team website (homepage, robots/sitemap when present, and common About/Sponsors/Robots/Resources/Contact/Links paths, including Linktree-style hubs). URLs are normalized, checked for liveness, and stored with ownership confidence + evidence. Private student social accounts and personal contact info are filtered out (see docs/privacy.md and docs/link-discovery.md).',
   'Open Alliance FTC team-declared resources (code, CAD, build threads, media, website) can be attached with --enrich-open-alliance via a single public GET to api.theopenalliance.org/teams/ftc. Matching requires an exact team number; OA awards/stats are not ingested as competitive results (see docs/open-alliance.md). Scheduled refreshes leave this off by default.',
   'Game Manual 0 gallery resources can be attached with --enrich-gm0 via a single bounded fetch of gallery.rst. Matching requires an exact leading team number on the gallery heading; name-only headings are rejected. Copyrighted GM0 prose is linked (gallery page + outbound URLs), not copied (see docs/gm0.md). Scheduled refreshes leave this off by default.',
   'Public GitHub repositories can be verified with --enrich-github from URLs already present on Team.links (website discovery, Open Alliance, GM0). Metadata (owner, languages, pushed_at, description hints) is fetched fail-soft via unauthenticated GitHub REST when available. Ownership requires evidence beyond the team number alone — number-only search hits are rejected (see docs/github-repos.md). Scheduled refreshes leave this off by default. Public org/team repos only; no private student-account scraping.',
   'Public YouTube channels, videos, and playlists can be verified with --enrich-youtube from URLs already present on Team.links (website discovery, Open Alliance, GM0). Declared-link verification works without YOUTUBE_API_KEY; optional Data API metadata uses a server-side key only (env / Actions secret — never committed). Ownership requires evidence beyond team name alone — name-only search hits are rejected. Quota exhaustion is recorded as a failed source check (see docs/youtube.md). Scheduled refreshes leave this off by default.',
   'Canonical location/organization identity fields (ISO country/subdivision, internal slugs, curated NCES IDs when uniquely matched) can be attached with --enrich-canonical-ids. Offline normalize + allowlist only — no paid geocoders, no invented external IDs, no student PII (see docs/canonical-identifiers.md). Scheduled refreshes leave this off by default; UI can still derive-on-read.',
+  'Authenticated FIRST FTC Events API competitive enrichment is opt-in with --enrich-first-api. Credentials (FIRST_API_USERNAME / FIRST_API_TOKEN) stay server-side only — never VITE_*, never committed, never in generated JSON. Without credentials the pull records a fail-soft source check and keeps public HTML canonical (see docs/first-api.md).',
 ];
 
 async function syncPublicAssets(): Promise<void> {
@@ -325,6 +333,52 @@ async function enrichYoutubeVideos(teams: Team[]): Promise<SourceCheck> {
     return {
       label: YOUTUBE_SOURCE,
       url: YOUTUBE_API_BASE,
+      checkedAt,
+      ok: false,
+      detail,
+    };
+  }
+}
+
+async function enrichFirstApiCompetitive(teams: Team[]): Promise<SourceCheck> {
+  const checkedAt = new Date().toISOString();
+  const credentials = readFirstApiCredentials(process.env);
+
+  try {
+    const result = await applyFirstApiCompetitiveEnrichment(teams, {
+      credentials,
+      delayMs: credentials ? undefined : 0,
+    });
+    const credsLabel = credentials ? 'present' : 'absent';
+    console.log(
+      `FIRST API: seasonsTouched=${result.seasonsTouched}; awardsReplaced=${result.awardsReplaced};` +
+        ` ranksUpdated=${result.eventsRankUpdated}; recordsUpdated=${result.recordsUpdated};` +
+        ` apiCalls=${result.apiCalls}; credentials=${credsLabel}`,
+    );
+
+    if (!result.result.ok) {
+      return {
+        label: FIRST_API_SOURCE,
+        url: FIRST_API_BASE_URL,
+        checkedAt,
+        ok: false,
+        detail: `state=${result.result.state}; ${result.result.diagnostics}; awardsReplaced=${result.awardsReplaced}; ranksUpdated=${result.eventsRankUpdated}; apiCalls=${result.apiCalls}; credentials=${credsLabel}`,
+      };
+    }
+
+    return {
+      label: FIRST_API_SOURCE,
+      url: FIRST_API_BASE_URL,
+      checkedAt,
+      ok: true,
+      detail: `enrichedTeams=${result.result.data.enrichedTeams}; awardsReplaced=${result.awardsReplaced}; ranksUpdated=${result.eventsRankUpdated}; recordsUpdated=${result.recordsUpdated}; apiCalls=${result.apiCalls}; credentials=${credsLabel}`,
+    };
+  } catch (error) {
+    const detail = error instanceof Error ? error.message : String(error);
+    console.warn(`FIRST API enrichment failed (continuing with public HTML competitive facts): ${detail}`);
+    return {
+      label: FIRST_API_SOURCE,
+      url: FIRST_API_BASE_URL,
       checkedAt,
       ok: false,
       detail,
@@ -523,6 +577,7 @@ async function buildFromNetwork(
   enrichGithub: boolean,
   enrichYoutube: boolean,
   enrichCanonicalIds: boolean,
+  enrichFirstApi: boolean,
 ): Promise<GeneratedData> {
   const seasonsToPull: readonly SeasonId[] = mode === 'current' ? [CURRENT_SEASON] : SUPPORTED_SEASONS;
   const catalog = await pullSeasonCatalog(seasonsToPull);
@@ -578,6 +633,15 @@ async function buildFromNetwork(
     sourceChecks.push(await enrichYoutubeVideos(pulled.teams));
   } else {
     console.log('Skipping YouTube verification (pass --enrich-youtube to enable)');
+  }
+
+  if (enrichFirstApi) {
+    console.log(
+      'Enriching competitive awards/ranks/records from authenticated FIRST FTC Events API (HTML remains when API omits fields)',
+    );
+    sourceChecks.push(await enrichFirstApiCompetitive(pulled.teams));
+  } else {
+    console.log('Skipping FIRST API enrichment (pass --enrich-first-api to enable; requires server-side credentials)');
   }
 
   const generatedAt = new Date().toISOString();
@@ -679,6 +743,7 @@ async function main() {
       args.enrichGithub,
       args.enrichYoutube,
       args.enrichCanonicalIds,
+      args.enrichFirstApi,
     );
   }
 

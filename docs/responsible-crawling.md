@@ -1,13 +1,13 @@
 # Responsible crawling policy
 
-This project refreshes Nevada team data from **public HTTP pages and public APIs** without FIRST API credentials. Operators and contributors should keep traffic modest and avoid hostile scraping patterns.
+This project refreshes Nevada team data from **public HTTP pages and public APIs** by default. Authenticated FIRST FTC Events API enrichment is **opt-in** and requires operator-held secrets (never in CI). Operators and contributors should keep traffic modest and avoid hostile scraping patterns.
 
 ## Principles
 
-1. **Public only** — no credentialed FTC Events API; no bypass of authentication or robots traps.
+1. **Public by default** — CI and scheduled refresh do not require FIRST API credentials. Opt-in `--enrich-first-api` uses Basic auth only when `FIRST_API_USERNAME` / `FIRST_API_TOKEN` are set server-side ([first-api.md](first-api.md)).
 2. **Purpose-limited** — crawl to maintain the Nevada directory/historical record and optional enrichments, not to bulk-archive the web.
-3. **Modest rate** — prefer scheduled Actions and skip optional work on cron when possible.
-4. **Fail soft on enrichment** — Portfolio Lab / FTCScout / avatar failures must not corrupt the identity-critical seed.
+3. **Modest rate** — prefer scheduled Actions and skip optional work on cron when possible; FIRST API client delays between GETs and maps 429 to fail-soft `SourceResult`.
+4. **Fail soft on enrichment** — Portfolio Lab / FTCScout / avatar / FIRST API failures must not corrupt the identity-critical seed.
 5. **No student PII collection** — see [privacy.md](privacy.md).
 
 ## Scheduled refresh defaults
@@ -43,6 +43,10 @@ GitHub enrichment is **opt-in** (`--enrich-github`) and defaults off on schedule
 ## YouTube verification
 
 YouTube enrichment is **opt-in** (`--enrich-youtube`) and defaults off on scheduled Actions. When enabled it verifies YouTube URLs already on team links (website / OA / GM0). Declared-link verification works without an API key; optional Data API metadata uses server-side `YOUTUBE_API_KEY` only (never committed). Name-only matches are never auto-accepted. Prefer verifying known URLs over search (search costs 100 quota units). See [youtube.md](youtube.md).
+
+## Authenticated FIRST FTC Events API
+
+FIRST API enrichment is **opt-in** (`--enrich-first-api`) and defaults off on scheduled Actions / CI. When enabled with server-side `FIRST_API_USERNAME` + `FIRST_API_TOKEN`, allowlisted GETs to `ftc-api.firstinspires.org` prefer official awards/ranks/records over HTML. Without credentials the client does not call the live API. See [first-api.md](first-api.md).
 
 ## The Orange Alliance
 
