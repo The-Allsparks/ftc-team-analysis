@@ -14,6 +14,7 @@ const MAX_PRIMARY_JS_GZIP_BYTES = 200 * 1024;
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const assetsDir = resolve(root, 'dist/assets');
 const publicSeed = resolve(root, 'dist/data/nv-ftc-teams.generated.json');
+const publicManifest = resolve(root, 'dist/data/manifest.json');
 const canonicalSeed = resolve(root, 'src/data/nv-ftc-teams.generated.json');
 
 const seedJson = JSON.parse(await readFile(canonicalSeed, 'utf8')) as { generatedAt?: string };
@@ -61,6 +62,12 @@ try {
   await stat(publicSeed);
 } catch {
   failures.push(`Missing static seed asset at dist/data/nv-ftc-teams.generated.json.`);
+}
+
+try {
+  await stat(publicManifest);
+} catch {
+  failures.push(`Missing snapshot manifest at dist/data/manifest.json.`);
 }
 
 if (failures.length > 0) {

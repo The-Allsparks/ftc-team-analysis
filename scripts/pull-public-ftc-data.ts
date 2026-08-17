@@ -3,6 +3,8 @@ import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { buildDataChangeReport, formatDataChangeReportMarkdown } from '../src/data/dataChangeReport';
 import { assertSafeToPublishGeneratedData } from '../src/data/publishGuard';
+import { parseGeneratedSeed } from '../src/data/generatedSeedSchema';
+import { writeSnapshotTree } from './snapshotTreeWrite';
 import { parsePullArgs, PULL_DATA_HELP } from '../src/data/pullArgs';
 import {
   GeneratedData,
@@ -142,6 +144,18 @@ async function syncPublicAssets(): Promise<void> {
   console.log(`Synced public seed to ${PUBLIC_SEED_PATH}`);
   await copyFile(OBSERVATIONS_PATH, PUBLIC_OBSERVATIONS_PATH);
   console.log(`Synced public observations to ${PUBLIC_OBSERVATIONS_PATH}`);
+
+  const raw = JSON.parse(await readFile(GENERATED_PATH, 'utf8')) as unknown;
+  const parsed = parseGeneratedSeed(raw);
+  if (!parsed.ok) {
+    throw new Error(
+      `Refusing snapshot tree sync: invalid mega-seed (${parsed.issues.map((i) => i.message).join('; ')})`,
+    );
+  }
+  const built = await writeSnapshotTree(dirname(PUBLIC_SEED_PATH), parsed.data, { previous: raw });
+  console.log(
+    `Wrote snapshot tree (${built.fileCount} files) for ${built.manifest.teamCount} teams.`,
+  );
 }
 
 async function loadPreviousObservations(regionCode: string): Promise<TeamObservationsData> {

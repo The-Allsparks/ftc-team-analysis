@@ -1,7 +1,7 @@
 node_modules
 dist
-public/data/nv-ftc-teams.generated.json
-public/data/nv-ftc-team-observations.generated.json
+public/data/**
+!public/data/.gitkeep
 .tools
 .env
 .DS_Store

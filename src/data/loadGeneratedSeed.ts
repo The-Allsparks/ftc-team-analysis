@@ -1,7 +1,7 @@
 import { GeneratedData } from './schema';
 import { parseGeneratedSeed, SeedIssue } from './generatedSeedSchema';
 
-/** Transitional static path; #38 may relocate under public/data/regions/. */
+/** Transitional mega-seed path; split tree lives alongside under /data/ (see docs/snapshot-tree.md). */
 export const GENERATED_SEED_URL = '/data/nv-ftc-teams.generated.json';
 
 export type LoadGeneratedSeedResult =

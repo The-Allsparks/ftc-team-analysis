@@ -1,15 +1,25 @@
-import { readFileSync } from 'node:fs';
-import { dirname, resolve } from 'node:path';
+import { readFileSync, readdirSync, existsSync } from 'node:fs';
+import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { GENERATED_DATA_SCHEMA_VERSION, parseGeneratedSeed } from '../src/data/generatedSeedSchema';
 import { parseTeamObservations } from '../src/data/teamObservationsSchema';
 import { TEAM_OBSERVATIONS_SCHEMA_VERSION } from '../src/lib/teamObservations';
+import { writeSnapshotTree } from './snapshotTreeWrite';
+import {
+  parseRegionSeasonSummary,
+  parseSnapshotManifest,
+  parseSnapshotSourceHealth,
+  parseTeamSeasonSnapshot,
+  parseTeamSnapshotIndex,
+} from '../src/data/snapshotTreeSchema';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const seedPath = resolve(root, 'src/data/nv-ftc-teams.generated.json');
 const observationsPath = resolve(root, 'src/data/nv-ftc-team-observations.generated.json');
+const publicDataDir = resolve(root, 'public/data');
 
-const seedResult = parseGeneratedSeed(JSON.parse(readFileSync(seedPath, 'utf8')));
+const seedRaw = JSON.parse(readFileSync(seedPath, 'utf8')) as unknown;
+const seedResult = parseGeneratedSeed(seedRaw);
 
 if (!seedResult.ok) {
   console.error('Generated seed envelope is invalid:');
@@ -58,3 +68,112 @@ try {
     throw error;
   }
 }
+
+const built = await writeSnapshotTree(publicDataDir, seedResult.data, { previous: seedRaw });
+console.log(`OK: regenerated snapshot tree (${built.fileCount} files) for validation`);
+
+function readJson(path: string): unknown {
+  return JSON.parse(readFileSync(path, 'utf8')) as unknown;
+}
+
+function failIssues(label: string, path: string, issues: { path: string; message: string }[]): never {
+  console.error(`${label} invalid (${path}):`);
+  for (const issue of issues) {
+    console.error(`  ${issue.path}: ${issue.message}`);
+  }
+  process.exit(1);
+}
+
+const manifestPath = resolve(publicDataDir, 'manifest.json');
+const manifestResult = parseSnapshotManifest(readJson(manifestPath));
+if (!manifestResult.ok) {
+  failIssues('manifest.json', manifestPath, manifestResult.issues);
+}
+
+const healthPath = resolve(publicDataDir, 'source-health.json');
+const healthResult = parseSnapshotSourceHealth(readJson(healthPath));
+if (!healthResult.ok) {
+  failIssues('source-health.json', healthPath, healthResult.issues);
+}
+
+if (manifestResult.data.teamCount !== seedResult.data.teams.length) {
+  console.error(
+    `manifest teamCount ${manifestResult.data.teamCount} does not match seed teams ${seedResult.data.teams.length}`,
+  );
+  process.exit(1);
+}
+
+if (manifestResult.data.generatedAt !== seedResult.data.generatedAt) {
+  console.error(
+    `manifest generatedAt ${manifestResult.data.generatedAt} does not match seed ${seedResult.data.generatedAt}`,
+  );
+  process.exit(1);
+}
+
+let regionFiles = 0;
+for (const season of manifestResult.data.seasons) {
+  const summaryPath = resolve(
+    publicDataDir,
+    'regions',
+    manifestResult.data.regionCode,
+    String(season),
+    'summary.json',
+  );
+  if (!existsSync(summaryPath)) {
+    console.error(`Missing region summary: ${summaryPath}`);
+    process.exit(1);
+  }
+  const summary = parseRegionSeasonSummary(readJson(summaryPath));
+  if (!summary.ok) {
+    failIssues('region summary', summaryPath, summary.issues);
+  }
+  regionFiles += 1;
+}
+
+let teamIndexFiles = 0;
+let teamSeasonFiles = 0;
+for (const entry of manifestResult.data.teams) {
+  const indexPath = resolve(publicDataDir, 'teams', String(entry.number), 'index.json');
+  if (!existsSync(indexPath)) {
+    console.error(`Missing team index: ${indexPath}`);
+    process.exit(1);
+  }
+  const index = parseTeamSnapshotIndex(readJson(indexPath));
+  if (!index.ok) {
+    failIssues('team index', indexPath, index.issues);
+  }
+  teamIndexFiles += 1;
+
+  for (const season of index.data.seasons) {
+    const seasonPath = resolve(publicDataDir, 'teams', String(entry.number), `${season}.json`);
+    if (!existsSync(seasonPath)) {
+      console.error(`Missing team season file: ${seasonPath}`);
+      process.exit(1);
+    }
+    const seasonFile = parseTeamSeasonSnapshot(readJson(seasonPath));
+    if (!seasonFile.ok) {
+      failIssues('team season', seasonPath, seasonFile.issues);
+    }
+    teamSeasonFiles += 1;
+  }
+}
+
+const teamsRoot = resolve(publicDataDir, 'teams');
+if (existsSync(teamsRoot)) {
+  const onDisk = new Set(
+    readdirSync(teamsRoot, { withFileTypes: true })
+      .filter((entry) => entry.isDirectory())
+      .map((entry) => entry.name),
+  );
+  const expected = new Set(manifestResult.data.teams.map((team) => String(team.number)));
+  for (const name of onDisk) {
+    if (!expected.has(name)) {
+      console.error(`Unexpected team directory not listed in manifest: ${join(teamsRoot, name)}`);
+      process.exit(1);
+    }
+  }
+}
+
+console.log(
+  `OK: snapshot tree (manifest + source-health + ${regionFiles} region summaries + ${teamIndexFiles} team indexes + ${teamSeasonFiles} team-season files)`,
+);
