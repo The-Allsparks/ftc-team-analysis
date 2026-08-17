@@ -33,6 +33,14 @@ const ftcScoringProxy = {
   },
 };
 
+const openAllianceProxy = {
+  '/open-alliance-proxy': {
+    target: 'https://api.theopenalliance.org',
+    changeOrigin: true,
+    rewrite: (path: string) => path.replace(/^\/open-alliance-proxy/, ''),
+  },
+};
+
 export default defineConfig({
   plugins: [react()],
   server: {
@@ -41,6 +49,7 @@ export default defineConfig({
       ...portfolioLabProxy,
       ...ftcScoutProxy,
       ...ftcScoringProxy,
+      ...openAllianceProxy,
     },
   },
   preview: {
@@ -49,6 +58,7 @@ export default defineConfig({
       ...portfolioLabProxy,
       ...ftcScoutProxy,
       ...ftcScoringProxy,
+      ...openAllianceProxy,
     },
   },
 });

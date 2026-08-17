@@ -40,10 +40,12 @@ describe('edgeCachePolicy', () => {
   it('classifies proxy upstreams conservatively by prefix and season', () => {
     const ftc = LIVE_PROXY_ROUTES.find((route) => route.prefix === '/ftc-proxy')!;
     const scout = LIVE_PROXY_ROUTES.find((route) => route.prefix === '/ftcscout-proxy')!;
+    const openAlliance = LIVE_PROXY_ROUTES.find((route) => route.prefix === '/open-alliance-proxy')!;
 
     expect(classifyProxyUpstream(ftc, `/${CURRENT_SEASON}/region/USNV`)).toBe('ftc-events-current');
     expect(classifyProxyUpstream(ftc, '/2019/region/USNV')).toBe('ftc-events-historical');
     expect(classifyProxyUpstream(scout, '/api/team/1')).toBe('ftcscout');
+    expect(classifyProxyUpstream(openAlliance, '/teams/ftc')).toBe('open-alliance');
     expect(parseSeasonFromProxyPath('/2024/team/1')).toBe(2024);
   });
 
@@ -54,6 +56,9 @@ describe('edgeCachePolicy', () => {
     );
     expect(proxyResponseCacheControl(ftc, '/2019/region/USNV', 200)).toBe('public, max-age=3600');
     expect(proxyResponseCacheControl(ftc, `/${CURRENT_SEASON}/region/USNV`, 502)).toBe('no-store');
+
+    const openAlliance = LIVE_PROXY_ROUTES.find((route) => route.prefix === '/open-alliance-proxy')!;
+    expect(proxyResponseCacheControl(openAlliance, '/teams/ftc', 200)).toBe('public, max-age=300');
   });
 
   it('keeps public/_headers in sync with historical seasons (excluding CURRENT_SEASON)', () => {

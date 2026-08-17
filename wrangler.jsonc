@@ -1,6 +1,6 @@
 /**
  * Cloudflare Workers config for the FTC Team Analysis SPA + live-data proxy.
- * Static assets are served from Vite `dist/`. Only the four allowlisted proxy
+ * Static assets are served from Vite `dist/`. Only the allowlisted live proxy
  * prefixes invoke the Worker script (keeps normal page views on the free
  * static-asset path).
  */
@@ -27,6 +27,8 @@
       "/portfolio-lab-proxy/*",
       "/ftc-scoring-proxy",
       "/ftc-scoring-proxy/*",
+      "/open-alliance-proxy",
+      "/open-alliance-proxy/*",
       "/ftc-api-proxy",
       "/ftc-api-proxy/*"
     ]

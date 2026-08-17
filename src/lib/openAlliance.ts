@@ -1,4 +1,5 @@
-import type { Team, TeamLink } from '../data/schema';
+import type { FieldEvidence, SeasonId, Team, TeamLink } from '../data/schema';
+import { createEvidence } from './fieldEvidence';
 import { classifyTeamLink, linkPriority } from './ftcParsers';
 import {
   isAllowedPublicTeamLink,
@@ -12,6 +13,8 @@ export const OPEN_ALLIANCE_API_BASE = 'https://api.theopenalliance.org';
 export const OPEN_ALLIANCE_FTC_LISTING_URL = 'https://theopenalliance.org/ftc/teams';
 export const OPEN_ALLIANCE_SOURCE = 'Open Alliance (team-declared)';
 export const OPEN_ALLIANCE_USER_AGENT = 'Nevada FTC Team Explorer Open Alliance enrichment';
+export const OPEN_ALLIANCE_PROXY_PREFIX = '/open-alliance-proxy';
+export const OPEN_ALLIANCE_EVIDENCE_SOURCE = 'open-alliance';
 
 /**
  * Team-declared resource fields from `GET /teams/ftc` (FTCOA-API `getTeamList`).
@@ -282,6 +285,79 @@ export function applyOpenAllianceEnrichment(
   }
 
   return { matchedTeams, linksAdded, skippedNonExact };
+}
+
+export function openAllianceListingForTeam(
+  listings: OpenAllianceFtcTeam[],
+  teamNumber: number,
+): OpenAllianceFtcTeam | null {
+  return listings.find((row) => parseOpenAllianceTeamNumber(row.TeamNumber) === teamNumber) ?? null;
+}
+
+/**
+ * Identity observations from a team-declared Open Alliance listing.
+ * Does not overwrite HTML season scalars — corroborating votes only.
+ */
+export function evidenceFromOpenAllianceListing(
+  listing: OpenAllianceFtcTeam,
+  season: SeasonId,
+  retrievedAt: string | null,
+  teamNumber: number,
+): FieldEvidence[] {
+  const sourceUrl = openAllianceTeamPageUrl(teamNumber);
+  const rows: FieldEvidence[] = [];
+
+  const add = (field: FieldEvidence['field'], value: string | null | undefined, extractionMethod: string) => {
+    if (value == null) {
+      return;
+    }
+    const trimmed = value.trim();
+    if (!trimmed) {
+      return;
+    }
+    rows.push(
+      createEvidence({
+        field,
+        value: trimmed,
+        kind: 'observed',
+        sourceType: OPEN_ALLIANCE_EVIDENCE_SOURCE,
+        sourceUrl,
+        retrievedAt,
+        observedSeason: season,
+        extractionMethod,
+        confidence: 'high',
+        rawValue: trimmed,
+      }),
+    );
+  };
+
+  add('name', listing.TeamName, 'open-alliance-team-name');
+  add('location', listing.Location, 'open-alliance-location');
+  add(
+    'website',
+    typeof listing.TeamWebsite === 'string' ? normalizeLinkUrl(listing.TeamWebsite) : listing.TeamWebsite,
+    'open-alliance-website',
+  );
+
+  return rows;
+}
+
+export async function fetchOpenAllianceFtcTeamListViaProxy(options?: {
+  fetchImpl?: typeof fetch;
+  signal?: AbortSignal;
+}): Promise<{ listings: OpenAllianceFtcTeam[]; skippedNonExact: number }> {
+  const fetchImpl = options?.fetchImpl ?? fetch;
+  const response = await fetchImpl(`${OPEN_ALLIANCE_PROXY_PREFIX}/teams/ftc`, {
+    headers: { Accept: 'application/json' },
+    signal: options?.signal,
+  });
+
+  if (!response.ok) {
+    throw new Error(`Open Alliance proxy /teams/ftc failed with HTTP ${response.status}`);
+  }
+
+  const raw: unknown = await response.json();
+  return parseOpenAllianceFtcListings(raw);
 }
 
 export async function fetchOpenAllianceFtcTeamList(options?: {

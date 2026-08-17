@@ -7,14 +7,14 @@ High-level layout of Nevada FTC Team Analysis. Hosting runbooks (Worker today, P
 ```text
 Browser (React/Vite SPA)
     │  static assets + /data/*.json
-    │  /ftc-proxy, /ftcscout-proxy, /portfolio-lab-proxy, /ftc-scoring-proxy
+    │  /ftc-proxy, /ftcscout-proxy, /portfolio-lab-proxy, /open-alliance-proxy, /ftc-scoring-proxy
     │  /ftc-api-proxy  (FIRST API; Basic auth from server env only)
     ▼
 Cloudflare Worker (worker/proxy.ts)     Pages Functions (functions/)     Local Vite dev proxies
     │  shared src/lib/liveProxy.ts — GET/HEAD only, fixed public upstream hosts
     │  src/lib/firstApiProxy.ts — GET/HEAD allowlisted API paths + env Basic auth
     ▼
-FTC Events / FTCScout / Portfolio Lab / FTC Scoring (public HTTP)
+FTC Events / FTCScout / Portfolio Lab / Open Alliance / FTC Scoring (public HTTP)
 FTC Events API (ftc-api.firstinspires.org) when FIRST_API_* secrets are set
 ```
 
@@ -38,12 +38,12 @@ FTC Events API (ftc-api.firstinspires.org) when FIRST_API_* secrets are set
 
 ### Static-first data loading (#88)
 
-Normal browsing prefers static `/data` snapshots. Live proxy prefixes (`/ftc-proxy`, `/ftcscout-proxy`, `/portfolio-lab-proxy`, `/ftc-scoring-proxy`) are used when the user refreshes, when a snapshot slice is missing, when a season has no static rows, or when switching to a region without a tree. If live proxies fail, the validated snapshot remains on screen with clear SourceResult / health messaging (#7 / #30).
+Normal browsing prefers static `/data` snapshots. Live proxy prefixes (`/ftc-proxy`, `/ftcscout-proxy`, `/portfolio-lab-proxy`, `/open-alliance-proxy`, `/ftc-scoring-proxy`) are used when the user refreshes, when a snapshot slice is missing, when a season has no static rows, or when switching to a region without a tree. If live proxies fail, the validated snapshot remains on screen with clear SourceResult / health messaging (#7 / #30).
 
 ## Trust boundaries
 
 - **Identity-critical path:** public FTC Events–backed seed + runtime schema validation; fail closed on broken envelopes. When operators configure `FIRST_API_USERNAME` / `FIRST_API_TOKEN` and pass `--enrich-first-api`, authenticated FIRST API competitive fields (awards / ranks / qualification records) are preferred over HTML for those facts ([first-api.md](first-api.md) / #17). CI and scheduled refresh stay public-page-only without secrets.
-- **Optional enrichment:** FTCScout, Portfolio Lab, avatars — failures surface as availability states, not empty “success” caches.
+- **Optional enrichment:** FTCScout, Portfolio Lab, Open Alliance, avatars — failures surface as availability states, not empty “success” caches. Live Open Alliance listings and season-matched Portfolio Lab rows also vote on identity chips (corroboration only; they do not overwrite HTML season scalars).
 - **Credentialed FIRST API:** Node `--enrich-first-api` plus Worker/Pages `/ftc-api-proxy` (secrets from env, never the SPA). Without secrets the proxy returns 503 and does not call FIRST. Live canonical seed enrichment still needs operator-held `FIRST_API_USERNAME` / `FIRST_API_TOKEN`.
 - **The Orange Alliance:** researched only (#21); **not** wired. Future role is non-canonical corroboration/enrichment; **FIRST remains canonical** for official results. See [orange-alliance.md](orange-alliance.md) and source hierarchy in [attribution.md](attribution.md).
 - **Internet Archive / Wayback:** researched only (#25); **not** wired. Future role is optional reconstruction of **archived** public team website facts; never treated as current live truth. See [internet-archive.md](internet-archive.md).
