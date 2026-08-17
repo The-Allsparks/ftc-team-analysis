@@ -13,7 +13,7 @@ const seasonIdSchema = v.picklist(SUPPORTED_SEASONS);
 const teamTypeSchema = v.picklist(['school', 'non-school', 'unknown']);
 const nullableString = v.nullable(v.string());
 
-/** Intended edge cache TTLs (seconds). Header wiring may land in #89. */
+/** Intended edge cache TTLs (seconds). Wired in public/_headers + docs/edge-cache.md (#89). */
 export const SNAPSHOT_CACHE_TTL = {
   /** Immutable historical season slices. */
   historicalMaxAgeSeconds: 30 * 24 * 60 * 60,

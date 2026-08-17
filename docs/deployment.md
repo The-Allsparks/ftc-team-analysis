@@ -56,7 +56,7 @@ After a successful production deploy, the free `*.pages.dev` hostname must serve
 
 Client navigation uses hash routes (`#health`, etc.), so deep links do not require a separate SPA rewrite for normal use. Vite still emits a standard SPA `index.html`.
 
-Static response headers for caching basics live in [`public/_headers`](../public/_headers) (copied into `dist/` by Vite; honored by Pages). Intended differentiated TTLs for historical vs current snapshot slices are documented in [snapshot-tree.md](snapshot-tree.md); path-specific header wiring may land with [#89](https://github.com/The-Allsparks/ftc-team-analysis/issues/89).
+Static response headers for caching live in [`public/_headers`](../public/_headers) (copied into `dist/` by Vite; honored by Pages). Differentiated TTLs for historical vs current snapshot slices, proxy response headers, and throttling notes: [edge-cache.md](edge-cache.md) ([#89](https://github.com/The-Allsparks/ftc-team-analysis/issues/89)). Tree layout TTLs: [snapshot-tree.md](snapshot-tree.md).
 
 ### Operator checklist — create / connect the Pages project
 
@@ -107,6 +107,7 @@ The data-refresh workflow never deploys Cloudflare. Merging a data PR alone is e
 
 - [architecture.md](architecture.md)
 - [snapshot-tree.md](snapshot-tree.md) (publication vs deploy)
+- [edge-cache.md](edge-cache.md) (static + proxy cache / throttle policy → [#89](https://github.com/The-Allsparks/ftc-team-analysis/issues/89))
 - [ingestion.md](ingestion.md) (pull + guards + refresh workflow)
 - [dependency-policy.md](dependency-policy.md) (Node / `.nvmrc`)
 - README “Production” section

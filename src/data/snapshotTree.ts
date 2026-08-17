@@ -155,7 +155,7 @@ function buildManifest(
     cachePolicy: {
       ...SNAPSHOT_CACHE_TTL,
       note:
-        'Intended TTLs for #38/#89. Historical season JSON may use long immutable caching; current season, manifest, and mega-seed stay short. public/_headers currently applies a uniform short TTL to /data/* until differentiated headers land.',
+        'TTLs for #38/#89. Historical season JSON uses long immutable caching in public/_headers; current season, manifest, mega-seed, and team index stay short. See docs/edge-cache.md.',
     },
   };
 }

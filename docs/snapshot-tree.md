@@ -75,15 +75,15 @@ Valibot: `src/data/snapshotTreeSchema.ts` (`SNAPSHOT_TREE_SCHEMA_VERSION = 1`).
 
 ## Intended cache TTLs
 
-Header differentiation may land with [#89](https://github.com/The-Allsparks/ftc-team-analysis/issues/89). Until then, `public/_headers` applies a **uniform short** `Cache-Control` to all `/data/*`.
+Policy and path-specific `Cache-Control` live in [edge-cache.md](edge-cache.md) and [`public/_headers`](../public/_headers) ([#89](https://github.com/The-Allsparks/ftc-team-analysis/issues/89)). Classification helpers: `src/lib/edgeCachePolicy.ts`. Values are also embedded in `manifest.cachePolicy`.
 
 | Asset class | Intended `max-age` | Notes |
 | --- | ---: | --- |
-| Historical season summaries / team-season JSON | **30 days** (`2592000`) | Treat as immutable after season close |
-| Current season slices, `manifest.json`, `source-health.json` | **5 minutes** (`300`) | Align with refresh cadence |
-| Mega-seed + observations (transition) | **5 minutes** (`300`) | Matches today's `/data/*` header |
+| Historical season summaries / team-season JSON | **30 days** (`2592000`) | Long immutable headers for closed seasons |
+| Current season slices, `manifest.json`, `source-health.json`, team `index.json` | **5 minutes** (`300`) | Align with refresh cadence + SWR |
+| Mega-seed + observations (transition) | **5 minutes** (`300`) | Same short class as current |
 
-These values are embedded in `manifest.cachePolicy` for consumers and docs; do not assume edge headers already differ by path.
+**Quota reminder:** normal browsing must hit these static files, not cached Functions — see [edge-cache.md](edge-cache.md).
 
 ## Publish guard
 
@@ -120,6 +120,7 @@ Degraded mode keeps a valid directory snapshot on screen and surfaces SourceResu
 ## Related
 
 - [architecture.md](architecture.md) — system layout (static-first note)
+- [edge-cache.md](edge-cache.md) — static + proxy Cache-Control / throttle policy (#89)
 - [ingestion.md](ingestion.md) — pull + guards + data-refresh (#90)
 - [deployment.md](deployment.md) — Pages/`/data` serving; snapshot vs app deploy
 - App loader: #88 (this document)

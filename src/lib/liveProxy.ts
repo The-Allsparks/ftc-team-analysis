@@ -1,7 +1,12 @@
 /**
  * Production live-data proxy routes (same prefixes as Vite `server.proxy`).
  * Only these fixed upstream hosts are allowed — never browser-supplied destinations.
+ *
+ * Successful responses set Cache-Control per docs/edge-cache.md (#89). This reduces
+ * browser/upstream repeat load; it does not make Function invocations free of quota.
  */
+
+import { proxyResponseCacheControl } from './edgeCachePolicy';
 
 export const LIVE_PROXY_ROUTES = [
   { prefix: '/ftc-proxy', targetOrigin: 'https://ftc-events.firstinspires.org' },
@@ -90,7 +95,10 @@ export async function proxyLiveUpstream(
   timeoutMs = LIVE_PROXY_TIMEOUT_MS,
 ): Promise<Response> {
   if (!LIVE_PROXY_ALLOWED_METHODS.has(request.method.toUpperCase())) {
-    return new Response(LIVE_PROXY_BAD_REQUEST, { status: 405 });
+    return new Response(LIVE_PROXY_BAD_REQUEST, {
+      status: 405,
+      headers: { 'Cache-Control': 'no-store' },
+    });
   }
 
   const controller = new AbortController();
@@ -104,16 +112,28 @@ export async function proxyLiveUpstream(
       signal: controller.signal,
     });
 
+    const headers = filterResponseHeaders(upstreamResponse.headers);
+    headers.set(
+      'Cache-Control',
+      proxyResponseCacheControl(resolved.route, resolved.upstreamUrl.pathname, upstreamResponse.status),
+    );
+
     return new Response(upstreamResponse.body, {
       status: upstreamResponse.status,
       statusText: upstreamResponse.statusText,
-      headers: filterResponseHeaders(upstreamResponse.headers),
+      headers,
     });
   } catch (error) {
     if (error instanceof Error && error.name === 'AbortError') {
-      return new Response(LIVE_PROXY_UPSTREAM_TIMEOUT, { status: 504 });
+      return new Response(LIVE_PROXY_UPSTREAM_TIMEOUT, {
+        status: 504,
+        headers: { 'Cache-Control': 'no-store' },
+      });
     }
-    return new Response(LIVE_PROXY_UPSTREAM_UNAVAILABLE, { status: 502 });
+    return new Response(LIVE_PROXY_UPSTREAM_UNAVAILABLE, {
+      status: 502,
+      headers: { 'Cache-Control': 'no-store' },
+    });
   } finally {
     clearTimeout(timer);
   }

@@ -72,10 +72,33 @@ describe('proxyLiveUpstream', () => {
     const response = await proxyLiveUpstream(request, resolved!, fetchImpl as typeof fetch);
     expect(response.status).toBe(200);
     expect(await response.text()).toBe('ok');
+    expect(response.headers.get('Cache-Control')).toBe('public, max-age=3600');
     expect(fetchImpl).toHaveBeenCalledWith(
       'https://ftc-events.firstinspires.org/2025/team/1',
       expect.objectContaining({ method: 'GET' }),
     );
+  });
+
+  it('sets short Cache-Control for current-season FTC Events and no-store on upstream errors', async () => {
+    const resolved = resolveLiveProxyRequest('/ftc-proxy/2026/region/USNV');
+    expect(resolved).not.toBeNull();
+
+    const ok = await proxyLiveUpstream(
+      new Request('https://app.example/ftc-proxy/2026/region/USNV'),
+      resolved!,
+      vi.fn(async () => new Response('ok', { status: 200 })) as unknown as typeof fetch,
+    );
+    expect(ok.headers.get('Cache-Control')).toBe('public, max-age=60');
+
+    const failed = await proxyLiveUpstream(
+      new Request('https://app.example/ftc-proxy/2026/region/USNV'),
+      resolved!,
+      vi.fn(async () => {
+        throw new Error('boom');
+      }) as unknown as typeof fetch,
+    );
+    expect(failed.status).toBe(502);
+    expect(failed.headers.get('Cache-Control')).toBe('no-store');
   });
 
   it('rejects non-GET/HEAD methods', async () => {

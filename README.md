@@ -17,6 +17,7 @@ Built and maintained by [The Allsparks](https://www.theallsparks.org/). Licensed
 | [docs/architecture.md](docs/architecture.md) | System layout |
 | [docs/ingestion.md](docs/ingestion.md) | Seed pull and publish guards |
 | [docs/snapshot-tree.md](docs/snapshot-tree.md) | Static manifest / region / team snapshot tree (#87) |
+| [docs/edge-cache.md](docs/edge-cache.md) | Edge Cache-Control + live-refresh throttle policy (#89) |
 | [docs/deployment.md](docs/deployment.md) | Deploy overview (Worker today; Pages target + operator checklist → [#38](https://github.com/The-Allsparks/ftc-team-analysis/issues/38) / [#85](https://github.com/The-Allsparks/ftc-team-analysis/issues/85)) |
 | [docs/responsible-crawling.md](docs/responsible-crawling.md) | Crawling / refresh traffic policy |
 | [docs/link-discovery.md](docs/link-discovery.md) | Website/social link discovery, ownership confidence, privacy filters |

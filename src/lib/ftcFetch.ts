@@ -1,3 +1,4 @@
+import { coalesceAsync } from './liveRefreshGuard';
 import { HttpStatusError } from './sourceResult';
 
 const FTC_PROXY_PREFIX = '/ftc-proxy';
@@ -7,7 +8,7 @@ export function toFtcProxyUrl(path: string): string {
   return `${FTC_PROXY_PREFIX}${normalized}`;
 }
 
-export async function fetchFtcHtml(path: string, attempt = 1): Promise<string> {
+async function fetchFtcHtmlOnce(path: string, attempt: number): Promise<string> {
   let response: Response;
 
   try {
@@ -22,7 +23,7 @@ export async function fetchFtcHtml(path: string, attempt = 1): Promise<string> {
 
   if (response.status === 429 && attempt < 4) {
     await new Promise((resolve) => setTimeout(resolve, attempt * 1500));
-    return fetchFtcHtml(path, attempt + 1);
+    return fetchFtcHtmlOnce(path, attempt + 1);
   }
 
   if (!response.ok) {
@@ -32,7 +33,12 @@ export async function fetchFtcHtml(path: string, attempt = 1): Promise<string> {
   return response.text();
 }
 
-export async function fetchFtcOk(path: string, attempt = 1): Promise<boolean> {
+/** Coalesce identical in-flight GETs so parallel refresh paths share one proxy call (#89). */
+export async function fetchFtcHtml(path: string, attempt = 1): Promise<string> {
+  return coalesceAsync(`ftc-html:${path}`, () => fetchFtcHtmlOnce(path, attempt));
+}
+
+async function fetchFtcOkOnce(path: string, attempt: number): Promise<boolean> {
   try {
     const response = await fetch(toFtcProxyUrl(path), {
       method: 'HEAD',
@@ -43,13 +49,17 @@ export async function fetchFtcOk(path: string, attempt = 1): Promise<boolean> {
 
     if (response.status === 429 && attempt < 4) {
       await new Promise((resolve) => setTimeout(resolve, attempt * 1500));
-      return fetchFtcOk(path, attempt + 1);
+      return fetchFtcOkOnce(path, attempt + 1);
     }
 
     return response.ok;
   } catch {
     return false;
   }
+}
+
+export async function fetchFtcOk(path: string, attempt = 1): Promise<boolean> {
+  return coalesceAsync(`ftc-head:${path}`, () => fetchFtcOkOnce(path, attempt));
 }
 
 export function isLiveFetchAvailable(): boolean {
