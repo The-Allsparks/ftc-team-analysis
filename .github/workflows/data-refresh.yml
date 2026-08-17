@@ -89,7 +89,7 @@ jobs:
           fi
           npm run pull:data -- "${ARGS[@]}"
 
-      - name: Validate generated seed
+      - name: Validate seed, observations, and snapshot tree
         run: npm run validate:data
 
       - name: Upload refresh artifacts
@@ -99,21 +99,41 @@ jobs:
           name: data-refresh-${{ steps.opts.outputs.mode }}-${{ github.run_id }}
           path: |
             data-refresh-report.md
+            snapshot-tree-report.md
             src/data/nv-ftc-teams.generated.json
+            src/data/nv-ftc-team-observations.generated.json
+            public/data/manifest.json
+            public/data/source-health.json
+            public/data/regions/**
           if-no-files-found: warn
 
-      - name: Detect seed changes
+      - name: Detect snapshot changes
         id: changes
         shell: bash
         run: |
           set -euo pipefail
-          if git diff --quiet -- src/data/nv-ftc-teams.generated.json; then
-            echo "changed=false" >> "$GITHUB_OUTPUT"
-            echo "No seed changes."
-          else
+          SEED_PATH="src/data/nv-ftc-teams.generated.json"
+          OBS_PATH="src/data/nv-ftc-team-observations.generated.json"
+          CHANGED=false
+
+          if ! git diff --quiet -- "$SEED_PATH"; then
+            CHANGED=true
+            echo "Mega-seed changed."
+            git diff --stat -- "$SEED_PATH"
+          fi
+
+          if [ -f "$OBS_PATH" ] && ! git diff --quiet -- "$OBS_PATH"; then
+            CHANGED=true
+            echo "Observations side store changed."
+            git diff --stat -- "$OBS_PATH"
+          fi
+
+          if [ "$CHANGED" = "true" ]; then
             echo "changed=true" >> "$GITHUB_OUTPUT"
-            echo "Seed files changed."
-            git diff --stat -- src/data/nv-ftc-teams.generated.json
+            echo "Checked-in snapshot inputs changed (tree will regenerate on next build)."
+          else
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "No seed/observations changes."
           fi
 
       - name: Prepare pull request body
@@ -124,13 +144,27 @@ jobs:
           {
             echo "Automated data refresh (\`mode=${{ steps.opts.outputs.mode }}\`)."
             echo
+            echo "## Snapshot pipeline (#90)"
+            echo
+            echo "- \`pull:data\` refreshed the mega-seed (+ observations) and emitted the #87 snapshot tree under \`public/data/\`."
+            echo "- \`validate:data\` re-validated the seed, observations, manifest, and tree files (publish guard still blocks empty/drop publishes)."
+            echo "- This PR commits **checked-in** inputs only (\`nv-ftc-teams.generated.json\` + \`nv-ftc-team-observations.generated.json\`)."
+            echo "- The split tree remains **gitignored**; Pages/Worker \`npm run build\` (\`sync:data\`) regenerates it for \`/data/*\`."
+            echo "- Download the workflow artifact for \`manifest.json\`, \`source-health.json\`, region summaries, and \`snapshot-tree-report.md\`."
+            echo
             echo "Publish gates: \`publishGuard\` + \`npm run validate:data\`."
             echo "This workflow never pushes directly to \`main\` and does not auto-merge."
             echo
             if [ -f data-refresh-report.md ]; then
               cat data-refresh-report.md
             else
-              echo "_No report file produced._"
+              echo "_No change report file produced._"
+            fi
+            echo
+            if [ -f snapshot-tree-report.md ]; then
+              cat snapshot-tree-report.md
+            else
+              echo "_No snapshot-tree report produced._"
             fi
           } > "$RUNNER_TEMP/data-refresh-pr-body.md"
 
@@ -145,6 +179,7 @@ jobs:
           delete-branch: true
           add-paths: |
             src/data/nv-ftc-teams.generated.json
+            src/data/nv-ftc-team-observations.generated.json
           labels: |
             type: data
             data-quality

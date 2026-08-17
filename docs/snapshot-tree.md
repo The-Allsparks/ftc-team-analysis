@@ -30,8 +30,25 @@ public/data/
 | --- | --- |
 | `npm run sync:data` | Copy mega-seed + observations, then write the tree |
 | `npm run generate:snapshots` | Tree only (same generator) |
-| `npm run validate:data` | Valibot-validate mega-seed, observations, **and** the tree |
+| `npm run validate:data` | Valibot-validate mega-seed, observations, **and** the tree; writes `snapshot-tree-report.md` |
+| `npm run pull:data` | Refresh seed + observations, then emit the tree (same generator as sync) |
 | `npm run build` / `dev` | Always run `sync:data` first |
+
+## Snapshot publication vs app deploy
+
+These are **different** operator paths:
+
+| Path | What changes | How it ships |
+| --- | --- | --- |
+| **Snapshot publication** | Canonical mega-seed + observations under `src/data/` | Scheduled/manual [data-refresh](../.github/workflows/data-refresh.yml): `pull:data` → `validate:data` → PR when inputs change. Merge the data PR; do **not** hand-edit `public/data/`. |
+| **App deploy** | SPA/Worker/Pages build output | Push/merge to `main` triggers CI + (Pages) production build, or run `npm run deploy` for the Worker. `npm run build` runs `sync:data`, so `/data/*` (mega-seed **and** tree) is regenerated from the checked-in seed at build time. |
+
+Practical rules:
+
+1. Refresh data with Actions (or local `pull:data`); review the data PR (publish guard + `validate:data` already ran).
+2. After the data PR merges to `main`, the next app build publishes a fresh tree — no separate “upload JSON to Pages” step.
+3. Workflow artifacts include `manifest.json`, `source-health.json`, region summaries, and `snapshot-tree-report.md` for inspection; those tree files are **not** committed (gitignored under `public/data/`).
+4. Redeploying the app without a seed change republishes the same logical snapshot (tree regenerated identically from the same seed).
 
 ## `manifest.json` schema (v1)
 
@@ -91,6 +108,6 @@ Tree emit: **474** files (manifest + source-health + 8 region summaries + 113 te
 ## Related
 
 - [architecture.md](architecture.md) — system layout
-- [ingestion.md](ingestion.md) — pull + guards
-- [deployment.md](deployment.md) — Pages/`/data` serving
+- [ingestion.md](ingestion.md) — pull + guards + data-refresh (#90)
+- [deployment.md](deployment.md) — Pages/`/data` serving; snapshot vs app deploy
 - App loader rewrite: #88 (out of scope here)

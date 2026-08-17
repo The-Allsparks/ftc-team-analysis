@@ -9,7 +9,7 @@ How the Nevada snapshot is built and refreshed from **public** FTC pages. See al
 | `npm run pull:data` | Refresh `src/data/nv-ftc-teams.generated.json` from public FTC Events pages; updates `nv-ftc-team-observations.generated.json` |
 | `npm run sync:data` | Copy canonical seed **and** observations into `public/data/`, then generate the split snapshot tree |
 | `npm run generate:snapshots` | Regenerate `manifest.json` / region summaries / per-team JSON only |
-| `npm run validate:data` | CLI check against the generated-seed runtime schema, observations (when present), and snapshot-tree schemas |
+| `npm run validate:data` | CLI check against the generated-seed runtime schema, observations (when present), and snapshot-tree schemas; writes `snapshot-tree-report.md` |
 
 Common flags:
 
@@ -34,7 +34,7 @@ Before overwriting the seed, `pull:data` refuses a candidate that:
 
 The same empty/drop guard runs before writing the split snapshot tree under `public/data/` (see [snapshot-tree.md](snapshot-tree.md)). Mega-seed publication and tree emission stay aligned during the #12 → #87 transition.
 
-Scheduled GitHub Actions (`.github/workflows/data-refresh.yml`) run the same pull path, then `validate:data`, write a change report artifact, and open a PR when the seed changes (never force-push to `main`).
+Scheduled GitHub Actions (`.github/workflows/data-refresh.yml`) run the same pull path (which emits the #87 snapshot tree), then `validate:data` (seed + observations + full tree), upload change/tree artifacts (`data-refresh-report.md`, `snapshot-tree-report.md`, `manifest.json`, region summaries), and open a PR when the **checked-in** seed or observations change (never force-push to `main`). The PR commits `src/data/nv-ftc-teams.generated.json` and `nv-ftc-team-observations.generated.json` only — the split tree stays gitignored and is regenerated on `npm run build` / Pages deploy. See [snapshot-tree.md](snapshot-tree.md) for snapshot publication vs app deploy.
 
 ## Source checks
 
