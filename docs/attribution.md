@@ -9,8 +9,8 @@ Project code and original documentation are MIT-licensed ([LICENSE](../LICENSE))
 | Source | Role in this project | Attribution | Constraints and residual risk |
 | --- | --- | --- | --- |
 | FIRST Team/Event Search | Discovery aid / public team search UI | [FIRST](https://www.firstinspires.org/) | Public HTML/search surfaces only. Terms of use and scraping expectations are set by FIRST; this repo does not assert a license grant from FIRST. |
-| FTC Events (region and team pages) | Primary seed: season roster, public team facts, events/awards visible on public pages | [FTC Events](https://ftc-events.firstinspires.org/) | Ingestion reads **public pages**. The official FTC Events API requires credentials and is **not** used. Markup changes can break parsers. Redistribution of scraped page content may be subject to FIRST/FTC Events terms — residual risk, not cleared here. |
-| FTC Events API (documented) | Not used | [API info](https://ftc-events.firstinspires.org/services/API) | Credentialed; out of scope for this project’s public-only stance. |
+| FTC Events (region and team pages) | Primary seed when API credentials are absent: season roster, public team facts, events/awards visible on public pages | [FTC Events](https://ftc-events.firstinspires.org/) | Ingestion reads **public pages** by default (CI / scheduled refresh). Markup changes can break parsers. Redistribution of scraped page content may be subject to FIRST/FTC Events terms — residual risk, not cleared here. |
+| FTC Events API (authenticated) | Canonical for official awards / event ranks / qualification records **when** `FIRST_API_USERNAME` + `FIRST_API_TOKEN` are configured and `--enrich-first-api` is used | [API info](https://ftc-events.firstinspires.org/services/API) / [docs/first-api.md](first-api.md) | HTTP Basic auth; secrets server-side only (never browser / never committed). Without credentials the client returns fail-soft `SourceResult` and does not call the live API. Production browser proxy with secret injection still depends on #2 / #38. Non-commercial use; attribute the API info page. Residual terms risk. |
 | FTCScout | Optional live quick-stats / events enrichment via allowlisted proxy | [FTCScout](https://ftcscout.org/) / [api.ftcscout.org](https://api.ftcscout.org) | Third-party API; availability, rate limits, and terms are upstream’s. Failures must not be cached as empty success. Schema validated before UI use. OPR and related metrics are **calculated community statistics**, not official FIRST results (see UI labels + `src/data/ftcScoutMeta.ts` catalog `v1`). |
 
 ### FTCScout coverage notes (#18)
@@ -31,8 +31,8 @@ Project code and original documentation are MIT-licensed ([LICENSE](../LICENSE))
 
 ## Source hierarchy (competitive vs enrichment)
 
-1. **FIRST / FTC Events** — canonical for official competitive results (public pages today; authenticated API in [#17](https://github.com/The-Allsparks/ftc-team-analysis/issues/17)).
-2. **Nevada seed** — identity-critical roster/history from public FTC Events (publish-guarded).
+1. **FIRST / FTC Events** — canonical for official competitive results (authenticated API when configured — [first-api.md](first-api.md) / [#17](https://github.com/The-Allsparks/ftc-team-analysis/issues/17); otherwise public pages).
+2. **Nevada seed** — identity-critical roster/history from public FTC Events (publish-guarded), optionally overlaid with API competitive facts.
 3. **FTCScout** — optional community-calculated stats (not official FIRST results).
 4. **The Orange Alliance** — future optional corroboration/enrichment only ([orange-alliance.md](orange-alliance.md)); never canonical where FIRST exists.
 5. **Link/resource enrichments** — Open Alliance, GM0, Portfolio Lab, GitHub verification, YouTube verification.

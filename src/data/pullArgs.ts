@@ -16,6 +16,12 @@ export type PullArgs = {
    * Offline catalog + string normalize only — no geocoding network calls.
    */
   enrichCanonicalIds: boolean;
+  /**
+   * Opt-in authenticated FIRST FTC Events API competitive enrichment (#17).
+   * Off by default. Requires server-side FIRST_API_USERNAME + FIRST_API_TOKEN;
+   * without credentials the pull records a fail-soft source check and keeps HTML canonical.
+   */
+  enrichFirstApi: boolean;
   dryRun: boolean;
   /** When set, skip network pull and load this JSON as the candidate (tests / dry gates). */
   candidateFixture: string | null;
@@ -51,6 +57,7 @@ export function parsePullArgs(argv: string[]): PullArgs {
     enrichGithub: false,
     enrichYoutube: false,
     enrichCanonicalIds: false,
+    enrichFirstApi: false,
     dryRun: false,
     candidateFixture: null,
     help: false,
@@ -110,6 +117,14 @@ export function parsePullArgs(argv: string[]): PullArgs {
       }
       continue;
     }
+    if (token === '--enrich-first-api' || token.startsWith('--enrich-first-api=')) {
+      if (token.includes('=')) {
+        args.enrichFirstApi = isTruthy(token.slice(token.indexOf('=') + 1));
+      } else {
+        args.enrichFirstApi = true;
+      }
+      continue;
+    }
     if (token === '--dry-run' || token.startsWith('--dry-run=')) {
       if (token.includes('=')) {
         args.dryRun = isTruthy(token.slice(token.indexOf('=') + 1));
@@ -154,6 +169,7 @@ Options:
   --enrich-github           opt-in: verify GitHub repos from declared links (OA/GM0/website); no number-only ownership
   --enrich-youtube          opt-in: verify YouTube channels/videos from declared links; no name-only ownership
   --enrich-canonical-ids    opt-in: normalize locations/orgs + curated NCES IDs when uniquely matched (#16)
+  --enrich-first-api        opt-in: prefer authenticated FIRST FTC Events API for competitive awards/ranks/records (#17); requires FIRST_API_USERNAME + FIRST_API_TOKEN
   --dry-run                 run guards/report but do not write the seed
   --candidate-fixture=PATH  load candidate JSON from PATH (no network); for gate tests
   --help                    show this help

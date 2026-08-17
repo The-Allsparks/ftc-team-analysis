@@ -27,8 +27,8 @@ FTC Events / FTCScout / Portfolio Lab / FTC Scoring (public HTTP)
 | Aggregate school context | `src/data/aggregateSchoolContext.ts` | Allowlisted institution/geography fields only (#27); no live Census seed; fetch pipeline deferred |
 | Public data copy | `public/data/` | Served as `/data/...` (via `npm run sync:data`) — mega-seed **and** split snapshot tree (#87) |
 | Snapshot tree | `docs/snapshot-tree.md`, `src/data/snapshotTree*.ts`, `loadDirectoryBootstrap.ts` | Manifest + region summaries boot the directory; per-team JSON loads lazily (#88). Mega-seed is fail-soft fallback only. |
-| Ingestion | `scripts/pull-public-ftc-data.ts` | Public-page pull, publish guards |
-| Live proxy core | `src/lib/liveProxy.ts` | Allowlist + host-fixed GET/HEAD forward (shared) |
+| Ingestion | `scripts/pull-public-ftc-data.ts` | Public-page pull (default); optional `--enrich-first-api` when server credentials exist |
+| Live proxy core | `src/lib/liveProxy.ts` | Allowlist + host-fixed GET/HEAD forward (shared; public hosts only today) |
 | Worker | `worker/proxy.ts`, `wrangler.jsonc` | Static assets + live proxy (keep during cutover) |
 | Pages Functions | `functions/`, `public/_routes.json` | Same proxy on Pages; invocation limited to four prefixes |
 
@@ -38,9 +38,9 @@ Normal browsing prefers static `/data` snapshots. Live proxy prefixes (`/ftc-pro
 
 ## Trust boundaries
 
-- **Identity-critical path:** public FTC Events–backed seed + runtime schema validation; fail closed on broken envelopes.
+- **Identity-critical path:** public FTC Events–backed seed + runtime schema validation; fail closed on broken envelopes. When operators configure `FIRST_API_USERNAME` / `FIRST_API_TOKEN` and pass `--enrich-first-api`, authenticated FIRST API competitive fields (awards / ranks / qualification records) are preferred over HTML for those facts ([first-api.md](first-api.md) / #17). CI and scheduled refresh stay public-page-only without secrets.
 - **Optional enrichment:** FTCScout, Portfolio Lab, avatars — failures surface as availability states, not empty “success” caches.
-- **No credentialed FIRST API** in the current design (season discovery stays config + ingested data; see #14 / #17).
+- **Credentialed FIRST API:** implemented as a **credential-optional** Node enrichment module. Secrets never enter the Vite client bundle. Browser/Worker secret injection for live API still depends on [#2](https://github.com/The-Allsparks/ftc-team-analysis/issues/2) / [#38](https://github.com/The-Allsparks/ftc-team-analysis/issues/38).
 - **The Orange Alliance:** researched only (#21); **not** wired. Future role is non-canonical corroboration/enrichment; **FIRST remains canonical** for official results. See [orange-alliance.md](orange-alliance.md) and source hierarchy in [attribution.md](attribution.md).
 - **Internet Archive / Wayback:** researched only (#25); **not** wired. Future role is optional reconstruction of **archived** public team website facts; never treated as current live truth. See [internet-archive.md](internet-archive.md).
 - **Onshape:** researched only (#26); **not** wired as a crawler. CAD appears only as outbound `TeamLink` `cad` URLs when teams declare them (website / OA / GM0). Public Documents mining is **NO-GO**. See [onshape.md](onshape.md).
@@ -58,6 +58,7 @@ When FTC Events has not published the current region page, the UI selects the la
 ## Related docs
 
 - [ingestion.md](ingestion.md) — pull pipeline and guards
+- [first-api.md](first-api.md) — authenticated FIRST FTC Events API (#17; credential-optional; API canonical when configured)
 - [snapshot-tree.md](snapshot-tree.md) — static manifest / region / team JSON layout (#87)
 - [edge-cache.md](edge-cache.md) — static + proxy Cache-Control and live-refresh coalesce (#89)
 - [link-discovery.md](link-discovery.md) — website/social link discovery, confidence, dead-link checks

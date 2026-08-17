@@ -1,0 +1,130 @@
+{
+  "_fixtureNote": "SYNTHETIC sample shaped like FTC Events API v2.0 responses (swagger SeasonTeamListings / Awards / EventRankings). Not a live capture. No credentials. Contract tests only (#17).",
+  "teamsPage": {
+    "teams": [
+      {
+        "teamNumber": 16158,
+        "displayTeamNumber": "16158",
+        "nameShort": "Fixture Allsparks",
+        "nameFull": "Synthetic Sponsor & Community",
+        "schoolName": "Synthetic High School",
+        "city": "Reno",
+        "stateProv": "NV",
+        "country": "USA",
+        "website": "https://example-first-api-16158.example/",
+        "rookieYear": 2019,
+        "robotName": null,
+        "homeRegion": "USNV",
+        "displayLocation": "Reno, NV USA"
+      },
+      {
+        "teamNumber": 21535,
+        "displayTeamNumber": "21535",
+        "nameShort": "Fixture Sparks",
+        "nameFull": "Synthetic Org",
+        "schoolName": null,
+        "city": "Las Vegas",
+        "stateProv": "NV",
+        "country": "USA",
+        "website": null,
+        "rookieYear": 2022,
+        "robotName": null,
+        "homeRegion": "USNV",
+        "displayLocation": "Las Vegas, NV USA"
+      }
+    ],
+    "teamCountTotal": 2,
+    "teamCountPage": 2,
+    "pageCurrent": 1,
+    "pageTotal": 1
+  },
+  "awardsFor16158": {
+    "awards": [
+      {
+        "awardId": 1001,
+        "teamNumber": 16158,
+        "eventCode": "USNVFIX",
+        "name": "Inspire Award Winner",
+        "series": 1,
+        "schoolName": "Synthetic High School",
+        "fullTeamName": "Synthetic Sponsor & Community"
+      },
+      {
+        "awardId": 1002,
+        "teamNumber": 16158,
+        "eventCode": "USNVFIX",
+        "name": "Think Award 2nd Place",
+        "series": 2,
+        "schoolName": "Synthetic High School",
+        "fullTeamName": "Synthetic Sponsor & Community"
+      }
+    ]
+  },
+  "rankingsUSNVFIX": {
+    "rankings": [
+      {
+        "rank": 2,
+        "teamNumber": 16158,
+        "displayTeamNumber": "16158",
+        "teamName": "Fixture Allsparks",
+        "sortOrder1": 2.5,
+        "sortOrder2": 120,
+        "sortOrder3": 0,
+        "sortOrder4": 0,
+        "sortOrder5": 0,
+        "sortOrder6": 0,
+        "wins": 4,
+        "losses": 1,
+        "ties": 0,
+        "qualAverage": 98.2,
+        "dq": 0,
+        "matchesPlayed": 5,
+        "matchesCounted": 5
+      },
+      {
+        "rank": 8,
+        "teamNumber": 21535,
+        "displayTeamNumber": "21535",
+        "teamName": "Fixture Sparks",
+        "sortOrder1": 1.1,
+        "sortOrder2": 70,
+        "sortOrder3": 0,
+        "sortOrder4": 0,
+        "sortOrder5": 0,
+        "sortOrder6": 0,
+        "wins": 1,
+        "losses": 4,
+        "ties": 0,
+        "qualAverage": 55,
+        "dq": 0,
+        "matchesPlayed": 5,
+        "matchesCounted": 5
+      }
+    ]
+  },
+  "eventsForTeam": {
+    "events": [
+      {
+        "eventId": "00000000-0000-4000-8000-000000000001",
+        "code": "USNVFIX",
+        "name": "Synthetic Nevada Fixture Meet",
+        "remote": false,
+        "hybrid": false,
+        "fieldCount": 1,
+        "published": true,
+        "type": "Other",
+        "typeName": "Meet",
+        "regionCode": "USNV",
+        "leagueCode": null,
+        "city": "Reno",
+        "stateprov": "NV",
+        "country": "USA",
+        "venue": "Synthetic Gym",
+        "timezone": "America/Los_Angeles",
+        "dateStart": "2025-11-01T00:00:00",
+        "dateEnd": "2025-11-01T00:00:00"
+      }
+    ],
+    "eventCount": 1
+  }
+}

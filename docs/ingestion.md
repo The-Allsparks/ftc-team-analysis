@@ -21,6 +21,7 @@ npm run pull:data -- --mode=current --skip-link-enrichment --enrich-gm0
 npm run pull:data -- --mode=current --skip-link-enrichment --enrich-github
 npm run pull:data -- --mode=current --skip-link-enrichment --enrich-youtube
 npm run pull:data -- --mode=current --skip-link-enrichment --enrich-canonical-ids
+npm run pull:data -- --mode=current --skip-link-enrichment --enrich-first-api
 npm run pull:data -- --dry-run --candidate-fixture=src/data/fixtures/empty-generated-candidate.json
 ```
 
@@ -55,7 +56,7 @@ Refresh-to-refresh field observations are stored in the append-only side store `
 
 ## What is not ingested
 
-- Credentialed FTC Events API payloads
+- Live FIRST API payloads in **CI / scheduled refresh** (no secrets required for green builds). Opt-in local/operator `--enrich-first-api` is documented in [first-api.md](first-api.md); production browser secret injection remains blocked on [#2](https://github.com/The-Allsparks/ftc-team-analysis/issues/2)
 - The Orange Alliance API payloads (researched in #21; not wired to `pull:data`)
 - Internet Archive / Wayback payloads (researched in #25; not wired to `pull:data` or scheduled refresh)
 - Onshape Public Documents / CAD binaries (researched in #26; declared CAD URLs may arrive via website / OA / GM0 only — see [onshape.md](onshape.md))
@@ -86,13 +87,17 @@ Opt-in with `--enrich-youtube` (default **off** for CI/scheduled refresh). Verif
 
 Opt-in with `--enrich-canonical-ids` (default **off** for CI/scheduled refresh). Offline string normalization plus a curated NCES allowlist fills optional `registeredLocation` and affiliation identity fields. Registered postal location stays distinct from event-region membership (`regionCode` / `region`). External IDs are never invented; ambiguous names are quarantined. UI helpers can also derive-on-read without rewriting the seed. See [canonical-identifiers.md](canonical-identifiers.md).
 
+## Authenticated FIRST FTC Events API (#17)
+
+Opt-in with `--enrich-first-api` (default **off** for CI/scheduled refresh). When `FIRST_API_USERNAME` and `FIRST_API_TOKEN` are set **server-side**, the pull prefers API awards, event ranks, and qualification records over public HTML for those fields. Without credentials the client returns a fail-soft `SourceResult` (`credentials_absent`) and does **not** call the live API — public pages stay canonical. Secrets never enter the Vite client. See [first-api.md](first-api.md).
+
 ## Aggregate school / community context (#27)
 
 **Not ingested yet.** Policy and allowlisted Valibot types exist for future CCD/EDGE/ACS aggregates keyed by #16 NCES IDs. No student-level paths; no bulk Census downloads in-repo. See [school-community-context.md](school-community-context.md).
 
 ## The Orange Alliance (#21)
 
-**Not ingested yet** (research only). Conditional go for future non-canonical corroboration/media enrichment after terms, secrets, and conflict rules; competitive corroboration implementation remains blocked on [#17](https://github.com/The-Allsparks/ftc-team-analysis/issues/17). **Do not** treat TOA as canonical where FIRST official data exists. See [orange-alliance.md](orange-alliance.md).
+**Not ingested yet** (research only). Conditional go for future non-canonical corroboration/media enrichment after terms and secrets; competitive corroboration should wait until FIRST API is the configured canonical path in production ([first-api.md](first-api.md) / [#17](https://github.com/The-Allsparks/ftc-team-analysis/issues/17)). **Do not** treat TOA as canonical where FIRST official data exists. See [orange-alliance.md](orange-alliance.md).
 
 ## Internet Archive / Wayback (#25)
 
