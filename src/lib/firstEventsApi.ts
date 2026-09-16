@@ -1,3 +1,8 @@
+import {
+  parseFirstApiTeamsPage,
+  type FirstApiTeam,
+  type FirstApiTeamsPage,
+} from '../data/firstApiSchema';
 import type {
   RecordSummary,
   SeasonId,
@@ -6,6 +11,8 @@ import type {
   TeamEvent,
   TeamSeason,
 } from '../data/schema';
+import { createEvidence, mergeSeasonEvidence } from './fieldEvidence';
+import { classifyTeamType } from './ftcParsers';
 import {
   failureFromHttpStatus,
   failureFromUnknown,
@@ -14,6 +21,8 @@ import {
   type SourceResult,
   userMessageFor,
 } from './sourceResult';
+
+export type { FirstApiTeam, FirstApiTeamsPage };
 
 /** Official FTC Events API host (HTTPS). Do not use the HTML site host for API calls. */
 export const FIRST_API_BASE_URL = 'https://ftc-api.firstinspires.org';
@@ -56,29 +65,8 @@ export type FirstApiCredentials = {
   token: string;
 };
 
-export type FirstApiTeam = {
-  teamNumber: number;
-  displayTeamNumber?: string | null;
-  nameShort?: string | null;
-  nameFull?: string | null;
-  schoolName?: string | null;
-  city?: string | null;
-  stateProv?: string | null;
-  country?: string | null;
-  website?: string | null;
-  rookieYear?: number | null;
-  robotName?: string | null;
-  homeRegion?: string | null;
-  displayLocation?: string | null;
-};
-
-export type FirstApiTeamsPage = {
-  teams?: FirstApiTeam[] | null;
-  teamCountTotal?: number;
-  teamCountPage?: number;
-  pageCurrent?: number;
-  pageTotal?: number;
-};
+/** Evidence `sourceType` for FIRST API identity votes (catalog id `first-api`). */
+export const FIRST_API_EVIDENCE_SOURCE = 'first-api';
 
 export type FirstApiAward = {
   awardId?: number;
@@ -135,6 +123,7 @@ export type ApplyFirstApiEnrichmentResult = {
   awardsReplaced: number;
   eventsRankUpdated: number;
   recordsUpdated: number;
+  identityVotesAttached: number;
   apiCalls: number;
   /** Present when credentials missing or a request failed (fail-soft). */
   result: SourceResult<{ enrichedTeams: number }>;
@@ -404,6 +393,181 @@ export async function fetchAllFirstApiTeams(
   return { ok: true, state: 'available', data: teams };
 }
 
+export function firstApiTeamPageUrl(season: number, teamNumber: number): string {
+  return `https://ftc-events.firstinspires.org/${season}/team/${teamNumber}`;
+}
+
+export function formatFirstApiLocation(team: FirstApiTeam): string | null {
+  const display = team.displayLocation?.trim();
+  if (display) {
+    return display;
+  }
+  const parts = [team.city, team.stateProv, team.country].filter(
+    (part): part is string => Boolean(part && part.trim()),
+  );
+  return parts.length > 0 ? parts.join(', ') : null;
+}
+
+/**
+ * Identity observations from a FIRST API team listing. Does **not** overwrite
+ * HTML season scalars — these rows are corroborating votes only.
+ */
+export function evidenceFromFirstApiTeam(
+  team: FirstApiTeam,
+  season: SeasonId,
+  retrievedAt: string | null,
+  extras?: { teamNumber?: number },
+): ReturnType<typeof createEvidence>[] {
+  const teamNumber = extras?.teamNumber ?? team.teamNumber;
+  const sourceUrl = firstApiTeamPageUrl(Number(season), teamNumber);
+  const rows: ReturnType<typeof createEvidence>[] = [];
+
+  const add = (
+    field: Parameters<typeof createEvidence>[0]['field'],
+    value: string | null | undefined,
+    extractionMethod: string,
+    kind: Parameters<typeof createEvidence>[0]['kind'] = 'observed',
+  ) => {
+    if (value == null) {
+      return;
+    }
+    const trimmed = String(value).trim();
+    if (!trimmed) {
+      return;
+    }
+    rows.push(
+      createEvidence({
+        field,
+        value: trimmed,
+        kind,
+        sourceType: FIRST_API_EVIDENCE_SOURCE,
+        sourceUrl,
+        retrievedAt,
+        observedSeason: season,
+        extractionMethod,
+        confidence: 'high',
+        rawValue: trimmed,
+      }),
+    );
+  };
+
+  add('name', team.nameShort, 'first-api-name-short');
+  add('organization', team.schoolName, 'first-api-school-name');
+  add('location', formatFirstApiLocation(team), 'first-api-location');
+  add('website', team.website, 'first-api-website');
+  add('robot', team.robotName, 'first-api-robot-name');
+  add('rookieYear', team.rookieYear != null ? String(team.rookieYear) : null, 'first-api-rookie-year');
+  if (team.schoolName) {
+    add('teamType', classifyTeamType('', team.schoolName), 'first-api-school-name', 'derived');
+  }
+
+  return rows;
+}
+
+export function attachFirstApiTeamEvidence(
+  season: TeamSeason,
+  team: FirstApiTeam,
+  retrievedAt: string | null,
+  extras?: { teamNumber?: number },
+): { season: TeamSeason; attached: boolean } {
+  const incoming = evidenceFromFirstApiTeam(team, season.season, retrievedAt, extras);
+  if (incoming.length === 0) {
+    return { season, attached: false };
+  }
+  return {
+    season: {
+      ...season,
+      evidence: mergeSeasonEvidence(season.evidence, incoming),
+    },
+    attached: true,
+  };
+}
+
+function pickFirstApiTeam(teams: FirstApiTeam[] | null | undefined, teamNumber: number): FirstApiTeam | null {
+  return (teams ?? []).find((row) => row.teamNumber === teamNumber) ?? null;
+}
+
+/**
+ * Browser/live path: GET `/ftc-api-proxy/{season}/teams?teamNumber=`.
+ * Never sends credentials from the client. 503 means server secrets are unset.
+ */
+export async function fetchFirstApiTeamFromProxy(
+  season: number,
+  teamNumber: number,
+  fetchImpl: typeof fetch = fetch,
+): Promise<SourceResult<FirstApiTeam | null>> {
+  const relative = `/${season}/teams`;
+  if (!isAllowedFirstApiPath(relative)) {
+    return {
+      ok: false,
+      state: 'proxy_failure',
+      userMessage: userMessageFor('proxy_failure', FIRST_API_SOURCE),
+      diagnostics: `path_not_allowlisted: ${relative}`,
+    };
+  }
+
+  try {
+    const response = await fetchImpl(`/ftc-api-proxy${relative}?teamNumber=${teamNumber}`, {
+      headers: { Accept: 'application/json' },
+    });
+
+    if (response.status === 503) {
+      return missingFirstApiCredentialsFailure();
+    }
+
+    if (response.status === 404) {
+      return { ok: true, state: 'no_record', data: null };
+    }
+
+    if (!response.ok) {
+      const bodySnippet = (await response.text().catch(() => '')).slice(0, 200);
+      return failureFromHttpStatus(
+        response.status,
+        FIRST_API_SOURCE,
+        `HTTP ${response.status} for /ftc-api-proxy${relative}${bodySnippet ? `; body=${bodySnippet}` : ''}`,
+      );
+    }
+
+    let raw: unknown;
+    try {
+      raw = await response.json();
+    } catch (error) {
+      return {
+        ok: false,
+        state: 'parse_failure',
+        userMessage: userMessageFor('parse_failure', FIRST_API_SOURCE),
+        diagnostics: error instanceof Error ? error.message : String(error),
+      };
+    }
+
+    const parsed = parseFirstApiTeamsPage(raw);
+    if (!parsed.ok) {
+      return {
+        ok: false,
+        state: 'parse_failure',
+        userMessage: userMessageFor('parse_failure', FIRST_API_SOURCE),
+        diagnostics: parsed.issues.map((issue) => `${issue.path}: ${issue.message}`).join('; '),
+      };
+    }
+
+    const team = pickFirstApiTeam(parsed.data.teams, teamNumber);
+    return {
+      ok: true,
+      state: team ? 'available' : 'no_record',
+      data: team,
+      diagnostics:
+        parsed.quarantinedRecordCount > 0
+          ? `quarantined=${parsed.quarantinedRecordCount}`
+          : undefined,
+    };
+  } catch (error) {
+    if (error instanceof HttpStatusError) {
+      return failureFromHttpStatus(error.status, FIRST_API_SOURCE, error.message);
+    }
+    return failureFromUnknown(error, FIRST_API_SOURCE);
+  }
+}
+
 export function mapFirstApiAwardToTeamAward(
   award: FirstApiAward,
   eventNameFallback?: string | null,
@@ -561,6 +725,7 @@ export async function applyFirstApiCompetitiveEnrichment(
     awardsReplaced: 0,
     eventsRankUpdated: 0,
     recordsUpdated: 0,
+    identityVotesAttached: 0,
     apiCalls: 0,
     result: missingFirstApiCredentialsFailure(),
   };
@@ -580,6 +745,7 @@ export async function applyFirstApiCompetitiveEnrichment(
   let awardsReplaced = 0;
   let eventsRankUpdated = 0;
   let recordsUpdated = 0;
+  let identityVotesAttached = 0;
   let apiCalls = 0;
   let enrichedTeams = 0;
   let lastFailure: SourceFailure | null = null;
@@ -597,6 +763,45 @@ export async function applyFirstApiCompetitiveEnrichment(
 
       seasonsTouched += 1;
 
+      let nextSeason = season;
+      const listingResult = await fetchFirstApiJson<unknown>(`/${seasonYear}/teams`, {
+        ...fetchOpts,
+        query: { teamNumber: team.number },
+      });
+      apiCalls += 1;
+      if (!listingResult.ok) {
+        lastFailure = stripFailureData(listingResult);
+        if (listingResult.state === 'auth_failure' || listingResult.state === 'rate_limited') {
+          return {
+            seasonsTouched,
+            awardsReplaced,
+            eventsRankUpdated,
+            recordsUpdated,
+            identityVotesAttached,
+            apiCalls,
+            result: lastFailure,
+          };
+        }
+      } else {
+        const parsed = parseFirstApiTeamsPage(listingResult.data);
+        if (parsed.ok) {
+          const apiTeam = pickFirstApiTeam(parsed.data.teams, team.number);
+          if (apiTeam) {
+            const attached = attachFirstApiTeamEvidence(
+              nextSeason,
+              apiTeam,
+              new Date().toISOString(),
+              { teamNumber: team.number },
+            );
+            nextSeason = attached.season;
+            if (attached.attached) {
+              identityVotesAttached += 1;
+              teamChanged = true;
+            }
+          }
+        }
+      }
+
       const awardsResult = await fetchFirstApiJson<FirstApiAwardsResponse>(
         `/${seasonYear}/awards/${team.number}`,
         fetchOpts,
@@ -604,12 +809,14 @@ export async function applyFirstApiCompetitiveEnrichment(
       apiCalls += 1;
       if (!awardsResult.ok) {
         lastFailure = stripFailureData(awardsResult);
+        team.seasons = { ...team.seasons, [seasonYear as SeasonId]: nextSeason };
         if (awardsResult.state === 'auth_failure' || awardsResult.state === 'rate_limited') {
           return {
             seasonsTouched,
             awardsReplaced,
             eventsRankUpdated,
             recordsUpdated,
+            identityVotesAttached,
             apiCalls,
             result: lastFailure,
           };
@@ -625,11 +832,11 @@ export async function applyFirstApiCompetitiveEnrichment(
       }
 
       const awardsMerge = mergeFirstApiAwardsIntoSeason(
-        season,
+        nextSeason,
         awardsResult.data.awards ?? [],
         eventNameByCode,
       );
-      let nextSeason = awardsMerge.season;
+      nextSeason = awardsMerge.season;
       if (awardsMerge.replaced) {
         awardsReplaced += 1;
         teamChanged = true;
@@ -658,6 +865,7 @@ export async function applyFirstApiCompetitiveEnrichment(
               awardsReplaced,
               eventsRankUpdated,
               recordsUpdated,
+              identityVotesAttached,
               apiCalls,
               result: lastFailure,
             };
@@ -704,6 +912,7 @@ export async function applyFirstApiCompetitiveEnrichment(
       awardsReplaced,
       eventsRankUpdated,
       recordsUpdated,
+      identityVotesAttached,
       apiCalls,
       result: lastFailure,
     };
@@ -714,6 +923,7 @@ export async function applyFirstApiCompetitiveEnrichment(
     awardsReplaced,
     eventsRankUpdated,
     recordsUpdated,
+    identityVotesAttached,
     apiCalls,
     result: {
       ok: true,
