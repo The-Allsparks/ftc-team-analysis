@@ -6,7 +6,9 @@ import type { Team } from '../data/schema';
 import {
   OPEN_ALLIANCE_SOURCE,
   applyOpenAllianceEnrichment,
+  evidenceFromOpenAllianceListing,
   fetchOpenAllianceFtcTeamList,
+  fetchOpenAllianceFtcTeamListViaProxy,
   isOpenAllianceLinkSource,
   openAllianceLinkAttribution,
   parseOpenAllianceFtcListings,
@@ -169,5 +171,29 @@ describe('fetchOpenAllianceFtcTeamList', () => {
     expect(fetchImpl).toHaveBeenCalledTimes(1);
     expect(listings).toHaveLength(2);
     expect(skippedNonExact).toBe(2);
+  });
+});
+
+describe('evidenceFromOpenAllianceListing', () => {
+  it('emits name, location, and website votes without awards', () => {
+    const { listings } = parseOpenAllianceFtcListings(loadFixtureJson('open-alliance-ftc-teams.json'));
+    const rows = evidenceFromOpenAllianceListing(listings[0]!, 2026, '2026-08-17T00:00:00.000Z', 16158);
+    expect(rows.map((row) => row.field).sort()).toEqual(['location', 'name', 'website']);
+    expect(rows.find((row) => row.field === 'name')?.value).toBe('Fixture Nevada Match');
+    expect(rows.every((row) => row.sourceType === 'open-alliance')).toBe(true);
+    expect(rows.some((row) => /award/i.test(row.field))).toBe(false);
+  });
+});
+
+describe('fetchOpenAllianceFtcTeamListViaProxy', () => {
+  it('calls the allowlisted browser proxy prefix', async () => {
+    const fixture = loadFixtureJson('open-alliance-ftc-teams.json');
+    const fetchImpl = vi.fn(async (input: RequestInfo | URL) => {
+      expect(String(input)).toBe('/open-alliance-proxy/teams/ftc');
+      return Response.json(fixture, { status: 200 });
+    }) as unknown as typeof fetch;
+
+    const { listings } = await fetchOpenAllianceFtcTeamListViaProxy({ fetchImpl });
+    expect(listings).toHaveLength(2);
   });
 });

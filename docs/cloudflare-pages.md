@@ -78,6 +78,8 @@ This repo ships `public/_routes.json` (copied into `dist/` by Vite). **Include o
     "/portfolio-lab-proxy/*",
     "/ftc-scoring-proxy",
     "/ftc-scoring-proxy/*",
+    "/open-alliance-proxy",
+    "/open-alliance-proxy/*",
     "/ftc-api-proxy",
     "/ftc-api-proxy/*"
   ],

@@ -36,6 +36,7 @@ Build always runs `sync:data` (via `npm run build`), then TypeScript + Vite. Out
 | `/ftc-proxy` | `https://ftc-events.firstinspires.org` |
 | `/ftcscout-proxy` | `https://api.ftcscout.org` |
 | `/portfolio-lab-proxy` | `https://www.ftcportfoliolab.org` |
+| `/open-alliance-proxy` | `https://api.theopenalliance.org` |
 | `/ftc-scoring-proxy` | `https://ftc-scoring.firstinspires.org` |
 | `/ftc-api-proxy` | `https://ftc-api.firstinspires.org/v2.0` (Basic auth from server secrets; 503 if unset) |
 

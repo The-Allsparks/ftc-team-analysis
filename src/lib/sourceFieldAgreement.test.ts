@@ -227,4 +227,78 @@ describe('fieldAgreement', () => {
     expect(agreement?.dissenting).toEqual([]);
     expect(agreement?.agreeing.map((vote) => vote.label)).toEqual(['FTC Events']);
   });
+
+  it('counts an Open Alliance listing as a separate name vote on the current season', () => {
+    const row: TeamSeason = {
+      ...season,
+      season: 2026,
+      evidence: [evidence('name', 'Allsparks', 'ftc-events-team-page')],
+    };
+
+    const agreement = fieldAgreement(row, 'name', 'Allsparks', {
+      teamNumber: 16158,
+      openAllianceRetrievedAt: '2026-08-17T00:00:00.000Z',
+      openAlliance: {
+        TeamNumber: '16158',
+        TeamName: 'Fixture Nevada Match',
+        Location: 'Las Vegas, NV, USA',
+        TeamWebsite: 'https://example-oa-16158.example/',
+      },
+    });
+
+    expect(agreement?.dissenting.map((vote) => vote.label)).toEqual(['Open Alliance']);
+    expect(agreement?.dissenting[0]?.displayValue).toBe('Fixture Nevada Match');
+  });
+
+  it('does not count Open Alliance listings on historical seasons', () => {
+    const row: TeamSeason = {
+      ...season,
+      season: 2025,
+      evidence: [evidence('name', 'Allsparks', 'ftc-events-team-page')],
+    };
+
+    const agreement = fieldAgreement(row, 'name', 'Allsparks', {
+      teamNumber: 16158,
+      openAllianceRetrievedAt: '2026-08-17T00:00:00.000Z',
+      openAlliance: {
+        TeamNumber: '16158',
+        TeamName: 'Fixture Nevada Match',
+      },
+    });
+
+    expect(agreement?.dissenting).toEqual([]);
+    expect(agreement?.agreeing.map((vote) => vote.label)).toEqual(['FTC Events']);
+  });
+
+  it('counts a season-matched Portfolio Lab teamName as a name vote', () => {
+    const row: TeamSeason = {
+      ...season,
+      season: 2025,
+      evidence: [evidence('name', 'Allsparks', 'ftc-events-team-page')],
+    };
+
+    const agreement = fieldAgreement(row, 'name', 'Allsparks', {
+      teamNumber: 16158,
+      portfolioFetchedAt: '2026-08-17T00:00:00.000Z',
+      portfolios: [
+        {
+          id: '16158-1',
+          teamName: 'Portfolio Lab Sparks',
+          teamNumber: 16158,
+          country: 'USA',
+          city: 'Reno',
+          season: 'DECODE',
+          level: 'inspire',
+          stars: '5',
+          score: '90',
+          award: '',
+          pdf: 'https://www.ftcportfoliolab.org/p.pdf',
+          summary: 'Synthetic',
+        },
+      ],
+    });
+
+    expect(agreement?.dissenting.map((vote) => vote.label)).toEqual(['Portfolio Lab']);
+    expect(agreement?.dissenting[0]?.displayValue).toBe('Portfolio Lab Sparks');
+  });
 });

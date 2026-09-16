@@ -1,9 +1,17 @@
 import type { TeamScoutData } from '../data/ftcScout';
 import { ftcScoutTeamUrl } from '../data/ftcScout';
-import type { FieldEvidence, TeamFactField, TeamSeason } from '../data/schema';
+import type { PortfolioLabEntry } from '../data/portfolioLab';
+import { portfolioLabSearchUrl, portfolioMatchesSeason } from '../data/portfolioLab';
+import type { FieldEvidence, Team, TeamFactField, TeamSeason } from '../data/schema';
+import { CURRENT_SEASON } from '../data/seasons';
 import { enrichSeasonCanonicalIdentity } from './canonicalIdentity';
 import { createEvidence, evidenceForSeasonField, synthesizeSeasonEvidence } from './fieldEvidence';
 import { classifyTeamType } from './ftcParsers';
+import {
+  evidenceFromOpenAllianceListing,
+  isOpenAllianceLinkSource,
+  type OpenAllianceFtcTeam,
+} from './openAlliance';
 import { teamTypeLabel } from './teamDirectory';
 
 export type SourceCatalogEntry = {
@@ -164,6 +172,11 @@ export function sourceVoteTitle(vote: SourceVote): string {
 export type FieldAgreementExtras = {
   teamNumber?: number;
   scout?: TeamScoutData | null;
+  team?: Team | null;
+  portfolios?: PortfolioLabEntry[] | null;
+  portfolioFetchedAt?: string | null;
+  openAlliance?: OpenAllianceFtcTeam | null;
+  openAllianceRetrievedAt?: string | null;
 };
 
 function hasCatalogSource(rows: FieldEvidence[], sourceId: string): boolean {
@@ -258,8 +271,83 @@ function scoutProfileEvidence(season: TeamSeason, extras: FieldAgreementExtras):
   return rows;
 }
 
+function openAllianceEvidence(season: TeamSeason, extras: FieldAgreementExtras): FieldEvidence[] {
+  if (season.season !== CURRENT_SEASON) {
+    return [];
+  }
+  if (extras.openAlliance && extras.teamNumber != null) {
+    return evidenceFromOpenAllianceListing(
+      extras.openAlliance,
+      season.season,
+      extras.openAllianceRetrievedAt ?? null,
+      extras.teamNumber,
+    );
+  }
+
+  const website = (extras.team?.links ?? []).find(
+    (link) => isOpenAllianceLinkSource(link.source) && (link.type === 'website' || /website/i.test(link.label)),
+  );
+  if (!website || extras.teamNumber == null) {
+    return [];
+  }
+  return evidenceFromOpenAllianceListing(
+    { TeamNumber: extras.teamNumber, TeamWebsite: website.url },
+    season.season,
+    website.retrievedAt ?? website.lastCheckedAt ?? null,
+    extras.teamNumber,
+  );
+}
+
+function portfolioLabEvidence(season: TeamSeason, extras: FieldAgreementExtras): FieldEvidence[] {
+  const portfolios = extras.portfolios ?? [];
+  if (portfolios.length === 0 || extras.teamNumber == null) {
+    return [];
+  }
+
+  const matched =
+    portfolios.find((entry) => portfolioMatchesSeason(entry, season.season)) ??
+    (season.season === CURRENT_SEASON ? portfolios[0] : undefined);
+  if (!matched) {
+    return [];
+  }
+
+  const retrievedAt = extras.portfolioFetchedAt ?? null;
+  const sourceUrl = portfolioLabSearchUrl(extras.teamNumber);
+  const rows: FieldEvidence[] = [];
+  const add = (field: TeamFactField, value: string | null | undefined, extractionMethod: string) => {
+    if (value == null) {
+      return;
+    }
+    const trimmed = value.trim();
+    if (!trimmed) {
+      return;
+    }
+    rows.push(
+      createEvidence({
+        field,
+        value: trimmed,
+        kind: 'observed',
+        sourceType: 'portfolio-lab',
+        sourceUrl,
+        retrievedAt,
+        observedSeason: season.season,
+        extractionMethod,
+        confidence: 'medium',
+        rawValue: trimmed,
+      }),
+    );
+  };
+
+  add('name', matched.teamName, 'portfolio-lab-team-name');
+  if (matched.city) {
+    add('location', matched.city, 'portfolio-lab-city');
+  }
+  return rows;
+}
+
 /**
- * Combine stored/synthesized evidence with read-time votes from NCES and live FTCScout.
+ * Combine stored/synthesized evidence with read-time votes from NCES, live FTCScout,
+ * Open Alliance listings, and Portfolio Lab catalogs.
  */
 export function collectFieldEvidence(
   season: TeamSeason,
@@ -283,6 +371,20 @@ export function collectFieldEvidence(
   extra.push(
     ...scoutProfileEvidence(season, extras ?? {}).filter(
       (row) => row.field === field && !hasCatalogSource(existing, catalogSourceId(row.sourceType)),
+    ),
+  );
+
+  extra.push(
+    ...openAllianceEvidence(season, extras ?? {}).filter(
+      (row) =>
+        row.field === field && !hasCatalogSource([...existing, ...extra], catalogSourceId(row.sourceType)),
+    ),
+  );
+
+  extra.push(
+    ...portfolioLabEvidence(season, extras ?? {}).filter(
+      (row) =>
+        row.field === field && !hasCatalogSource([...existing, ...extra], catalogSourceId(row.sourceType)),
     ),
   );
 
