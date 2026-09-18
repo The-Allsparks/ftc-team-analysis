@@ -23,15 +23,15 @@
     "discover:regions": "node scripts/discover-regions-full.mjs"
   },
   "dependencies": {
-    "node-html-parser": "^9.0.2",
-    "react": "^19.2.8",
-    "react-dom": "^19.2.8",
-    "valibot": "1.4.2"
+    "node-html-parser": "^9.0.4",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0",
+    "valibot": "1.5.0"
   },
   "devDependencies": {
     "@types/node": "^26.5.1",
-    "@types/react": "^19.2.18",
-    "@types/react-dom": "^19.2.4",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
     "@vitejs/plugin-react": "^6.1.1",
     "tsx": "^4.23.13",
     "typescript": "^7.0.2",
