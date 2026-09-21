@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-16T16:17:01.259Z",
+  "generatedAt": "2026-09-21T16:14:54.664Z",
   "targetSeasons": [
     2026,
     2025,
@@ -23,7 +23,7 @@
       "latestOrganization": "JD Air and Heating/Strategy Tax/goBILDA/Gene Haas Foundation/Tesla&Word of Life Christian Academy",
       "latestWebsite": null,
       "latestTeamType": "school",
-      "latestLeague": "Southern Nevada",
+      "latestLeague": null,
       "latestRegion": "Nevada",
       "links": [],
       "seasons": {
@@ -1973,6 +1973,94 @@
               "confirmationState": "unconfirmed",
               "sourceText": "JD Air and Heating/Strategy Tax/goBILDA/Gene Haas Foundation/Tesla&Word of Life Christian Academy"
             }
+          ]
+        },
+        "2026": {
+          "season": 2026,
+          "active": true,
+          "name": "G-Bots",
+          "location": "Las Vegas, NV, USA",
+          "city": "Las Vegas",
+          "state": "NV",
+          "country": "USA",
+          "region": "Nevada",
+          "league": null,
+          "rookieYear": 2008,
+          "organization": "JD Air and Heating/Strategy Tax/goBILDA/Gene Haas Foundation/Tesla&Word of Life Christian Academy",
+          "affiliations": [
+            {
+              "entityType": "sponsor",
+              "name": "JD Air and Heating",
+              "season": 2026,
+              "source": "ftc-events-sponsors",
+              "retrievedAt": "2026-09-21T16:14:53.659Z",
+              "confidence": "high",
+              "confirmationState": "unconfirmed",
+              "sourceText": "JD Air and Heating/Strategy Tax/goBILDA/Gene Haas Foundation/Tesla&Word of Life Christian Academy"
+            },
+            {
+              "entityType": "sponsor",
+              "name": "Strategy Tax",
+              "season": 2026,
+              "source": "ftc-events-sponsors",
+              "retrievedAt": "2026-09-21T16:14:53.659Z",
+              "confidence": "high",
+              "confirmationState": "unconfirmed",
+              "sourceText": "JD Air and Heating/Strategy Tax/goBILDA/Gene Haas Foundation/Tesla&Word of Life Christian Academy"
+            },
+            {
+              "entityType": "sponsor",
+              "name": "goBILDA",
+              "season": 2026,
+              "source": "ftc-events-sponsors",
+              "retrievedAt": "2026-09-21T16:14:53.659Z",
+              "confidence": "high",
+              "confirmationState": "unconfirmed",
+              "sourceText": "JD Air and Heating/Strategy Tax/goBILDA/Gene Haas Foundation/Tesla&Word of Life Christian Academy"
+            },
+            {
+              "entityType": "sponsor",
+              "name": "Gene Haas Foundation",
+              "season": 2026,
+              "source": "ftc-events-sponsors",
+              "retrievedAt": "2026-09-21T16:14:53.659Z",
+              "confidence": "high",
+              "confirmationState": "unconfirmed",
+              "sourceText": "JD Air and Heating/Strategy Tax/goBILDA/Gene Haas Foundation/Tesla&Word of Life Christian Academy"
+            },
+            {
+              "entityType": "sponsor",
+              "name": "Tesla",
+              "season": 2026,
+              "source": "ftc-events-sponsors",
+              "retrievedAt": "2026-09-21T16:14:53.659Z",
+              "confidence": "high",
+              "confirmationState": "unconfirmed",
+              "sourceText": "JD Air and Heating/Strategy Tax/goBILDA/Gene Haas Foundation/Tesla&Word of Life Christian Academy"
+            },
+            {
+              "entityType": "school",
+              "name": "Word of Life Christian Academy",
+              "season": 2026,
+              "source": "ftc-events-sponsors",
+              "retrievedAt": "2026-09-21T16:14:53.659Z",
+              "confidence": "high",
+              "confirmationState": "unconfirmed",
+              "sourceText": "JD Air and Heating/Strategy Tax/goBILDA/Gene Haas Foundation/Tesla&Word of Life Christian Academy"
+            }
+          ],
+          "teamType": "school",
+          "website": null,
+          "robot": null,
+          "sourceUrl": "https://ftc-events.firstinspires.org/2026/team/3050",
+          "summary": null,
+          "record": null,
+          "qualificationRecord": null,
+          "playoffRecord": null,
+          "events": [],
+          "awards": [],
+          "notes": [
+            "No public event rows were parsed from this season page."
           ]
         }
       }
@@ -8590,7 +8678,7 @@
               "name": "University of Nevada Cooperative Extension",
               "season": 2026,
               "source": "ftc-events-sponsors",
-              "retrievedAt": "2026-08-16T16:17:01.259Z",
+              "retrievedAt": "2026-09-21T16:14:53.011Z",
               "confidence": "high",
               "confirmationState": "unconfirmed",
               "sourceText": "University of Nevada Cooperative Extension/TESLA/Gene Hauss Foundation/National Security Site&4-H"
@@ -8600,7 +8688,7 @@
               "name": "TESLA",
               "season": 2026,
               "source": "ftc-events-sponsors",
-              "retrievedAt": "2026-08-16T16:17:01.259Z",
+              "retrievedAt": "2026-09-21T16:14:53.011Z",
               "confidence": "high",
               "confirmationState": "unconfirmed",
               "sourceText": "University of Nevada Cooperative Extension/TESLA/Gene Hauss Foundation/National Security Site&4-H"
@@ -8610,7 +8698,7 @@
               "name": "Gene Hauss Foundation",
               "season": 2026,
               "source": "ftc-events-sponsors",
-              "retrievedAt": "2026-08-16T16:17:01.259Z",
+              "retrievedAt": "2026-09-21T16:14:53.011Z",
               "confidence": "high",
               "confirmationState": "unconfirmed",
               "sourceText": "University of Nevada Cooperative Extension/TESLA/Gene Hauss Foundation/National Security Site&4-H"
@@ -8620,7 +8708,7 @@
               "name": "National Security Site",
               "season": 2026,
               "source": "ftc-events-sponsors",
-              "retrievedAt": "2026-08-16T16:17:01.259Z",
+              "retrievedAt": "2026-09-21T16:14:53.011Z",
               "confidence": "high",
               "confirmationState": "unconfirmed",
               "sourceText": "University of Nevada Cooperative Extension/TESLA/Gene Hauss Foundation/National Security Site&4-H"
@@ -8630,7 +8718,7 @@
               "name": "4-H",
               "season": 2026,
               "source": "ftc-events-sponsors",
-              "retrievedAt": "2026-08-16T16:17:01.259Z",
+              "retrievedAt": "2026-09-21T16:14:53.011Z",
               "confidence": "high",
               "confirmationState": "unconfirmed",
               "sourceText": "University of Nevada Cooperative Extension/TESLA/Gene Hauss Foundation/National Security Site&4-H"
@@ -10174,7 +10262,7 @@
               "name": "Gene Hess Foundation",
               "season": 2026,
               "source": "ftc-events-sponsors",
-              "retrievedAt": "2026-08-16T16:16:59.064Z",
+              "retrievedAt": "2026-09-21T16:14:53.463Z",
               "confidence": "high",
               "confirmationState": "unconfirmed",
               "sourceText": "Gene Hess Foundation&4-H"
@@ -10184,7 +10272,7 @@
               "name": "4-H",
               "season": 2026,
               "source": "ftc-events-sponsors",
-              "retrievedAt": "2026-08-16T16:16:59.064Z",
+              "retrievedAt": "2026-09-21T16:14:53.463Z",
               "confidence": "high",
               "confirmationState": "unconfirmed",
               "sourceText": "Gene Hess Foundation&4-H"
@@ -14966,7 +15054,7 @@
               "name": "The Meadows School",
               "season": 2026,
               "source": "ftc-events-sponsors",
-              "retrievedAt": "2026-08-16T16:16:58.966Z",
+              "retrievedAt": "2026-09-21T16:14:53.564Z",
               "confidence": "high",
               "confirmationState": "unconfirmed",
               "sourceText": "The Meadows School"
@@ -14996,10 +15084,10 @@
       "latestState": "NV",
       "latestCountry": "USA",
       "latestRookieYear": 2018,
-      "latestOrganization": "Tesla & Elko High School",
+      "latestOrganization": "Tesla&Elko High School",
       "latestWebsite": null,
       "latestTeamType": "school",
-      "latestLeague": "Northern Nevada",
+      "latestLeague": null,
       "latestRegion": "Nevada",
       "links": [],
       "seasons": {
@@ -15665,6 +15753,54 @@
               "sourceText": "Tesla & Elko High School"
             }
           ]
+        },
+        "2026": {
+          "season": 2026,
+          "active": true,
+          "name": "ELrobotiKO",
+          "location": "Elko, NV, USA",
+          "city": "Elko",
+          "state": "NV",
+          "country": "USA",
+          "region": "Nevada",
+          "league": null,
+          "rookieYear": 2018,
+          "organization": "Tesla&Elko High School",
+          "affiliations": [
+            {
+              "entityType": "sponsor",
+              "name": "Tesla",
+              "season": 2026,
+              "source": "ftc-events-sponsors",
+              "retrievedAt": "2026-09-21T16:14:53.467Z",
+              "confidence": "high",
+              "confirmationState": "unconfirmed",
+              "sourceText": "Tesla&Elko High School"
+            },
+            {
+              "entityType": "school",
+              "name": "Elko High School",
+              "season": 2026,
+              "source": "ftc-events-sponsors",
+              "retrievedAt": "2026-09-21T16:14:53.467Z",
+              "confidence": "high",
+              "confirmationState": "unconfirmed",
+              "sourceText": "Tesla&Elko High School"
+            }
+          ],
+          "teamType": "school",
+          "website": null,
+          "robot": null,
+          "sourceUrl": "https://ftc-events.firstinspires.org/2026/team/15492",
+          "summary": null,
+          "record": null,
+          "qualificationRecord": null,
+          "playoffRecord": null,
+          "events": [],
+          "awards": [],
+          "notes": [
+            "No public event rows were parsed from this season page."
+          ]
         }
       }
     },
@@ -15679,7 +15815,7 @@
       "latestOrganization": "Tesla/Gene Haas Foundation&Mojave High School",
       "latestWebsite": null,
       "latestTeamType": "school",
-      "latestLeague": "Southern Nevada",
+      "latestLeague": null,
       "latestRegion": "Nevada",
       "links": [],
       "seasons": {
@@ -16743,6 +16879,64 @@
               "confirmationState": "unconfirmed",
               "sourceText": "Tesla/Gene Haas Foundation&Mojave High School"
             }
+          ]
+        },
+        "2026": {
+          "season": 2026,
+          "active": true,
+          "name": "RoboRattlers Green",
+          "location": "North Las Vegas, NV, USA",
+          "city": "North Las Vegas",
+          "state": "NV",
+          "country": "USA",
+          "region": "Nevada",
+          "league": null,
+          "rookieYear": 2018,
+          "organization": "Tesla/Gene Haas Foundation&Mojave High School",
+          "affiliations": [
+            {
+              "entityType": "sponsor",
+              "name": "Tesla",
+              "season": 2026,
+              "source": "ftc-events-sponsors",
+              "retrievedAt": "2026-09-21T16:14:53.501Z",
+              "confidence": "high",
+              "confirmationState": "unconfirmed",
+              "sourceText": "Tesla/Gene Haas Foundation&Mojave High School"
+            },
+            {
+              "entityType": "sponsor",
+              "name": "Gene Haas Foundation",
+              "season": 2026,
+              "source": "ftc-events-sponsors",
+              "retrievedAt": "2026-09-21T16:14:53.501Z",
+              "confidence": "high",
+              "confirmationState": "unconfirmed",
+              "sourceText": "Tesla/Gene Haas Foundation&Mojave High School"
+            },
+            {
+              "entityType": "school",
+              "name": "Mojave High School",
+              "season": 2026,
+              "source": "ftc-events-sponsors",
+              "retrievedAt": "2026-09-21T16:14:53.501Z",
+              "confidence": "high",
+              "confirmationState": "unconfirmed",
+              "sourceText": "Tesla/Gene Haas Foundation&Mojave High School"
+            }
+          ],
+          "teamType": "school",
+          "website": null,
+          "robot": null,
+          "sourceUrl": "https://ftc-events.firstinspires.org/2026/team/15569",
+          "summary": null,
+          "record": null,
+          "qualificationRecord": null,
+          "playoffRecord": null,
+          "events": [],
+          "awards": [],
+          "notes": [
+            "No public event rows were parsed from this season page."
           ]
         }
       }
@@ -18912,7 +19106,7 @@
               "name": "Gene Haas Foundation",
               "season": 2026,
               "source": "ftc-events-sponsors",
-              "retrievedAt": "2026-08-16T16:16:58.979Z",
+              "retrievedAt": "2026-09-21T16:14:53.600Z",
               "confidence": "high",
               "confirmationState": "unconfirmed",
               "sourceText": "Gene Haas Foundation&Foothill High School"
@@ -18922,7 +19116,7 @@
               "name": "Foothill High School",
               "season": 2026,
               "source": "ftc-events-sponsors",
-              "retrievedAt": "2026-08-16T16:16:58.979Z",
+              "retrievedAt": "2026-09-21T16:14:53.600Z",
               "confidence": "high",
               "confirmationState": "unconfirmed",
               "sourceText": "Gene Haas Foundation&Foothill High School"
@@ -18952,10 +19146,10 @@
       "latestState": "NV",
       "latestCountry": "USA",
       "latestRookieYear": 2018,
-      "latestOrganization": "Tesla & Virgin Valley High School",
+      "latestOrganization": "Tesla&Virgin Valley High School",
       "latestWebsite": null,
       "latestTeamType": "school",
-      "latestLeague": "Southern Nevada",
+      "latestLeague": null,
       "latestRegion": "Nevada",
       "links": [],
       "seasons": {
@@ -19961,6 +20155,54 @@
               "confirmationState": "unconfirmed",
               "sourceText": "Tesla & Virgin Valley High School"
             }
+          ]
+        },
+        "2026": {
+          "season": 2026,
+          "active": true,
+          "name": "RoboDawgs",
+          "location": "Mesquite, NV, USA",
+          "city": "Mesquite",
+          "state": "NV",
+          "country": "USA",
+          "region": "Nevada",
+          "league": null,
+          "rookieYear": 2018,
+          "organization": "Tesla&Virgin Valley High School",
+          "affiliations": [
+            {
+              "entityType": "sponsor",
+              "name": "Tesla",
+              "season": 2026,
+              "source": "ftc-events-sponsors",
+              "retrievedAt": "2026-09-21T16:14:53.653Z",
+              "confidence": "high",
+              "confirmationState": "unconfirmed",
+              "sourceText": "Tesla&Virgin Valley High School"
+            },
+            {
+              "entityType": "school",
+              "name": "Virgin Valley High School",
+              "season": 2026,
+              "source": "ftc-events-sponsors",
+              "retrievedAt": "2026-09-21T16:14:53.653Z",
+              "confidence": "high",
+              "confirmationState": "unconfirmed",
+              "sourceText": "Tesla&Virgin Valley High School"
+            }
+          ],
+          "teamType": "school",
+          "website": null,
+          "robot": null,
+          "sourceUrl": "https://ftc-events.firstinspires.org/2026/team/15889",
+          "summary": null,
+          "record": null,
+          "qualificationRecord": null,
+          "playoffRecord": null,
+          "events": [],
+          "awards": [],
+          "notes": [
+            "No public event rows were parsed from this season page."
           ]
         }
       }
@@ -24509,7 +24751,7 @@
               "name": "Tract",
               "season": 2026,
               "source": "ftc-events-sponsors",
-              "retrievedAt": "2026-08-16T16:16:59.079Z",
+              "retrievedAt": "2026-09-21T16:14:53.858Z",
               "confidence": "high",
               "confirmationState": "unconfirmed",
               "sourceText": "Tract/401 - IBEW/Gene Haas Foundation/SendCutSend/REV Robotics&Family/Community"
@@ -24519,7 +24761,7 @@
               "name": "401 - IBEW",
               "season": 2026,
               "source": "ftc-events-sponsors",
-              "retrievedAt": "2026-08-16T16:16:59.079Z",
+              "retrievedAt": "2026-09-21T16:14:53.858Z",
               "confidence": "high",
               "confirmationState": "unconfirmed",
               "sourceText": "Tract/401 - IBEW/Gene Haas Foundation/SendCutSend/REV Robotics&Family/Community"
@@ -24529,7 +24771,7 @@
               "name": "Gene Haas Foundation",
               "season": 2026,
               "source": "ftc-events-sponsors",
-              "retrievedAt": "2026-08-16T16:16:59.079Z",
+              "retrievedAt": "2026-09-21T16:14:53.858Z",
               "confidence": "high",
               "confirmationState": "unconfirmed",
               "sourceText": "Tract/401 - IBEW/Gene Haas Foundation/SendCutSend/REV Robotics&Family/Community"
@@ -24539,7 +24781,7 @@
               "name": "SendCutSend",
               "season": 2026,
               "source": "ftc-events-sponsors",
-              "retrievedAt": "2026-08-16T16:16:59.079Z",
+              "retrievedAt": "2026-09-21T16:14:53.858Z",
               "confidence": "high",
               "confirmationState": "unconfirmed",
               "sourceText": "Tract/401 - IBEW/Gene Haas Foundation/SendCutSend/REV Robotics&Family/Community"
@@ -24549,7 +24791,7 @@
               "name": "REV Robotics",
               "season": 2026,
               "source": "ftc-events-sponsors",
-              "retrievedAt": "2026-08-16T16:16:59.079Z",
+              "retrievedAt": "2026-09-21T16:14:53.858Z",
               "confidence": "high",
               "confirmationState": "unconfirmed",
               "sourceText": "Tract/401 - IBEW/Gene Haas Foundation/SendCutSend/REV Robotics&Family/Community"
@@ -24559,7 +24801,7 @@
               "name": "Family/Community",
               "season": 2026,
               "source": "ftc-events-sponsors",
-              "retrievedAt": "2026-08-16T16:16:59.079Z",
+              "retrievedAt": "2026-09-21T16:14:53.858Z",
               "confidence": "high",
               "confirmationState": "unconfirmed",
               "sourceText": "Tract/401 - IBEW/Gene Haas Foundation/SendCutSend/REV Robotics&Family/Community"
@@ -33494,7 +33736,7 @@
               "name": "Adelson Educational Campus",
               "season": 2026,
               "source": "ftc-events-sponsors",
-              "retrievedAt": "2026-08-16T16:16:59.448Z",
+              "retrievedAt": "2026-09-21T16:14:54.043Z",
               "confidence": "high",
               "confirmationState": "unconfirmed",
               "sourceText": "Adelson Educational Campus"
@@ -34620,7 +34862,7 @@
               "name": "Meadows School",
               "season": 2026,
               "source": "ftc-events-sponsors",
-              "retrievedAt": "2026-08-16T16:17:00.382Z",
+              "retrievedAt": "2026-09-21T16:14:54.012Z",
               "confidence": "high",
               "confirmationState": "unconfirmed",
               "sourceText": "Meadows School"
@@ -37011,16 +37253,16 @@
     },
     {
       "number": 20681,
-      "latestName": "Giga Bite",
+      "latestName": "GigaBite",
       "latestLocation": "South Lake Tahoe, CA, USA",
       "latestCity": "South Lake Tahoe",
       "latestState": "CA",
       "latestCountry": "USA",
       "latestRookieYear": 2021,
       "latestOrganization": "Family/Community",
-      "latestWebsite": null,
+      "latestWebsite": "https://www.gigabiterobotics.com",
       "latestTeamType": "non-school",
-      "latestLeague": "Northern Nevada",
+      "latestLeague": null,
       "latestRegion": "Nevada",
       "links": [],
       "seasons": {
@@ -37825,6 +38067,44 @@
               "confirmationState": "unconfirmed",
               "sourceText": "Family/Community"
             }
+          ]
+        },
+        "2026": {
+          "season": 2026,
+          "active": true,
+          "name": "GigaBite",
+          "location": "South Lake Tahoe, CA, USA",
+          "city": "South Lake Tahoe",
+          "state": "CA",
+          "country": "USA",
+          "region": "Nevada",
+          "league": null,
+          "rookieYear": 2021,
+          "organization": "Family/Community",
+          "affiliations": [
+            {
+              "entityType": "team_affiliation",
+              "name": "Family/Community",
+              "season": 2026,
+              "source": "ftc-events-sponsors",
+              "retrievedAt": "2026-09-21T16:14:54.046Z",
+              "confidence": "high",
+              "confirmationState": "unconfirmed",
+              "sourceText": "Family/Community"
+            }
+          ],
+          "teamType": "non-school",
+          "website": "https://www.gigabiterobotics.com",
+          "robot": null,
+          "sourceUrl": "https://ftc-events.firstinspires.org/2026/team/20681",
+          "summary": null,
+          "record": null,
+          "qualificationRecord": null,
+          "playoffRecord": null,
+          "events": [],
+          "awards": [],
+          "notes": [
+            "No public event rows were parsed from this season page."
           ]
         }
       }
@@ -40053,7 +40333,7 @@
               "name": "Tesla",
               "season": 2026,
               "source": "ftc-events-sponsors",
-              "retrievedAt": "2026-08-16T16:16:59.393Z",
+              "retrievedAt": "2026-09-21T16:14:53.780Z",
               "confidence": "high",
               "confirmationState": "unconfirmed",
               "sourceText": "Tesla&Helen C Cannon Middle School"
@@ -40063,7 +40343,7 @@
               "name": "Helen C Cannon Middle School",
               "season": 2026,
               "source": "ftc-events-sponsors",
-              "retrievedAt": "2026-08-16T16:16:59.393Z",
+              "retrievedAt": "2026-09-21T16:14:53.780Z",
               "confidence": "high",
               "confirmationState": "unconfirmed",
               "sourceText": "Tesla&Helen C Cannon Middle School"
@@ -40721,7 +41001,7 @@
               "name": "Central Technical Training Academy",
               "season": 2026,
               "source": "ftc-events-sponsors",
-              "retrievedAt": "2026-08-16T16:17:00.365Z",
+              "retrievedAt": "2026-09-21T16:14:54.070Z",
               "confidence": "high",
               "confirmationState": "unconfirmed",
               "sourceText": "Central Technical Training Academy"
@@ -40751,10 +41031,10 @@
       "latestState": "NV",
       "latestCountry": "USA",
       "latestRookieYear": 2022,
-      "latestOrganization": "Legends Bay Casino/Western Turf and Hardscapes&Honors Academy of Literature",
+      "latestOrganization": "Legends Bay Casino/Western Turf and Hardscapes/Tesla&Honors Academy of Literature",
       "latestWebsite": null,
       "latestTeamType": "school",
-      "latestLeague": "Northern Nevada",
+      "latestLeague": null,
       "latestRegion": "Nevada",
       "links": [],
       "seasons": {
@@ -41391,6 +41671,74 @@
               "confirmationState": "unconfirmed",
               "sourceText": "Legends Bay Casino/Western Turf and Hardscapes&Honors Academy of Literature"
             }
+          ]
+        },
+        "2026": {
+          "season": 2026,
+          "active": true,
+          "name": "The Great Golden Gryphons",
+          "location": "Reno, NV, USA",
+          "city": "Reno",
+          "state": "NV",
+          "country": "USA",
+          "region": "Nevada",
+          "league": null,
+          "rookieYear": 2022,
+          "organization": "Legends Bay Casino/Western Turf and Hardscapes/Tesla&Honors Academy of Literature",
+          "affiliations": [
+            {
+              "entityType": "sponsor",
+              "name": "Legends Bay Casino",
+              "season": 2026,
+              "source": "ftc-events-sponsors",
+              "retrievedAt": "2026-09-21T16:14:54.026Z",
+              "confidence": "high",
+              "confirmationState": "unconfirmed",
+              "sourceText": "Legends Bay Casino/Western Turf and Hardscapes/Tesla&Honors Academy of Literature"
+            },
+            {
+              "entityType": "sponsor",
+              "name": "Western Turf and Hardscapes",
+              "season": 2026,
+              "source": "ftc-events-sponsors",
+              "retrievedAt": "2026-09-21T16:14:54.026Z",
+              "confidence": "high",
+              "confirmationState": "unconfirmed",
+              "sourceText": "Legends Bay Casino/Western Turf and Hardscapes/Tesla&Honors Academy of Literature"
+            },
+            {
+              "entityType": "sponsor",
+              "name": "Tesla",
+              "season": 2026,
+              "source": "ftc-events-sponsors",
+              "retrievedAt": "2026-09-21T16:14:54.026Z",
+              "confidence": "high",
+              "confirmationState": "unconfirmed",
+              "sourceText": "Legends Bay Casino/Western Turf and Hardscapes/Tesla&Honors Academy of Literature"
+            },
+            {
+              "entityType": "school",
+              "name": "Honors Academy of Literature",
+              "season": 2026,
+              "source": "ftc-events-sponsors",
+              "retrievedAt": "2026-09-21T16:14:54.026Z",
+              "confidence": "high",
+              "confirmationState": "unconfirmed",
+              "sourceText": "Legends Bay Casino/Western Turf and Hardscapes/Tesla&Honors Academy of Literature"
+            }
+          ],
+          "teamType": "school",
+          "website": null,
+          "robot": null,
+          "sourceUrl": "https://ftc-events.firstinspires.org/2026/team/21632",
+          "summary": null,
+          "record": null,
+          "qualificationRecord": null,
+          "playoffRecord": null,
+          "events": [],
+          "awards": [],
+          "notes": [
+            "No public event rows were parsed from this season page."
           ]
         }
       }
@@ -43526,7 +43874,7 @@
               "name": "Tesla",
               "season": 2026,
               "source": "ftc-events-sponsors",
-              "retrievedAt": "2026-08-16T16:17:00.563Z",
+              "retrievedAt": "2026-09-21T16:14:54.386Z",
               "confidence": "high",
               "confirmationState": "unconfirmed",
               "sourceText": "Tesla&Meadow Valley Middle School"
@@ -43536,7 +43884,7 @@
               "name": "Meadow Valley Middle School",
               "season": 2026,
               "source": "ftc-events-sponsors",
-              "retrievedAt": "2026-08-16T16:17:00.563Z",
+              "retrievedAt": "2026-09-21T16:14:54.386Z",
               "confidence": "high",
               "confirmationState": "unconfirmed",
               "sourceText": "Tesla&Meadow Valley Middle School"
@@ -45220,7 +45568,7 @@
               "name": "Tesla",
               "season": 2026,
               "source": "ftc-events-sponsors",
-              "retrievedAt": "2026-08-16T16:17:00.005Z",
+              "retrievedAt": "2026-09-21T16:14:54.184Z",
               "confidence": "high",
               "confirmationState": "unconfirmed",
               "sourceText": "Tesla/Gene Haas Foundation/Sensus Social/Ken and Alicia Lund, Ferrari-Lund Real Estate/Lake Buddy/Galena High School PTO&Galena High School"
@@ -45230,7 +45578,7 @@
               "name": "Gene Haas Foundation",
               "season": 2026,
               "source": "ftc-events-sponsors",
-              "retrievedAt": "2026-08-16T16:17:00.005Z",
+              "retrievedAt": "2026-09-21T16:14:54.184Z",
               "confidence": "high",
               "confirmationState": "unconfirmed",
               "sourceText": "Tesla/Gene Haas Foundation/Sensus Social/Ken and Alicia Lund, Ferrari-Lund Real Estate/Lake Buddy/Galena High School PTO&Galena High School"
@@ -45240,7 +45588,7 @@
               "name": "Sensus Social",
               "season": 2026,
               "source": "ftc-events-sponsors",
-              "retrievedAt": "2026-08-16T16:17:00.005Z",
+              "retrievedAt": "2026-09-21T16:14:54.184Z",
               "confidence": "high",
               "confirmationState": "unconfirmed",
               "sourceText": "Tesla/Gene Haas Foundation/Sensus Social/Ken and Alicia Lund, Ferrari-Lund Real Estate/Lake Buddy/Galena High School PTO&Galena High School"
@@ -45250,7 +45598,7 @@
               "name": "Ken and Alicia Lund, Ferrari-Lund Real Estate",
               "season": 2026,
               "source": "ftc-events-sponsors",
-              "retrievedAt": "2026-08-16T16:17:00.005Z",
+              "retrievedAt": "2026-09-21T16:14:54.184Z",
               "confidence": "high",
               "confirmationState": "unconfirmed",
               "sourceText": "Tesla/Gene Haas Foundation/Sensus Social/Ken and Alicia Lund, Ferrari-Lund Real Estate/Lake Buddy/Galena High School PTO&Galena High School"
@@ -45260,7 +45608,7 @@
               "name": "Lake Buddy",
               "season": 2026,
               "source": "ftc-events-sponsors",
-              "retrievedAt": "2026-08-16T16:17:00.005Z",
+              "retrievedAt": "2026-09-21T16:14:54.184Z",
               "confidence": "high",
               "confirmationState": "unconfirmed",
               "sourceText": "Tesla/Gene Haas Foundation/Sensus Social/Ken and Alicia Lund, Ferrari-Lund Real Estate/Lake Buddy/Galena High School PTO&Galena High School"
@@ -45270,7 +45618,7 @@
               "name": "Galena High School PTO",
               "season": 2026,
               "source": "ftc-events-sponsors",
-              "retrievedAt": "2026-08-16T16:17:00.005Z",
+              "retrievedAt": "2026-09-21T16:14:54.184Z",
               "confidence": "high",
               "confirmationState": "unconfirmed",
               "sourceText": "Tesla/Gene Haas Foundation/Sensus Social/Ken and Alicia Lund, Ferrari-Lund Real Estate/Lake Buddy/Galena High School PTO&Galena High School"
@@ -45280,7 +45628,7 @@
               "name": "Galena High School",
               "season": 2026,
               "source": "ftc-events-sponsors",
-              "retrievedAt": "2026-08-16T16:17:00.005Z",
+              "retrievedAt": "2026-09-21T16:14:54.184Z",
               "confidence": "high",
               "confirmationState": "unconfirmed",
               "sourceText": "Tesla/Gene Haas Foundation/Sensus Social/Ken and Alicia Lund, Ferrari-Lund Real Estate/Lake Buddy/Galena High School PTO&Galena High School"
@@ -45777,7 +46125,7 @@
               "name": "Tesla",
               "season": 2026,
               "source": "ftc-events-sponsors",
-              "retrievedAt": "2026-08-16T16:17:00.638Z",
+              "retrievedAt": "2026-09-21T16:14:54.190Z",
               "confidence": "high",
               "confirmationState": "unconfirmed",
               "sourceText": "Tesla&Amplus Academy Durango"
@@ -45787,7 +46135,7 @@
               "name": "Amplus Academy Durango",
               "season": 2026,
               "source": "ftc-events-sponsors",
-              "retrievedAt": "2026-08-16T16:17:00.638Z",
+              "retrievedAt": "2026-09-21T16:14:54.190Z",
               "confidence": "high",
               "confirmationState": "unconfirmed",
               "sourceText": "Tesla&Amplus Academy Durango"
@@ -48788,7 +49136,7 @@
       "latestOrganization": "Coral Academy High School",
       "latestWebsite": null,
       "latestTeamType": "school",
-      "latestLeague": "Northern Nevada",
+      "latestLeague": null,
       "latestRegion": "Nevada",
       "links": [],
       "seasons": {
@@ -49073,6 +49421,44 @@
               "confirmationState": "unconfirmed",
               "sourceText": "Coral Academy High School"
             }
+          ]
+        },
+        "2026": {
+          "season": 2026,
+          "active": true,
+          "name": "FalconX",
+          "location": "Reno, NV, USA",
+          "city": "Reno",
+          "state": "NV",
+          "country": "USA",
+          "region": "Nevada",
+          "league": null,
+          "rookieYear": 2024,
+          "organization": "Coral Academy High School",
+          "affiliations": [
+            {
+              "entityType": "school",
+              "name": "Coral Academy High School",
+              "season": 2026,
+              "source": "ftc-events-sponsors",
+              "retrievedAt": "2026-09-21T16:14:54.160Z",
+              "confidence": "high",
+              "confirmationState": "unconfirmed",
+              "sourceText": "Coral Academy High School"
+            }
+          ],
+          "teamType": "school",
+          "website": null,
+          "robot": null,
+          "sourceUrl": "https://ftc-events.firstinspires.org/2026/team/26019",
+          "summary": null,
+          "record": null,
+          "qualificationRecord": null,
+          "playoffRecord": null,
+          "events": [],
+          "awards": [],
+          "notes": [
+            "No public event rows were parsed from this season page."
           ]
         }
       }
@@ -49792,7 +50178,7 @@
               "name": "Nasri Academy for Gifted Children",
               "season": 2026,
               "source": "ftc-events-sponsors",
-              "retrievedAt": "2026-08-16T16:17:00.698Z",
+              "retrievedAt": "2026-09-21T16:14:54.255Z",
               "confidence": "high",
               "confirmationState": "unconfirmed",
               "sourceText": "Nasri Academy for Gifted Children"
@@ -50064,10 +50450,10 @@
       "latestState": "NV",
       "latestCountry": "USA",
       "latestRookieYear": 2025,
-      "latestOrganization": "Frank and Victoria Fertitta Foundation&Family/Community",
+      "latestOrganization": "Frank and Victoria Fertitta Foundation/Craft Kitchen&Family/Community",
       "latestWebsite": null,
       "latestTeamType": "non-school",
-      "latestLeague": "Southern Nevada",
+      "latestLeague": null,
       "latestRegion": "Nevada",
       "links": [],
       "seasons": {
@@ -50277,21 +50663,79 @@
               "sourceText": "Frank and Victoria Fertitta Foundation&Family/Community"
             }
           ]
+        },
+        "2026": {
+          "season": 2026,
+          "active": true,
+          "name": "Symbiotic",
+          "location": "Las Vegas, NV, USA",
+          "city": "Las Vegas",
+          "state": "NV",
+          "country": "USA",
+          "region": "Nevada",
+          "league": null,
+          "rookieYear": 2025,
+          "organization": "Frank and Victoria Fertitta Foundation/Craft Kitchen&Family/Community",
+          "affiliations": [
+            {
+              "entityType": "sponsor",
+              "name": "Frank and Victoria Fertitta Foundation",
+              "season": 2026,
+              "source": "ftc-events-sponsors",
+              "retrievedAt": "2026-09-21T16:14:54.516Z",
+              "confidence": "high",
+              "confirmationState": "unconfirmed",
+              "sourceText": "Frank and Victoria Fertitta Foundation/Craft Kitchen&Family/Community"
+            },
+            {
+              "entityType": "sponsor",
+              "name": "Craft Kitchen",
+              "season": 2026,
+              "source": "ftc-events-sponsors",
+              "retrievedAt": "2026-09-21T16:14:54.516Z",
+              "confidence": "high",
+              "confirmationState": "unconfirmed",
+              "sourceText": "Frank and Victoria Fertitta Foundation/Craft Kitchen&Family/Community"
+            },
+            {
+              "entityType": "team_affiliation",
+              "name": "Family/Community",
+              "season": 2026,
+              "source": "ftc-events-sponsors",
+              "retrievedAt": "2026-09-21T16:14:54.516Z",
+              "confidence": "high",
+              "confirmationState": "unconfirmed",
+              "sourceText": "Frank and Victoria Fertitta Foundation/Craft Kitchen&Family/Community"
+            }
+          ],
+          "teamType": "non-school",
+          "website": null,
+          "robot": null,
+          "sourceUrl": "https://ftc-events.firstinspires.org/2026/team/30408",
+          "summary": null,
+          "record": null,
+          "qualificationRecord": null,
+          "playoffRecord": null,
+          "events": [],
+          "awards": [],
+          "notes": [
+            "No public event rows were parsed from this season page."
+          ]
         }
       }
     },
     {
       "number": 30770,
-      "latestName": "Legacy Robotics A",
+      "latestName": "TechWings",
       "latestLocation": "North Las Vegas, NV, USA",
       "latestCity": "North Las Vegas",
       "latestState": "NV",
       "latestCountry": "USA",
       "latestRookieYear": 2025,
-      "latestOrganization": "Legacy High School",
+      "latestOrganization": "Legacy High School&Legacy High School",
       "latestWebsite": null,
       "latestTeamType": "school",
-      "latestLeague": "Southern Nevada",
+      "latestLeague": null,
       "latestRegion": "Nevada",
       "links": [],
       "seasons": {
@@ -50417,12 +50861,60 @@
               "sourceText": "Legacy High School"
             }
           ]
+        },
+        "2026": {
+          "season": 2026,
+          "active": true,
+          "name": "TechWings",
+          "location": "North Las Vegas, NV, USA",
+          "city": "North Las Vegas",
+          "state": "NV",
+          "country": "USA",
+          "region": "Nevada",
+          "league": null,
+          "rookieYear": 2025,
+          "organization": "Legacy High School&Legacy High School",
+          "affiliations": [
+            {
+              "entityType": "school",
+              "name": "Legacy High School",
+              "season": 2026,
+              "source": "ftc-events-sponsors",
+              "retrievedAt": "2026-09-21T16:14:54.309Z",
+              "confidence": "low",
+              "confirmationState": "unconfirmed",
+              "sourceText": "Legacy High School&Legacy High School"
+            },
+            {
+              "entityType": "school",
+              "name": "Legacy High School",
+              "season": 2026,
+              "source": "ftc-events-sponsors",
+              "retrievedAt": "2026-09-21T16:14:54.309Z",
+              "confidence": "low",
+              "confirmationState": "unconfirmed",
+              "sourceText": "Legacy High School&Legacy High School"
+            }
+          ],
+          "teamType": "school",
+          "website": null,
+          "robot": null,
+          "sourceUrl": "https://ftc-events.firstinspires.org/2026/team/30770",
+          "summary": null,
+          "record": null,
+          "qualificationRecord": null,
+          "playoffRecord": null,
+          "events": [],
+          "awards": [],
+          "notes": [
+            "No public event rows were parsed from this season page."
+          ]
         }
       }
     },
     {
       "number": 31733,
-      "latestName": "The Little G-Bots",
+      "latestName": "The Little G's",
       "latestLocation": "Las Vegas, NV, USA",
       "latestCity": "Las Vegas",
       "latestState": "NV",
@@ -50431,7 +50923,7 @@
       "latestOrganization": "Gene Haas Foundation&Word of Life Christian Academy",
       "latestWebsite": null,
       "latestTeamType": "school",
-      "latestLeague": "Southern Nevada",
+      "latestLeague": null,
       "latestRegion": "Nevada",
       "links": [],
       "seasons": {
@@ -50641,6 +51133,54 @@
               "sourceText": "Gene Haas Foundation&Word of Life Christian Academy"
             }
           ]
+        },
+        "2026": {
+          "season": 2026,
+          "active": true,
+          "name": "The Little G's",
+          "location": "Las Vegas, NV, USA",
+          "city": "Las Vegas",
+          "state": "NV",
+          "country": "USA",
+          "region": "Nevada",
+          "league": null,
+          "rookieYear": 2025,
+          "organization": "Gene Haas Foundation&Word of Life Christian Academy",
+          "affiliations": [
+            {
+              "entityType": "sponsor",
+              "name": "Gene Haas Foundation",
+              "season": 2026,
+              "source": "ftc-events-sponsors",
+              "retrievedAt": "2026-09-21T16:14:54.293Z",
+              "confidence": "high",
+              "confirmationState": "unconfirmed",
+              "sourceText": "Gene Haas Foundation&Word of Life Christian Academy"
+            },
+            {
+              "entityType": "school",
+              "name": "Word of Life Christian Academy",
+              "season": 2026,
+              "source": "ftc-events-sponsors",
+              "retrievedAt": "2026-09-21T16:14:54.293Z",
+              "confidence": "high",
+              "confirmationState": "unconfirmed",
+              "sourceText": "Gene Haas Foundation&Word of Life Christian Academy"
+            }
+          ],
+          "teamType": "school",
+          "website": null,
+          "robot": null,
+          "sourceUrl": "https://ftc-events.firstinspires.org/2026/team/31733",
+          "summary": null,
+          "record": null,
+          "qualificationRecord": null,
+          "playoffRecord": null,
+          "events": [],
+          "awards": [],
+          "notes": [
+            "No public event rows were parsed from this season page."
+          ]
         }
       }
     },
@@ -50805,16 +51345,16 @@
     },
     {
       "number": 31993,
-      "latestName": "Legacy Robotics B",
+      "latestName": "Poultry in Motion",
       "latestLocation": "North Las Vegas, NV, USA",
       "latestCity": "North Las Vegas",
       "latestState": "NV",
       "latestCountry": "USA",
       "latestRookieYear": 2025,
-      "latestOrganization": "Legacy High School",
+      "latestOrganization": "Legacy High School/Limelight/Gene Haas Foundation/FIRST Nevada&Legacy High School",
       "latestWebsite": null,
       "latestTeamType": "school",
-      "latestLeague": "Southern Nevada",
+      "latestLeague": null,
       "latestRegion": "Nevada",
       "links": [],
       "seasons": {
@@ -50939,6 +51479,84 @@
               "confirmationState": "unconfirmed",
               "sourceText": "Legacy High School"
             }
+          ]
+        },
+        "2026": {
+          "season": 2026,
+          "active": true,
+          "name": "Poultry in Motion",
+          "location": "North Las Vegas, NV, USA",
+          "city": "North Las Vegas",
+          "state": "NV",
+          "country": "USA",
+          "region": "Nevada",
+          "league": null,
+          "rookieYear": 2025,
+          "organization": "Legacy High School/Limelight/Gene Haas Foundation/FIRST Nevada&Legacy High School",
+          "affiliations": [
+            {
+              "entityType": "sponsor",
+              "name": "Legacy High School",
+              "season": 2026,
+              "source": "ftc-events-sponsors",
+              "retrievedAt": "2026-09-21T16:14:54.372Z",
+              "confidence": "high",
+              "confirmationState": "unconfirmed",
+              "sourceText": "Legacy High School/Limelight/Gene Haas Foundation/FIRST Nevada&Legacy High School"
+            },
+            {
+              "entityType": "sponsor",
+              "name": "Limelight",
+              "season": 2026,
+              "source": "ftc-events-sponsors",
+              "retrievedAt": "2026-09-21T16:14:54.372Z",
+              "confidence": "high",
+              "confirmationState": "unconfirmed",
+              "sourceText": "Legacy High School/Limelight/Gene Haas Foundation/FIRST Nevada&Legacy High School"
+            },
+            {
+              "entityType": "sponsor",
+              "name": "Gene Haas Foundation",
+              "season": 2026,
+              "source": "ftc-events-sponsors",
+              "retrievedAt": "2026-09-21T16:14:54.372Z",
+              "confidence": "high",
+              "confirmationState": "unconfirmed",
+              "sourceText": "Legacy High School/Limelight/Gene Haas Foundation/FIRST Nevada&Legacy High School"
+            },
+            {
+              "entityType": "sponsor",
+              "name": "FIRST Nevada",
+              "season": 2026,
+              "source": "ftc-events-sponsors",
+              "retrievedAt": "2026-09-21T16:14:54.372Z",
+              "confidence": "high",
+              "confirmationState": "unconfirmed",
+              "sourceText": "Legacy High School/Limelight/Gene Haas Foundation/FIRST Nevada&Legacy High School"
+            },
+            {
+              "entityType": "school",
+              "name": "Legacy High School",
+              "season": 2026,
+              "source": "ftc-events-sponsors",
+              "retrievedAt": "2026-09-21T16:14:54.372Z",
+              "confidence": "high",
+              "confirmationState": "unconfirmed",
+              "sourceText": "Legacy High School/Limelight/Gene Haas Foundation/FIRST Nevada&Legacy High School"
+            }
+          ],
+          "teamType": "school",
+          "website": null,
+          "robot": null,
+          "sourceUrl": "https://ftc-events.firstinspires.org/2026/team/31993",
+          "summary": null,
+          "record": null,
+          "qualificationRecord": null,
+          "playoffRecord": null,
+          "events": [],
+          "awards": [],
+          "notes": [
+            "No public event rows were parsed from this season page."
           ]
         }
       }
@@ -51362,10 +51980,10 @@
       "latestState": "CA",
       "latestCountry": "USA",
       "latestRookieYear": 2025,
-      "latestOrganization": "Tahoe Truckee High",
-      "latestWebsite": null,
+      "latestOrganization": "West Orthodontics&Tahoe Truckee High",
+      "latestWebsite": "https://snowbotics.org",
       "latestTeamType": "school",
-      "latestLeague": "Northern Nevada",
+      "latestLeague": null,
       "latestRegion": "Nevada",
       "links": [],
       "seasons": {
@@ -51491,6 +52109,54 @@
               "sourceText": "Tahoe Truckee High"
             }
           ]
+        },
+        "2026": {
+          "season": 2026,
+          "active": true,
+          "name": "Truckee Snowbotics",
+          "location": "Truckee, CA, USA",
+          "city": "Truckee",
+          "state": "CA",
+          "country": "USA",
+          "region": "Nevada",
+          "league": null,
+          "rookieYear": 2025,
+          "organization": "West Orthodontics&Tahoe Truckee High",
+          "affiliations": [
+            {
+              "entityType": "sponsor",
+              "name": "West Orthodontics",
+              "season": 2026,
+              "source": "ftc-events-sponsors",
+              "retrievedAt": "2026-09-21T16:14:54.430Z",
+              "confidence": "high",
+              "confirmationState": "unconfirmed",
+              "sourceText": "West Orthodontics&Tahoe Truckee High"
+            },
+            {
+              "entityType": "host_organization",
+              "name": "Tahoe Truckee High",
+              "season": 2026,
+              "source": "ftc-events-sponsors",
+              "retrievedAt": "2026-09-21T16:14:54.430Z",
+              "confidence": "medium",
+              "confirmationState": "unconfirmed",
+              "sourceText": "West Orthodontics&Tahoe Truckee High"
+            }
+          ],
+          "teamType": "school",
+          "website": "https://snowbotics.org",
+          "robot": null,
+          "sourceUrl": "https://ftc-events.firstinspires.org/2026/team/32587",
+          "summary": null,
+          "record": null,
+          "qualificationRecord": null,
+          "playoffRecord": null,
+          "events": [],
+          "awards": [],
+          "notes": [
+            "No public event rows were parsed from this season page."
+          ]
         }
       }
     },
@@ -51545,6 +52211,126 @@
               "confirmationState": "unconfirmed",
               "sourceText": "Innovations High School"
             }
+          ]
+        }
+      }
+    },
+    {
+      "number": 36117,
+      "latestName": "The Allsparks",
+      "latestLocation": "Las Vegas, NV, USA",
+      "latestCity": "Las Vegas",
+      "latestState": "NV",
+      "latestCountry": "USA",
+      "latestRookieYear": 2026,
+      "latestOrganization": "Family/Community",
+      "latestWebsite": "https://www.theallsparks.org",
+      "latestTeamType": "non-school",
+      "latestLeague": null,
+      "latestRegion": "Nevada",
+      "links": [],
+      "seasons": {
+        "2026": {
+          "season": 2026,
+          "active": true,
+          "name": "The Allsparks",
+          "location": "Las Vegas, NV, USA",
+          "city": "Las Vegas",
+          "state": "NV",
+          "country": "USA",
+          "region": "Nevada",
+          "league": null,
+          "rookieYear": 2026,
+          "organization": "Family/Community",
+          "affiliations": [
+            {
+              "entityType": "team_affiliation",
+              "name": "Family/Community",
+              "season": 2026,
+              "source": "ftc-events-sponsors",
+              "retrievedAt": "2026-09-21T16:14:54.664Z",
+              "confidence": "high",
+              "confirmationState": "unconfirmed",
+              "sourceText": "Family/Community"
+            }
+          ],
+          "teamType": "non-school",
+          "website": "https://www.theallsparks.org",
+          "robot": "Bumblebee",
+          "sourceUrl": "https://ftc-events.firstinspires.org/2026/team/36117",
+          "summary": null,
+          "record": null,
+          "qualificationRecord": null,
+          "playoffRecord": null,
+          "events": [],
+          "awards": [],
+          "notes": [
+            "No public event rows were parsed from this season page."
+          ]
+        }
+      }
+    },
+    {
+      "number": 37434,
+      "latestName": "Reno Rovers",
+      "latestLocation": "Reno, NV, USA",
+      "latestCity": "Reno",
+      "latestState": "NV",
+      "latestCountry": "USA",
+      "latestRookieYear": 2026,
+      "latestOrganization": "Reno Rovers&Family/Community",
+      "latestWebsite": null,
+      "latestTeamType": "non-school",
+      "latestLeague": null,
+      "latestRegion": "Nevada",
+      "links": [],
+      "seasons": {
+        "2026": {
+          "season": 2026,
+          "active": true,
+          "name": "Reno Rovers",
+          "location": "Reno, NV, USA",
+          "city": "Reno",
+          "state": "NV",
+          "country": "USA",
+          "region": "Nevada",
+          "league": null,
+          "rookieYear": 2026,
+          "organization": "Reno Rovers&Family/Community",
+          "affiliations": [
+            {
+              "entityType": "sponsor",
+              "name": "Reno Rovers",
+              "season": 2026,
+              "source": "ftc-events-sponsors",
+              "retrievedAt": "2026-09-21T16:14:54.509Z",
+              "confidence": "high",
+              "confirmationState": "unconfirmed",
+              "sourceText": "Reno Rovers&Family/Community"
+            },
+            {
+              "entityType": "team_affiliation",
+              "name": "Family/Community",
+              "season": 2026,
+              "source": "ftc-events-sponsors",
+              "retrievedAt": "2026-09-21T16:14:54.509Z",
+              "confidence": "high",
+              "confirmationState": "unconfirmed",
+              "sourceText": "Reno Rovers&Family/Community"
+            }
+          ],
+          "teamType": "non-school",
+          "website": null,
+          "robot": null,
+          "sourceUrl": "https://ftc-events.firstinspires.org/2026/team/37434",
+          "summary": null,
+          "record": null,
+          "qualificationRecord": null,
+          "playoffRecord": null,
+          "events": [],
+          "awards": [],
+          "notes": [
+            "No public event rows were parsed from this season page."
           ]
         }
       }
@@ -52702,30 +53488,30 @@
     {
       "label": "FTC Events region USNV 2026",
       "url": "https://ftc-events.firstinspires.org/2026/region/USNV",
-      "checkedAt": "2026-08-16T16:16:57.579Z",
+      "checkedAt": "2026-09-21T16:14:51.337Z",
       "ok": true,
-      "detail": "13 teams, 14 events, 2 leagues"
+      "detail": "27 teams, 14 events, 2 leagues"
     },
     {
       "label": "League rankings 2026 Northern Nevada",
       "url": "https://ftc-events.firstinspires.org/2026/region/USNV/league/NN",
-      "checkedAt": "2026-08-16T16:16:58.091Z",
+      "checkedAt": "2026-09-21T16:14:51.933Z",
       "ok": true,
       "detail": "0 rankings"
     },
     {
       "label": "League rankings 2026 Southern Nevada",
       "url": "https://ftc-events.firstinspires.org/2026/region/USNV/league/SN",
-      "checkedAt": "2026-08-16T16:16:58.422Z",
+      "checkedAt": "2026-09-21T16:14:52.764Z",
       "ok": true,
       "detail": "0 rankings"
     },
     {
       "label": "FTC Events public team pages",
       "url": "https://ftc-events.firstinspires.org/2026/team/16158",
-      "checkedAt": "2026-08-16T16:17:01.259Z",
+      "checkedAt": "2026-09-21T16:14:54.664Z",
       "ok": true,
-      "detail": "Fetched 13 team pages"
+      "detail": "Fetched 27 team pages"
     }
   ]
 }
