@@ -23,9 +23,9 @@
     "discover:regions": "node scripts/discover-regions-full.mjs"
   },
   "dependencies": {
-    "node-html-parser": "^9.0.4",
-    "react": "^19.3.0",
-    "react-dom": "^19.3.0",
+    "node-html-parser": "^9.0.5",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
     "valibot": "1.5.0"
   },
   "devDependencies": {
