@@ -1,6 +1,8 @@
 import { type ReactNode, useState } from 'react';
 import type { TeamScoutData } from '../data/ftcScout';
-import type { TeamFactField, TeamSeason } from '../data/schema';
+import type { PortfolioLabEntry } from '../data/portfolioLab';
+import type { Team, TeamFactField, TeamSeason } from '../data/schema';
+import type { OpenAllianceFtcTeam } from '../lib/openAlliance';
 import {
   fieldAgreement,
   formatSeenAt,
@@ -109,6 +111,11 @@ export function IdentityFactCell({
   emptyLabel = 'Not listed',
   scout,
   teamNumber,
+  team,
+  portfolios,
+  portfolioFetchedAt,
+  openAlliance,
+  openAllianceRetrievedAt,
   extra,
   compact = false,
   hideValueWhenIdle = false,
@@ -122,6 +129,11 @@ export function IdentityFactCell({
   emptyLabel?: string;
   scout?: TeamScoutData | null;
   teamNumber?: number;
+  team?: Team | null;
+  portfolios?: PortfolioLabEntry[] | null;
+  portfolioFetchedAt?: string | null;
+  openAlliance?: OpenAllianceFtcTeam | null;
+  openAllianceRetrievedAt?: string | null;
   extra?: ReactNode;
   compact?: boolean;
   hideValueWhenIdle?: boolean;
@@ -131,7 +143,15 @@ export function IdentityFactCell({
   agreementDisplayedValue?: string | null;
 }) {
   const [hovered, setHovered] = useState<SourceVote | null>(null);
-  const extras: FieldAgreementExtras = { scout, teamNumber };
+  const extras: FieldAgreementExtras = {
+    scout,
+    teamNumber,
+    team,
+    portfolios,
+    portfolioFetchedAt,
+    openAlliance,
+    openAllianceRetrievedAt,
+  };
   const agreement = fieldAgreement(
     season,
     field,

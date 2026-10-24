@@ -14,6 +14,7 @@ export const LIVE_PROXY_ROUTES = [
   { prefix: '/ftcscout-proxy', targetOrigin: 'https://api.ftcscout.org' },
   { prefix: '/portfolio-lab-proxy', targetOrigin: 'https://www.ftcportfoliolab.org' },
   { prefix: '/ftc-scoring-proxy', targetOrigin: 'https://ftc-scoring.firstinspires.org' },
+  { prefix: '/open-alliance-proxy', targetOrigin: 'https://api.theopenalliance.org' },
 ] as const;
 
 export type LiveProxyRoute = (typeof LIVE_PROXY_ROUTES)[number];

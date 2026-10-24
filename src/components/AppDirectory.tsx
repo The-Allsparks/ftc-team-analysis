@@ -11,6 +11,7 @@ import {
 import type { DirectorySnapshotSource } from '../data/snapshotDirectory';
 import { useFtcData } from '../hooks/useFtcData';
 import { useFtcScout } from '../hooks/useFtcScout';
+import { useOpenAlliance } from '../hooks/useOpenAlliance';
 import { usePortfolioLab } from '../hooks/usePortfolioLab';
 import { useTeamAvatarCatalog } from '../hooks/useTeamAvatarCatalog';
 import { defaultSeasonWithData, initialSeasonFilter } from '../lib/ftcSeason';
@@ -86,7 +87,9 @@ export function AppDirectory({
     message: portfolioMessage,
     diagnostics: portfolioDiagnostics,
     refreshCatalog: refreshPortfolioCatalog,
+    fetchedAt: portfolioFetchedAt,
   } = usePortfolioLab();
+  const { getListing: getOpenAllianceListing, fetchedAt: openAllianceFetchedAt } = useOpenAlliance();
   const {
     getTeamScoutData,
     scoutStatus,
@@ -654,6 +657,11 @@ export function AppDirectory({
             loadTeamScout={loadTeamScout}
             selectedLineage={selectedLineage}
             selectedPortfolios={selectedPortfolios}
+            portfolioFetchedAt={portfolioFetchedAt}
+            openAllianceListing={
+              selectedTeam ? getOpenAllianceListing(selectedTeam.number) : null
+            }
+            openAllianceRetrievedAt={openAllianceFetchedAt}
             portfolioStatus={portfolioStatus}
             refreshPortfolioCatalog={refreshPortfolioCatalog}
             onCorrectionSubmitted={handleCorrectionSubmitted}

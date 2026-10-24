@@ -28,6 +28,7 @@ export const PROXY_CACHE_TTL_SECONDS = {
   ftcScout: 120,
   portfolioLab: 300,
   ftcScoring: 600,
+  openAlliance: 300,
 } as const;
 
 export const PROXY_ERROR_CACHE_CONTROL = 'no-store' as const;
@@ -39,7 +40,8 @@ export type ProxyUpstreamCacheClass =
   | 'ftc-events-historical'
   | 'ftcscout'
   | 'portfolio-lab'
-  | 'ftc-scoring';
+  | 'ftc-scoring'
+  | 'open-alliance';
 
 /** Structural route shape (avoids importing liveProxy and creating a cycle). */
 export type ProxyRouteLike = { prefix: string };
@@ -118,6 +120,8 @@ export function classifyProxyUpstream(
       return 'ftcscout';
     case '/portfolio-lab-proxy':
       return 'portfolio-lab';
+    case '/open-alliance-proxy':
+      return 'open-alliance';
     case '/ftc-scoring-proxy':
       return 'ftc-scoring';
     case '/ftc-proxy': {
@@ -140,6 +144,8 @@ export function proxyCacheControlForClass(cacheClass: ProxyUpstreamCacheClass): 
       return `public, max-age=${PROXY_CACHE_TTL_SECONDS.ftcScout}`;
     case 'portfolio-lab':
       return `public, max-age=${PROXY_CACHE_TTL_SECONDS.portfolioLab}`;
+    case 'open-alliance':
+      return `public, max-age=${PROXY_CACHE_TTL_SECONDS.openAlliance}`;
     case 'ftc-scoring':
       return `public, max-age=${PROXY_CACHE_TTL_SECONDS.ftcScoring}`;
     case 'ftc-events-current':

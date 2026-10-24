@@ -10,6 +10,7 @@ Open Alliance data is **enrichment only**:
 
 - Attached as `TeamLink` rows (code / CAD / build thread / media / website)
 - Shown in Useful Links with visible `Open Alliance (team-declared)` attribution
+- Current-season identity cells also show an Open Alliance favicon vote for declared `TeamName` / `Location` / `TeamWebsite` (corroboration only; HTML season scalars stay as scraped)
 - **Not** used as canonical competitive records, awards, ranks, or OPR
 
 OA `NewestAward` / award fields from the API are intentionally ignored.
@@ -63,7 +64,9 @@ Behavior:
 
 | Path | Role |
 | --- | --- |
-| `src/lib/openAlliance.ts` | Parse, exact match, map to `TeamLink`, optional fetch |
-| `src/lib/openAlliance.test.ts` | Fixtures for match / non-match / attribution |
+| `src/lib/openAlliance.ts` | Parse, exact match, map to `TeamLink`, optional fetch, identity votes, browser proxy fetch |
+| `src/lib/openAlliance.test.ts` | Fixtures for match / non-match / attribution / identity votes |
+| `src/hooks/useOpenAlliance.ts` | One catalog `GET /open-alliance-proxy/teams/ftc` for current-season identity chips |
 | `src/lib/fixtures/open-alliance-ftc-teams.json` | Small synthetic listing (not a full scrape) |
 | `scripts/pull-public-ftc-data.ts` | `--enrich-open-alliance` wiring |
+| `functions/open-alliance-proxy.ts` | Pages Function for the allowlisted OA proxy |

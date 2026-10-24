@@ -34,6 +34,7 @@ Set on **successful** Worker / Pages Function responses in `proxyLiveUpstream` (
 | FTC Events (historical season in path) | `/ftc-proxy/{year}/…` | `public, max-age=3600` | Closed seasons change rarely; still conservative |
 | FTCScout | `/ftcscout-proxy` | `public, max-age=120` | Stats can move during events |
 | Portfolio Lab | `/portfolio-lab-proxy` | `public, max-age=300` | Catalog enrichment; optional |
+| Open Alliance | `/open-alliance-proxy` | `public, max-age=300` | Team-declared listing; optional |
 | FTC Scoring (avatars) | `/ftc-scoring-proxy` | `public, max-age=600` | Composed CSS changes infrequently |
 
 No `stale-while-revalidate` on proxy responses. Do **not** assume these headers collapse Function request quota via Workers Caching.

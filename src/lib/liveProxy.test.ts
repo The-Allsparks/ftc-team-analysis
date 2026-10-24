@@ -27,6 +27,9 @@ describe('resolveLiveProxyRequest', () => {
     expect(resolveLiveProxyRequest('/ftc-scoring-proxy/avatars/composed/2025.css')?.upstreamUrl.toString()).toBe(
       'https://ftc-scoring.firstinspires.org/avatars/composed/2025.css',
     );
+    expect(resolveLiveProxyRequest('/open-alliance-proxy/teams/ftc')?.upstreamUrl.toString()).toBe(
+      'https://api.theopenalliance.org/teams/ftc',
+    );
   });
 
   it('preserves query strings and allows the bare prefix', () => {
