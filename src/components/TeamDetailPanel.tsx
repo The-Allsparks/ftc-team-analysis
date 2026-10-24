@@ -59,6 +59,7 @@ import { CorrectionSubmissionForm } from './CorrectionSubmissionForm';
 import { IdentityFactCell } from './SourceAgreementChips';
 import { TeamAvatar } from './TeamAvatar';
 import { SourceStatusBlock } from './SourceStatusBlock';
+import type { FirstApiTeam } from '../lib/firstEventsApi';
 
 function awardKey(award: Partial<TeamAward>, index: number) {
   return `${award.name ?? 'award'}-${award.eventName ?? 'event'}-${index}`;
@@ -72,10 +73,16 @@ function OrganizationIdentity({
   season,
   scout,
   teamNumber,
+  firstApiTeam,
+  firstApiSeason,
+  firstApiRetrievedAt,
 }: {
   season: TeamSeason;
   scout?: TeamScoutData | null;
   teamNumber?: number;
+  firstApiTeam?: FirstApiTeam | null;
+  firstApiSeason?: SeasonId | null;
+  firstApiRetrievedAt?: string | null;
 }) {
   const hosts = hostAffiliations(season);
   const sponsors = sponsorAffiliations(season);
@@ -91,6 +98,9 @@ function OrganizationIdentity({
         emptyLabel="Not available publicly yet"
         scout={scout}
         teamNumber={teamNumber}
+        firstApiTeam={firstApiTeam}
+        firstApiSeason={firstApiSeason}
+        firstApiRetrievedAt={firstApiRetrievedAt}
       />
     );
   }
@@ -104,6 +114,9 @@ function OrganizationIdentity({
         displayedValue={season.organization}
         scout={scout}
         teamNumber={teamNumber}
+        firstApiTeam={firstApiTeam}
+        firstApiSeason={firstApiSeason}
+        firstApiRetrievedAt={firstApiRetrievedAt}
       />
     );
   }
@@ -118,6 +131,9 @@ function OrganizationIdentity({
         agreementDisplayedValue={season.organization}
         scout={scout}
         teamNumber={teamNumber}
+        firstApiTeam={firstApiTeam}
+        firstApiSeason={firstApiSeason}
+        firstApiRetrievedAt={firstApiRetrievedAt}
         preferDisplayedValue
         extra={
           hosts.some((row) => row.confidence === 'low') ? (
@@ -149,6 +165,9 @@ export type TeamDetailPanelProps = {
   scoutMessage: string | null;
   scoutDiagnostics: string | null;
   loadTeamScout: (season: SeasonId, teamNumber: number, force?: boolean) => Promise<TeamScoutData | null>;
+  firstApiTeam?: FirstApiTeam | null;
+  firstApiSeason?: SeasonId | null;
+  firstApiRetrievedAt?: string | null;
   selectedLineage: TeamLineage | null;
   selectedPortfolios: PortfolioLabEntry[];
   portfolioStatus: 'idle' | 'loading' | 'ready' | 'error';
@@ -172,6 +191,9 @@ export default function TeamDetailPanel({
   scoutMessage,
   scoutDiagnostics,
   loadTeamScout,
+  firstApiTeam = null,
+  firstApiSeason = null,
+  firstApiRetrievedAt = null,
   selectedLineage,
   selectedPortfolios,
   portfolioStatus,
@@ -259,6 +281,9 @@ export default function TeamDetailPanel({
               season={selectedSeason}
               scout={selectedScoutData}
               teamNumber={selectedTeam.number}
+              firstApiTeam={firstApiTeam}
+              firstApiSeason={firstApiSeason}
+              firstApiRetrievedAt={firstApiRetrievedAt}
             />
             <IdentityFactCell
               label="Website"
@@ -267,6 +292,9 @@ export default function TeamDetailPanel({
               displayedValue={selectedSeason.website}
               scout={selectedScoutData}
               teamNumber={selectedTeam.number}
+              firstApiTeam={firstApiTeam}
+              firstApiSeason={firstApiSeason}
+              firstApiRetrievedAt={firstApiRetrievedAt}
             />
             <IdentityFactCell
               label="League"
@@ -275,6 +303,9 @@ export default function TeamDetailPanel({
               displayedValue={selectedSeason.league}
               scout={selectedScoutData}
               teamNumber={selectedTeam.number}
+              firstApiTeam={firstApiTeam}
+              firstApiSeason={firstApiSeason}
+              firstApiRetrievedAt={firstApiRetrievedAt}
             />
             <IdentityFactCell
               label="Region"
@@ -283,6 +314,9 @@ export default function TeamDetailPanel({
               displayedValue={selectedSeason.region}
               scout={selectedScoutData}
               teamNumber={selectedTeam.number}
+              firstApiTeam={firstApiTeam}
+              firstApiSeason={firstApiSeason}
+              firstApiRetrievedAt={firstApiRetrievedAt}
             />
             <IdentityFactCell
               label="Listed this season"
@@ -292,6 +326,9 @@ export default function TeamDetailPanel({
               emptyLabel="Unknown"
               scout={selectedScoutData}
               teamNumber={selectedTeam.number}
+              firstApiTeam={firstApiTeam}
+              firstApiSeason={firstApiSeason}
+              firstApiRetrievedAt={firstApiRetrievedAt}
             />
             <IdentityFactCell
               label="Rookie Year"
@@ -301,6 +338,9 @@ export default function TeamDetailPanel({
               emptyLabel="Unknown"
               scout={selectedScoutData}
               teamNumber={selectedTeam.number}
+              firstApiTeam={firstApiTeam}
+              firstApiSeason={firstApiSeason}
+              firstApiRetrievedAt={firstApiRetrievedAt}
             />
             <IdentityFactCell
               label="Team Type"
@@ -309,6 +349,9 @@ export default function TeamDetailPanel({
               displayedValue={selectedSeason.teamType}
               scout={selectedScoutData}
               teamNumber={selectedTeam.number}
+              firstApiTeam={firstApiTeam}
+              firstApiSeason={firstApiSeason}
+              firstApiRetrievedAt={firstApiRetrievedAt}
             />
             <div className="identity-cell">
               <span>Advancement</span>
@@ -322,6 +365,9 @@ export default function TeamDetailPanel({
               emptyLabel="Not parsed yet"
               scout={selectedScoutData}
               teamNumber={selectedTeam.number}
+              firstApiTeam={firstApiTeam}
+              firstApiSeason={firstApiSeason}
+              firstApiRetrievedAt={firstApiRetrievedAt}
               extra={
                 selectedSeason.record ? (
                   <small className="record-key">W-L-T = wins-losses-ties</small>
@@ -335,6 +381,9 @@ export default function TeamDetailPanel({
               displayedValue={selectedSeason.robot}
               scout={selectedScoutData}
               teamNumber={selectedTeam.number}
+              firstApiTeam={firstApiTeam}
+              firstApiSeason={firstApiSeason}
+              firstApiRetrievedAt={firstApiRetrievedAt}
             />
           </div>
 

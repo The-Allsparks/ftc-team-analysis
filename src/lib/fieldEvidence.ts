@@ -9,6 +9,7 @@ import type {
   TeamFactField,
   TeamSeason,
 } from '../data/schema';
+import { catalogSourceId } from './sourceCatalog';
 
 export const TEAM_FACT_FIELDS = [
   'name',
@@ -129,8 +130,13 @@ export function recordObservation(
   mode: 'supersede' | 'conflict' = 'supersede',
 ): FieldEvidence[] {
   const prior = existing ?? [];
-  const sameFieldCurrent = prior.filter((row) => row.field === incoming.field && row.status === 'current');
-  const identical = sameFieldCurrent.find(
+  const sameSourceCurrent = prior.filter(
+    (row) =>
+      row.field === incoming.field &&
+      row.status === 'current' &&
+      catalogSourceId(row.sourceType) === catalogSourceId(incoming.sourceType),
+  );
+  const identical = sameSourceCurrent.find(
     (row) => normalizeCompareValue(row.value) === normalizeCompareValue(incoming.value),
   );
 
@@ -151,12 +157,12 @@ export function recordObservation(
   }
 
   const demoteTo: ObservationStatus = mode === 'conflict' ? 'conflicting' : 'superseded';
-  const demotedIds = new Set(sameFieldCurrent.map((row) => row.id));
+  const demotedIds = new Set(sameSourceCurrent.map((row) => row.id));
   const nextPrior = prior.map((row) =>
     demotedIds.has(row.id) ? { ...row, status: demoteTo } : row,
   );
 
-  const primaryPrior = sameFieldCurrent[0];
+  const primaryPrior = sameSourceCurrent[0];
   const withLink: FieldEvidence = {
     ...incoming,
     status: 'current',

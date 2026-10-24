@@ -353,6 +353,7 @@ async function enrichFirstApiCompetitive(teams: Team[]): Promise<SourceCheck> {
     console.log(
       `FIRST API: seasonsTouched=${result.seasonsTouched}; awardsReplaced=${result.awardsReplaced};` +
         ` ranksUpdated=${result.eventsRankUpdated}; recordsUpdated=${result.recordsUpdated};` +
+        ` identityVotes=${result.identityVotesAttached};` +
         ` apiCalls=${result.apiCalls}; credentials=${credsLabel}`,
     );
 
@@ -362,7 +363,7 @@ async function enrichFirstApiCompetitive(teams: Team[]): Promise<SourceCheck> {
         url: FIRST_API_BASE_URL,
         checkedAt,
         ok: false,
-        detail: `state=${result.result.state}; ${result.result.diagnostics}; awardsReplaced=${result.awardsReplaced}; ranksUpdated=${result.eventsRankUpdated}; apiCalls=${result.apiCalls}; credentials=${credsLabel}`,
+        detail: `state=${result.result.state}; ${result.result.diagnostics}; awardsReplaced=${result.awardsReplaced}; ranksUpdated=${result.eventsRankUpdated}; identityVotes=${result.identityVotesAttached}; apiCalls=${result.apiCalls}; credentials=${credsLabel}`,
       };
     }
 
@@ -371,7 +372,7 @@ async function enrichFirstApiCompetitive(teams: Team[]): Promise<SourceCheck> {
       url: FIRST_API_BASE_URL,
       checkedAt,
       ok: true,
-      detail: `enrichedTeams=${result.result.data.enrichedTeams}; awardsReplaced=${result.awardsReplaced}; ranksUpdated=${result.eventsRankUpdated}; recordsUpdated=${result.recordsUpdated}; apiCalls=${result.apiCalls}; credentials=${credsLabel}`,
+      detail: `enrichedTeams=${result.result.data.enrichedTeams}; awardsReplaced=${result.awardsReplaced}; ranksUpdated=${result.eventsRankUpdated}; recordsUpdated=${result.recordsUpdated}; identityVotes=${result.identityVotesAttached}; apiCalls=${result.apiCalls}; credentials=${credsLabel}`,
     };
   } catch (error) {
     const detail = error instanceof Error ? error.message : String(error);

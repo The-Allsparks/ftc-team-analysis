@@ -1,6 +1,7 @@
 import { type ReactNode, useState } from 'react';
 import type { TeamScoutData } from '../data/ftcScout';
-import type { TeamFactField, TeamSeason } from '../data/schema';
+import type { SeasonId, TeamFactField, TeamSeason } from '../data/schema';
+import type { FirstApiTeam } from '../lib/firstEventsApi';
 import {
   fieldAgreement,
   formatSeenAt,
@@ -109,6 +110,9 @@ export function IdentityFactCell({
   emptyLabel = 'Not listed',
   scout,
   teamNumber,
+  firstApiTeam,
+  firstApiSeason,
+  firstApiRetrievedAt,
   extra,
   compact = false,
   hideValueWhenIdle = false,
@@ -122,6 +126,9 @@ export function IdentityFactCell({
   emptyLabel?: string;
   scout?: TeamScoutData | null;
   teamNumber?: number;
+  firstApiTeam?: FirstApiTeam | null;
+  firstApiSeason?: SeasonId | null;
+  firstApiRetrievedAt?: string | null;
   extra?: ReactNode;
   compact?: boolean;
   hideValueWhenIdle?: boolean;
@@ -131,7 +138,13 @@ export function IdentityFactCell({
   agreementDisplayedValue?: string | null;
 }) {
   const [hovered, setHovered] = useState<SourceVote | null>(null);
-  const extras: FieldAgreementExtras = { scout, teamNumber };
+  const extras: FieldAgreementExtras = {
+    scout,
+    teamNumber,
+    firstApiTeam,
+    firstApiSeason,
+    firstApiRetrievedAt,
+  };
   const agreement = fieldAgreement(
     season,
     field,
