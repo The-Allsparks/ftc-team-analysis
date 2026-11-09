@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-16T16:17:01.259Z",
+  "generatedAt": "2026-11-09T16:10:00.639Z",
   "targetSeasons": [
     2026,
     2025,
@@ -1974,6 +1974,131 @@
               "sourceText": "JD Air and Heating/Strategy Tax/goBILDA/Gene Haas Foundation/Tesla&Word of Life Christian Academy"
             }
           ]
+        },
+        "2026": {
+          "season": 2026,
+          "active": true,
+          "name": "G-Bots",
+          "location": "Las Vegas, NV, USA",
+          "city": "Las Vegas",
+          "state": "NV",
+          "country": "USA",
+          "region": "Nevada",
+          "league": "Southern Nevada",
+          "rookieYear": 2008,
+          "organization": "JD Air and Heating/Strategy Tax/goBILDA/Gene Haas Foundation/Tesla&Word of Life Christian Academy",
+          "affiliations": [
+            {
+              "entityType": "sponsor",
+              "name": "JD Air and Heating",
+              "season": 2026,
+              "source": "ftc-events-sponsors",
+              "retrievedAt": "2026-11-09T16:09:57.746Z",
+              "confidence": "high",
+              "confirmationState": "unconfirmed",
+              "sourceText": "JD Air and Heating/Strategy Tax/goBILDA/Gene Haas Foundation/Tesla&Word of Life Christian Academy"
+            },
+            {
+              "entityType": "sponsor",
+              "name": "Strategy Tax",
+              "season": 2026,
+              "source": "ftc-events-sponsors",
+              "retrievedAt": "2026-11-09T16:09:57.746Z",
+              "confidence": "high",
+              "confirmationState": "unconfirmed",
+              "sourceText": "JD Air and Heating/Strategy Tax/goBILDA/Gene Haas Foundation/Tesla&Word of Life Christian Academy"
+            },
+            {
+              "entityType": "sponsor",
+              "name": "goBILDA",
+              "season": 2026,
+              "source": "ftc-events-sponsors",
+              "retrievedAt": "2026-11-09T16:09:57.746Z",
+              "confidence": "high",
+              "confirmationState": "unconfirmed",
+              "sourceText": "JD Air and Heating/Strategy Tax/goBILDA/Gene Haas Foundation/Tesla&Word of Life Christian Academy"
+            },
+            {
+              "entityType": "sponsor",
+              "name": "Gene Haas Foundation",
+              "season": 2026,
+              "source": "ftc-events-sponsors",
+              "retrievedAt": "2026-11-09T16:09:57.746Z",
+              "confidence": "high",
+              "confirmationState": "unconfirmed",
+              "sourceText": "JD Air and Heating/Strategy Tax/goBILDA/Gene Haas Foundation/Tesla&Word of Life Christian Academy"
+            },
+            {
+              "entityType": "sponsor",
+              "name": "Tesla",
+              "season": 2026,
+              "source": "ftc-events-sponsors",
+              "retrievedAt": "2026-11-09T16:09:57.746Z",
+              "confidence": "high",
+              "confirmationState": "unconfirmed",
+              "sourceText": "JD Air and Heating/Strategy Tax/goBILDA/Gene Haas Foundation/Tesla&Word of Life Christian Academy"
+            },
+            {
+              "entityType": "school",
+              "name": "Word of Life Christian Academy",
+              "season": 2026,
+              "source": "ftc-events-sponsors",
+              "retrievedAt": "2026-11-09T16:09:57.746Z",
+              "confidence": "high",
+              "confirmationState": "unconfirmed",
+              "sourceText": "JD Air and Heating/Strategy Tax/goBILDA/Gene Haas Foundation/Tesla&Word of Life Christian Academy"
+            }
+          ],
+          "teamType": "school",
+          "website": null,
+          "robot": null,
+          "sourceUrl": "https://ftc-events.firstinspires.org/2026/team/3050",
+          "summary": null,
+          "record": null,
+          "qualificationRecord": null,
+          "playoffRecord": null,
+          "events": [
+            {
+              "code": "USNVSNM1",
+              "name": "Southern League Meet # 1S",
+              "dateRange": "October 31 to October 31, 2026",
+              "eventOrder": 4,
+              "location": "Las Vegas, NV, USA",
+              "league": "Southern Nevada",
+              "rank": "0 of 0",
+              "totalPoints": 136,
+              "matchCount": 5,
+              "rankingScore": null,
+              "leagueSeasonRank": null,
+              "leagueSeasonRankTotal": null,
+              "qualificationUrl": "https://ftc-events.firstinspires.org/2026/USNVSNM1/qualifications?team=3050",
+              "playoffUrl": null,
+              "playoffRecord": null,
+              "allianceSelection": null,
+              "sourceUrl": "https://ftc-events.firstinspires.org/2026/USNVSNM1"
+            },
+            {
+              "code": "USNVSNM2",
+              "name": "Southern League Meet # 2S",
+              "dateRange": "October 31 to October 31, 2026",
+              "eventOrder": 5,
+              "location": "Las Vegas, NV, USA",
+              "league": "Southern Nevada",
+              "rank": "0 of 0",
+              "totalPoints": 194,
+              "matchCount": 5,
+              "rankingScore": null,
+              "leagueSeasonRank": null,
+              "leagueSeasonRankTotal": null,
+              "qualificationUrl": "https://ftc-events.firstinspires.org/2026/USNVSNM2/qualifications?team=3050",
+              "playoffUrl": null,
+              "playoffRecord": null,
+              "allianceSelection": null,
+              "sourceUrl": "https://ftc-events.firstinspires.org/2026/USNVSNM2"
+            }
+          ],
+          "awards": [],
+          "notes": []
         }
       }
     },
@@ -7302,7 +7427,7 @@
       "latestOrganization": "University of Nevada Cooperative Extension/TESLA/Gene Hauss Foundation/National Security Site&4-H",
       "latestWebsite": null,
       "latestTeamType": "school",
-      "latestLeague": null,
+      "latestLeague": "Southern Nevada",
       "latestRegion": "Nevada",
       "links": [],
       "seasons": {
@@ -8581,7 +8706,7 @@
           "state": "NV",
           "country": "USA",
           "region": "Nevada",
-          "league": null,
+          "league": "Southern Nevada",
           "rookieYear": 2017,
           "organization": "University of Nevada Cooperative Extension/TESLA/Gene Hauss Foundation/National Security Site&4-H",
           "affiliations": [
@@ -8590,7 +8715,7 @@
               "name": "University of Nevada Cooperative Extension",
               "season": 2026,
               "source": "ftc-events-sponsors",
-              "retrievedAt": "2026-08-16T16:17:01.259Z",
+              "retrievedAt": "2026-11-09T16:09:57.254Z",
               "confidence": "high",
               "confirmationState": "unconfirmed",
               "sourceText": "University of Nevada Cooperative Extension/TESLA/Gene Hauss Foundation/National Security Site&4-H"
@@ -8600,7 +8725,7 @@
               "name": "TESLA",
               "season": 2026,
               "source": "ftc-events-sponsors",
-              "retrievedAt": "2026-08-16T16:17:01.259Z",
+              "retrievedAt": "2026-11-09T16:09:57.254Z",
               "confidence": "high",
               "confirmationState": "unconfirmed",
               "sourceText": "University of Nevada Cooperative Extension/TESLA/Gene Hauss Foundation/National Security Site&4-H"
@@ -8610,7 +8735,7 @@
               "name": "Gene Hauss Foundation",
               "season": 2026,
               "source": "ftc-events-sponsors",
-              "retrievedAt": "2026-08-16T16:17:01.259Z",
+              "retrievedAt": "2026-11-09T16:09:57.254Z",
               "confidence": "high",
               "confirmationState": "unconfirmed",
               "sourceText": "University of Nevada Cooperative Extension/TESLA/Gene Hauss Foundation/National Security Site&4-H"
@@ -8620,7 +8745,7 @@
               "name": "National Security Site",
               "season": 2026,
               "source": "ftc-events-sponsors",
-              "retrievedAt": "2026-08-16T16:17:01.259Z",
+              "retrievedAt": "2026-11-09T16:09:57.254Z",
               "confidence": "high",
               "confirmationState": "unconfirmed",
               "sourceText": "University of Nevada Cooperative Extension/TESLA/Gene Hauss Foundation/National Security Site&4-H"
@@ -8630,7 +8755,7 @@
               "name": "4-H",
               "season": 2026,
               "source": "ftc-events-sponsors",
-              "retrievedAt": "2026-08-16T16:17:01.259Z",
+              "retrievedAt": "2026-11-09T16:09:57.254Z",
               "confidence": "high",
               "confirmationState": "unconfirmed",
               "sourceText": "University of Nevada Cooperative Extension/TESLA/Gene Hauss Foundation/National Security Site&4-H"
@@ -8644,11 +8769,29 @@
           "record": null,
           "qualificationRecord": null,
           "playoffRecord": null,
-          "events": [],
+          "events": [
+            {
+              "code": "USNVSNM1",
+              "name": "Southern League Meet # 1S",
+              "dateRange": "October 31 to October 31, 2026",
+              "eventOrder": 4,
+              "location": "Las Vegas, NV, USA",
+              "league": "Southern Nevada",
+              "rank": "0 of 0",
+              "totalPoints": 228,
+              "matchCount": 5,
+              "rankingScore": null,
+              "leagueSeasonRank": null,
+              "leagueSeasonRankTotal": null,
+              "qualificationUrl": "https://ftc-events.firstinspires.org/2026/USNVSNM1/qualifications?team=12777",
+              "playoffUrl": null,
+              "playoffRecord": null,
+              "allianceSelection": null,
+              "sourceUrl": "https://ftc-events.firstinspires.org/2026/USNVSNM1"
+            }
+          ],
           "awards": [],
-          "notes": [
-            "No public event rows were parsed from this season page."
-          ]
+          "notes": []
         }
       }
     },
@@ -8660,10 +8803,10 @@
       "latestState": "NV",
       "latestCountry": "USA",
       "latestRookieYear": 2017,
-      "latestOrganization": "Gene Hess Foundation&4-H",
+      "latestOrganization": "Gene Haas Foundation&4-H",
       "latestWebsite": "https://m.facebook.com/groups/2096287130595257",
       "latestTeamType": "non-school",
-      "latestLeague": null,
+      "latestLeague": "Southern Nevada",
       "latestRegion": "Nevada",
       "links": [
         {
@@ -10165,29 +10308,29 @@
           "state": "NV",
           "country": "USA",
           "region": "Nevada",
-          "league": null,
+          "league": "Southern Nevada",
           "rookieYear": 2017,
-          "organization": "Gene Hess Foundation&4-H",
+          "organization": "Gene Haas Foundation&4-H",
           "affiliations": [
             {
               "entityType": "sponsor",
-              "name": "Gene Hess Foundation",
+              "name": "Gene Haas Foundation",
               "season": 2026,
               "source": "ftc-events-sponsors",
-              "retrievedAt": "2026-08-16T16:16:59.064Z",
+              "retrievedAt": "2026-11-09T16:09:57.227Z",
               "confidence": "high",
               "confirmationState": "unconfirmed",
-              "sourceText": "Gene Hess Foundation&4-H"
+              "sourceText": "Gene Haas Foundation&4-H"
             },
             {
               "entityType": "community_organization",
               "name": "4-H",
               "season": 2026,
               "source": "ftc-events-sponsors",
-              "retrievedAt": "2026-08-16T16:16:59.064Z",
+              "retrievedAt": "2026-11-09T16:09:57.227Z",
               "confidence": "high",
               "confirmationState": "unconfirmed",
-              "sourceText": "Gene Hess Foundation&4-H"
+              "sourceText": "Gene Haas Foundation&4-H"
             }
           ],
           "teamType": "non-school",
@@ -10198,11 +10341,29 @@
           "record": null,
           "qualificationRecord": null,
           "playoffRecord": null,
-          "events": [],
+          "events": [
+            {
+              "code": "USNVSNM1",
+              "name": "Southern League Meet # 1S",
+              "dateRange": "October 31 to October 31, 2026",
+              "eventOrder": 4,
+              "location": "Las Vegas, NV, USA",
+              "league": "Southern Nevada",
+              "rank": "0 of 0",
+              "totalPoints": 229,
+              "matchCount": 5,
+              "rankingScore": null,
+              "leagueSeasonRank": null,
+              "leagueSeasonRankTotal": null,
+              "qualificationUrl": "https://ftc-events.firstinspires.org/2026/USNVSNM1/qualifications?team=12991",
+              "playoffUrl": null,
+              "playoffRecord": null,
+              "allianceSelection": null,
+              "sourceUrl": "https://ftc-events.firstinspires.org/2026/USNVSNM1"
+            }
+          ],
           "awards": [],
-          "notes": [
-            "No public event rows were parsed from this season page."
-          ]
+          "notes": []
         }
       }
     },
@@ -13555,7 +13716,7 @@
       "latestOrganization": "The Meadows School",
       "latestWebsite": null,
       "latestTeamType": "school",
-      "latestLeague": null,
+      "latestLeague": "Southern Nevada",
       "latestRegion": "Nevada",
       "links": [],
       "seasons": {
@@ -14957,7 +15118,7 @@
           "state": "NV",
           "country": "USA",
           "region": "Nevada",
-          "league": null,
+          "league": "Southern Nevada",
           "rookieYear": 2018,
           "organization": "The Meadows School",
           "affiliations": [
@@ -14966,7 +15127,7 @@
               "name": "The Meadows School",
               "season": 2026,
               "source": "ftc-events-sponsors",
-              "retrievedAt": "2026-08-16T16:16:58.966Z",
+              "retrievedAt": "2026-11-09T16:09:57.316Z",
               "confidence": "high",
               "confirmationState": "unconfirmed",
               "sourceText": "The Meadows School"
@@ -14980,11 +15141,48 @@
           "record": null,
           "qualificationRecord": null,
           "playoffRecord": null,
-          "events": [],
+          "events": [
+            {
+              "code": "USNVSNM1",
+              "name": "Southern League Meet # 1S",
+              "dateRange": "October 31 to October 31, 2026",
+              "eventOrder": 4,
+              "location": "Las Vegas, NV, USA",
+              "league": "Southern Nevada",
+              "rank": "0 of 0",
+              "totalPoints": 595,
+              "matchCount": 5,
+              "rankingScore": null,
+              "leagueSeasonRank": null,
+              "leagueSeasonRankTotal": null,
+              "qualificationUrl": "https://ftc-events.firstinspires.org/2026/USNVSNM1/qualifications?team=14841",
+              "playoffUrl": null,
+              "playoffRecord": null,
+              "allianceSelection": null,
+              "sourceUrl": "https://ftc-events.firstinspires.org/2026/USNVSNM1"
+            },
+            {
+              "code": "USNVSNM2",
+              "name": "Southern League Meet # 2S",
+              "dateRange": "October 31 to October 31, 2026",
+              "eventOrder": 5,
+              "location": "Las Vegas, NV, USA",
+              "league": "Southern Nevada",
+              "rank": "0 of 0",
+              "totalPoints": 709,
+              "matchCount": 6,
+              "rankingScore": null,
+              "leagueSeasonRank": null,
+              "leagueSeasonRankTotal": null,
+              "qualificationUrl": "https://ftc-events.firstinspires.org/2026/USNVSNM2/qualifications?team=14841",
+              "playoffUrl": null,
+              "playoffRecord": null,
+              "allianceSelection": null,
+              "sourceUrl": "https://ftc-events.firstinspires.org/2026/USNVSNM2"
+            }
+          ],
           "awards": [],
-          "notes": [
-            "No public event rows were parsed from this season page."
-          ]
+          "notes": []
         }
       }
     },
@@ -14996,7 +15194,7 @@
       "latestState": "NV",
       "latestCountry": "USA",
       "latestRookieYear": 2018,
-      "latestOrganization": "Tesla & Elko High School",
+      "latestOrganization": "Tesla&Elko High School",
       "latestWebsite": null,
       "latestTeamType": "school",
       "latestLeague": "Northern Nevada",
@@ -15664,6 +15862,54 @@
               "confirmationState": "unconfirmed",
               "sourceText": "Tesla & Elko High School"
             }
+          ]
+        },
+        "2026": {
+          "season": 2026,
+          "active": true,
+          "name": "ELrobotiKO",
+          "location": "Elko, NV, USA",
+          "city": "Elko",
+          "state": "NV",
+          "country": "USA",
+          "region": "Nevada",
+          "league": "Northern Nevada",
+          "rookieYear": 2018,
+          "organization": "Tesla&Elko High School",
+          "affiliations": [
+            {
+              "entityType": "sponsor",
+              "name": "Tesla",
+              "season": 2026,
+              "source": "ftc-events-sponsors",
+              "retrievedAt": "2026-11-09T16:09:57.196Z",
+              "confidence": "high",
+              "confirmationState": "unconfirmed",
+              "sourceText": "Tesla&Elko High School"
+            },
+            {
+              "entityType": "school",
+              "name": "Elko High School",
+              "season": 2026,
+              "source": "ftc-events-sponsors",
+              "retrievedAt": "2026-11-09T16:09:57.196Z",
+              "confidence": "high",
+              "confirmationState": "unconfirmed",
+              "sourceText": "Tesla&Elko High School"
+            }
+          ],
+          "teamType": "school",
+          "website": null,
+          "robot": null,
+          "sourceUrl": "https://ftc-events.firstinspires.org/2026/team/15492",
+          "summary": null,
+          "record": null,
+          "qualificationRecord": null,
+          "playoffRecord": null,
+          "events": [],
+          "awards": [],
+          "notes": [
+            "No public event rows were parsed from this season page."
           ]
         }
       }
@@ -16744,6 +16990,82 @@
               "sourceText": "Tesla/Gene Haas Foundation&Mojave High School"
             }
           ]
+        },
+        "2026": {
+          "season": 2026,
+          "active": true,
+          "name": "RoboRattlers Green",
+          "location": "North Las Vegas, NV, USA",
+          "city": "North Las Vegas",
+          "state": "NV",
+          "country": "USA",
+          "region": "Nevada",
+          "league": "Southern Nevada",
+          "rookieYear": 2018,
+          "organization": "Tesla/Gene Haas Foundation&Mojave High School",
+          "affiliations": [
+            {
+              "entityType": "sponsor",
+              "name": "Tesla",
+              "season": 2026,
+              "source": "ftc-events-sponsors",
+              "retrievedAt": "2026-11-09T16:09:57.754Z",
+              "confidence": "high",
+              "confirmationState": "unconfirmed",
+              "sourceText": "Tesla/Gene Haas Foundation&Mojave High School"
+            },
+            {
+              "entityType": "sponsor",
+              "name": "Gene Haas Foundation",
+              "season": 2026,
+              "source": "ftc-events-sponsors",
+              "retrievedAt": "2026-11-09T16:09:57.754Z",
+              "confidence": "high",
+              "confirmationState": "unconfirmed",
+              "sourceText": "Tesla/Gene Haas Foundation&Mojave High School"
+            },
+            {
+              "entityType": "school",
+              "name": "Mojave High School",
+              "season": 2026,
+              "source": "ftc-events-sponsors",
+              "retrievedAt": "2026-11-09T16:09:57.754Z",
+              "confidence": "high",
+              "confirmationState": "unconfirmed",
+              "sourceText": "Tesla/Gene Haas Foundation&Mojave High School"
+            }
+          ],
+          "teamType": "school",
+          "website": null,
+          "robot": null,
+          "sourceUrl": "https://ftc-events.firstinspires.org/2026/team/15569",
+          "summary": null,
+          "record": null,
+          "qualificationRecord": null,
+          "playoffRecord": null,
+          "events": [
+            {
+              "code": "USNVSNM2",
+              "name": "Southern League Meet # 2S",
+              "dateRange": "October 31 to October 31, 2026",
+              "eventOrder": 5,
+              "location": "Las Vegas, NV, USA",
+              "league": "Southern Nevada",
+              "rank": "0 of 0",
+              "totalPoints": 115,
+              "matchCount": 5,
+              "rankingScore": null,
+              "leagueSeasonRank": null,
+              "leagueSeasonRankTotal": null,
+              "qualificationUrl": "https://ftc-events.firstinspires.org/2026/USNVSNM2/qualifications?team=15569",
+              "playoffUrl": null,
+              "playoffRecord": null,
+              "allianceSelection": null,
+              "sourceUrl": "https://ftc-events.firstinspires.org/2026/USNVSNM2"
+            }
+          ],
+          "awards": [],
+          "notes": []
         }
       }
     },
@@ -17685,7 +18007,7 @@
       "latestOrganization": "Gene Haas Foundation&Foothill High School",
       "latestWebsite": "https://sites.google.com/view/foothillsteam",
       "latestTeamType": "school",
-      "latestLeague": null,
+      "latestLeague": "Southern Nevada",
       "latestRegion": "Nevada",
       "links": [
         {
@@ -18903,7 +19225,7 @@
           "state": "NV",
           "country": "USA",
           "region": "Nevada",
-          "league": null,
+          "league": "Southern Nevada",
           "rookieYear": 2018,
           "organization": "Gene Haas Foundation&Foothill High School",
           "affiliations": [
@@ -18912,7 +19234,7 @@
               "name": "Gene Haas Foundation",
               "season": 2026,
               "source": "ftc-events-sponsors",
-              "retrievedAt": "2026-08-16T16:16:58.979Z",
+              "retrievedAt": "2026-11-09T16:09:57.425Z",
               "confidence": "high",
               "confirmationState": "unconfirmed",
               "sourceText": "Gene Haas Foundation&Foothill High School"
@@ -18922,7 +19244,7 @@
               "name": "Foothill High School",
               "season": 2026,
               "source": "ftc-events-sponsors",
-              "retrievedAt": "2026-08-16T16:16:58.979Z",
+              "retrievedAt": "2026-11-09T16:09:57.425Z",
               "confidence": "high",
               "confirmationState": "unconfirmed",
               "sourceText": "Gene Haas Foundation&Foothill High School"
@@ -18952,7 +19274,7 @@
       "latestState": "NV",
       "latestCountry": "USA",
       "latestRookieYear": 2018,
-      "latestOrganization": "Tesla & Virgin Valley High School",
+      "latestOrganization": "Tesla&Virgin Valley High School",
       "latestWebsite": null,
       "latestTeamType": "school",
       "latestLeague": "Southern Nevada",
@@ -19962,6 +20284,72 @@
               "sourceText": "Tesla & Virgin Valley High School"
             }
           ]
+        },
+        "2026": {
+          "season": 2026,
+          "active": true,
+          "name": "RoboDawgs",
+          "location": "Mesquite, NV, USA",
+          "city": "Mesquite",
+          "state": "NV",
+          "country": "USA",
+          "region": "Nevada",
+          "league": "Southern Nevada",
+          "rookieYear": 2018,
+          "organization": "Tesla&Virgin Valley High School",
+          "affiliations": [
+            {
+              "entityType": "sponsor",
+              "name": "Tesla",
+              "season": 2026,
+              "source": "ftc-events-sponsors",
+              "retrievedAt": "2026-11-09T16:09:57.481Z",
+              "confidence": "high",
+              "confirmationState": "unconfirmed",
+              "sourceText": "Tesla&Virgin Valley High School"
+            },
+            {
+              "entityType": "school",
+              "name": "Virgin Valley High School",
+              "season": 2026,
+              "source": "ftc-events-sponsors",
+              "retrievedAt": "2026-11-09T16:09:57.481Z",
+              "confidence": "high",
+              "confirmationState": "unconfirmed",
+              "sourceText": "Tesla&Virgin Valley High School"
+            }
+          ],
+          "teamType": "school",
+          "website": null,
+          "robot": null,
+          "sourceUrl": "https://ftc-events.firstinspires.org/2026/team/15889",
+          "summary": null,
+          "record": null,
+          "qualificationRecord": null,
+          "playoffRecord": null,
+          "events": [
+            {
+              "code": "USNVSNM1",
+              "name": "Southern League Meet # 1S",
+              "dateRange": "October 31 to October 31, 2026",
+              "eventOrder": 4,
+              "location": "Las Vegas, NV, USA",
+              "league": "Southern Nevada",
+              "rank": "0 of 0",
+              "totalPoints": 102,
+              "matchCount": 5,
+              "rankingScore": null,
+              "leagueSeasonRank": null,
+              "leagueSeasonRankTotal": null,
+              "qualificationUrl": "https://ftc-events.firstinspires.org/2026/USNVSNM1/qualifications?team=15889",
+              "playoffUrl": null,
+              "playoffRecord": null,
+              "allianceSelection": null,
+              "sourceUrl": "https://ftc-events.firstinspires.org/2026/USNVSNM1"
+            }
+          ],
+          "awards": [],
+          "notes": []
         }
       }
     },
@@ -21221,6 +21609,74 @@
               "sourceText": "Tesla/Solidworks/Gene Haas Foundation&Yerington Intermediate School"
             }
           ]
+        },
+        "2026": {
+          "season": 2026,
+          "active": true,
+          "name": "Chaos",
+          "location": "Yerington, NV, USA",
+          "city": "Yerington",
+          "state": "NV",
+          "country": "USA",
+          "region": "Nevada",
+          "league": "Northern Nevada",
+          "rookieYear": 2018,
+          "organization": "Tesla/Solidworks/Gene Haas Foundation&Yerington Intermediate School",
+          "affiliations": [
+            {
+              "entityType": "sponsor",
+              "name": "Tesla",
+              "season": 2026,
+              "source": "ftc-events-sponsors",
+              "retrievedAt": "2026-11-09T16:09:57.552Z",
+              "confidence": "high",
+              "confirmationState": "unconfirmed",
+              "sourceText": "Tesla/Solidworks/Gene Haas Foundation&Yerington Intermediate School"
+            },
+            {
+              "entityType": "sponsor",
+              "name": "Solidworks",
+              "season": 2026,
+              "source": "ftc-events-sponsors",
+              "retrievedAt": "2026-11-09T16:09:57.552Z",
+              "confidence": "high",
+              "confirmationState": "unconfirmed",
+              "sourceText": "Tesla/Solidworks/Gene Haas Foundation&Yerington Intermediate School"
+            },
+            {
+              "entityType": "sponsor",
+              "name": "Gene Haas Foundation",
+              "season": 2026,
+              "source": "ftc-events-sponsors",
+              "retrievedAt": "2026-11-09T16:09:57.552Z",
+              "confidence": "high",
+              "confirmationState": "unconfirmed",
+              "sourceText": "Tesla/Solidworks/Gene Haas Foundation&Yerington Intermediate School"
+            },
+            {
+              "entityType": "school",
+              "name": "Yerington Intermediate School",
+              "season": 2026,
+              "source": "ftc-events-sponsors",
+              "retrievedAt": "2026-11-09T16:09:57.552Z",
+              "confidence": "high",
+              "confirmationState": "unconfirmed",
+              "sourceText": "Tesla/Solidworks/Gene Haas Foundation&Yerington Intermediate School"
+            }
+          ],
+          "teamType": "school",
+          "website": null,
+          "robot": null,
+          "sourceUrl": "https://ftc-events.firstinspires.org/2026/team/15903",
+          "summary": null,
+          "record": null,
+          "qualificationRecord": null,
+          "playoffRecord": null,
+          "events": [],
+          "awards": [],
+          "notes": [
+            "No public event rows were parsed from this season page."
+          ]
         }
       }
     },
@@ -22152,7 +22608,7 @@
       "latestOrganization": "Tract/401 - IBEW/Gene Haas Foundation/SendCutSend/REV Robotics&Family/Community",
       "latestWebsite": "https://www.vcsilvercircuits.com",
       "latestTeamType": "non-school",
-      "latestLeague": null,
+      "latestLeague": "Northern Nevada",
       "latestRegion": "Nevada",
       "links": [
         {
@@ -24500,7 +24956,7 @@
           "state": "NV",
           "country": "USA",
           "region": "Nevada",
-          "league": null,
+          "league": "Northern Nevada",
           "rookieYear": 2018,
           "organization": "Tract/401 - IBEW/Gene Haas Foundation/SendCutSend/REV Robotics&Family/Community",
           "affiliations": [
@@ -24509,7 +24965,7 @@
               "name": "Tract",
               "season": 2026,
               "source": "ftc-events-sponsors",
-              "retrievedAt": "2026-08-16T16:16:59.079Z",
+              "retrievedAt": "2026-11-09T16:09:57.666Z",
               "confidence": "high",
               "confirmationState": "unconfirmed",
               "sourceText": "Tract/401 - IBEW/Gene Haas Foundation/SendCutSend/REV Robotics&Family/Community"
@@ -24519,7 +24975,7 @@
               "name": "401 - IBEW",
               "season": 2026,
               "source": "ftc-events-sponsors",
-              "retrievedAt": "2026-08-16T16:16:59.079Z",
+              "retrievedAt": "2026-11-09T16:09:57.666Z",
               "confidence": "high",
               "confirmationState": "unconfirmed",
               "sourceText": "Tract/401 - IBEW/Gene Haas Foundation/SendCutSend/REV Robotics&Family/Community"
@@ -24529,7 +24985,7 @@
               "name": "Gene Haas Foundation",
               "season": 2026,
               "source": "ftc-events-sponsors",
-              "retrievedAt": "2026-08-16T16:16:59.079Z",
+              "retrievedAt": "2026-11-09T16:09:57.666Z",
               "confidence": "high",
               "confirmationState": "unconfirmed",
               "sourceText": "Tract/401 - IBEW/Gene Haas Foundation/SendCutSend/REV Robotics&Family/Community"
@@ -24539,7 +24995,7 @@
               "name": "SendCutSend",
               "season": 2026,
               "source": "ftc-events-sponsors",
-              "retrievedAt": "2026-08-16T16:16:59.079Z",
+              "retrievedAt": "2026-11-09T16:09:57.666Z",
               "confidence": "high",
               "confirmationState": "unconfirmed",
               "sourceText": "Tract/401 - IBEW/Gene Haas Foundation/SendCutSend/REV Robotics&Family/Community"
@@ -24549,7 +25005,7 @@
               "name": "REV Robotics",
               "season": 2026,
               "source": "ftc-events-sponsors",
-              "retrievedAt": "2026-08-16T16:16:59.079Z",
+              "retrievedAt": "2026-11-09T16:09:57.666Z",
               "confidence": "high",
               "confirmationState": "unconfirmed",
               "sourceText": "Tract/401 - IBEW/Gene Haas Foundation/SendCutSend/REV Robotics&Family/Community"
@@ -24559,7 +25015,7 @@
               "name": "Family/Community",
               "season": 2026,
               "source": "ftc-events-sponsors",
-              "retrievedAt": "2026-08-16T16:16:59.079Z",
+              "retrievedAt": "2026-11-09T16:09:57.666Z",
               "confidence": "high",
               "confirmationState": "unconfirmed",
               "sourceText": "Tract/401 - IBEW/Gene Haas Foundation/SendCutSend/REV Robotics&Family/Community"
@@ -24573,11 +25029,29 @@
           "record": null,
           "qualificationRecord": null,
           "playoffRecord": null,
-          "events": [],
+          "events": [
+            {
+              "code": "USNVNNM1",
+              "name": "Northern League Meet # 1N",
+              "dateRange": "October 31 to October 31, 2026",
+              "eventOrder": 3,
+              "location": "Reno, NV, USA",
+              "league": "Northern Nevada",
+              "rank": "0 of 0",
+              "totalPoints": 664,
+              "matchCount": 6,
+              "rankingScore": null,
+              "leagueSeasonRank": null,
+              "leagueSeasonRankTotal": null,
+              "qualificationUrl": "https://ftc-events.firstinspires.org/2026/USNVNNM1/qualifications?team=16158",
+              "playoffUrl": null,
+              "playoffRecord": null,
+              "allianceSelection": null,
+              "sourceUrl": "https://ftc-events.firstinspires.org/2026/USNVNNM1"
+            }
+          ],
           "awards": [],
-          "notes": [
-            "No public event rows were parsed from this season page."
-          ]
+          "notes": []
         }
       }
     },
@@ -25537,7 +26011,7 @@
       "latestState": "NV",
       "latestCountry": "USA",
       "latestRookieYear": 2019,
-      "latestOrganization": "Tesla&Alpine Academy",
+      "latestOrganization": "Alpine Academy",
       "latestWebsite": null,
       "latestTeamType": "school",
       "latestLeague": "Northern Nevada",
@@ -25885,6 +26359,44 @@
               "confirmationState": "unconfirmed",
               "sourceText": "Tesla&Alpine Academy"
             }
+          ]
+        },
+        "2026": {
+          "season": 2026,
+          "active": true,
+          "name": "Robo Archers",
+          "location": "Sparks, NV, USA",
+          "city": "Sparks",
+          "state": "NV",
+          "country": "USA",
+          "region": "Nevada",
+          "league": "Northern Nevada",
+          "rookieYear": 2019,
+          "organization": "Alpine Academy",
+          "affiliations": [
+            {
+              "entityType": "school",
+              "name": "Alpine Academy",
+              "season": 2026,
+              "source": "ftc-events-sponsors",
+              "retrievedAt": "2026-11-09T16:09:57.918Z",
+              "confidence": "high",
+              "confirmationState": "unconfirmed",
+              "sourceText": "Alpine Academy"
+            }
+          ],
+          "teamType": "school",
+          "website": null,
+          "robot": null,
+          "sourceUrl": "https://ftc-events.firstinspires.org/2026/team/16779",
+          "summary": null,
+          "record": null,
+          "qualificationRecord": null,
+          "playoffRecord": null,
+          "events": [],
+          "awards": [],
+          "notes": [
+            "No public event rows were parsed from this season page."
           ]
         }
       }
@@ -28341,6 +28853,64 @@
               "confirmationState": "unconfirmed",
               "sourceText": "Tesla/Gene Haas Foundation&West Wendover Jr Sr High Sch"
             }
+          ]
+        },
+        "2026": {
+          "season": 2026,
+          "active": true,
+          "name": "Wolverines",
+          "location": "West Wendover, NV, USA",
+          "city": "West Wendover",
+          "state": "NV",
+          "country": "USA",
+          "region": "Nevada",
+          "league": "Northern Nevada",
+          "rookieYear": 2019,
+          "organization": "Tesla/Gene Haas Foundation&West Wendover Jr Sr High Sch",
+          "affiliations": [
+            {
+              "entityType": "sponsor",
+              "name": "Tesla",
+              "season": 2026,
+              "source": "ftc-events-sponsors",
+              "retrievedAt": "2026-11-09T16:09:57.748Z",
+              "confidence": "high",
+              "confirmationState": "unconfirmed",
+              "sourceText": "Tesla/Gene Haas Foundation&West Wendover Jr Sr High Sch"
+            },
+            {
+              "entityType": "sponsor",
+              "name": "Gene Haas Foundation",
+              "season": 2026,
+              "source": "ftc-events-sponsors",
+              "retrievedAt": "2026-11-09T16:09:57.748Z",
+              "confidence": "high",
+              "confirmationState": "unconfirmed",
+              "sourceText": "Tesla/Gene Haas Foundation&West Wendover Jr Sr High Sch"
+            },
+            {
+              "entityType": "school",
+              "name": "West Wendover Jr Sr High Sch",
+              "season": 2026,
+              "source": "ftc-events-sponsors",
+              "retrievedAt": "2026-11-09T16:09:57.748Z",
+              "confidence": "high",
+              "confirmationState": "unconfirmed",
+              "sourceText": "Tesla/Gene Haas Foundation&West Wendover Jr Sr High Sch"
+            }
+          ],
+          "teamType": "school",
+          "website": null,
+          "robot": null,
+          "sourceUrl": "https://ftc-events.firstinspires.org/2026/team/17506",
+          "summary": null,
+          "record": null,
+          "qualificationRecord": null,
+          "playoffRecord": null,
+          "events": [],
+          "awards": [],
+          "notes": [
+            "No public event rows were parsed from this season page."
           ]
         }
       }
@@ -31023,7 +31593,7 @@
       "latestState": "NV",
       "latestCountry": "USA",
       "latestRookieYear": 2020,
-      "latestOrganization": "Tesla&Leadership Academy of Nevada",
+      "latestOrganization": "Tesla/Gene Haas Foundation&Leadership Academy of Nevada",
       "latestWebsite": null,
       "latestTeamType": "school",
       "latestLeague": "Southern Nevada",
@@ -31826,6 +32396,64 @@
               "sourceText": "Tesla&Leadership Academy of Nevada"
             }
           ]
+        },
+        "2026": {
+          "season": 2026,
+          "active": true,
+          "name": "LANV Logic",
+          "location": "Las Vegas, NV, USA",
+          "city": "Las Vegas",
+          "state": "NV",
+          "country": "USA",
+          "region": "Nevada",
+          "league": "Southern Nevada",
+          "rookieYear": 2020,
+          "organization": "Tesla/Gene Haas Foundation&Leadership Academy of Nevada",
+          "affiliations": [
+            {
+              "entityType": "sponsor",
+              "name": "Tesla",
+              "season": 2026,
+              "source": "ftc-events-sponsors",
+              "retrievedAt": "2026-11-09T16:09:57.876Z",
+              "confidence": "high",
+              "confirmationState": "unconfirmed",
+              "sourceText": "Tesla/Gene Haas Foundation&Leadership Academy of Nevada"
+            },
+            {
+              "entityType": "sponsor",
+              "name": "Gene Haas Foundation",
+              "season": 2026,
+              "source": "ftc-events-sponsors",
+              "retrievedAt": "2026-11-09T16:09:57.876Z",
+              "confidence": "high",
+              "confirmationState": "unconfirmed",
+              "sourceText": "Tesla/Gene Haas Foundation&Leadership Academy of Nevada"
+            },
+            {
+              "entityType": "school",
+              "name": "Leadership Academy of Nevada",
+              "season": 2026,
+              "source": "ftc-events-sponsors",
+              "retrievedAt": "2026-11-09T16:09:57.876Z",
+              "confidence": "high",
+              "confirmationState": "unconfirmed",
+              "sourceText": "Tesla/Gene Haas Foundation&Leadership Academy of Nevada"
+            }
+          ],
+          "teamType": "school",
+          "website": null,
+          "robot": null,
+          "sourceUrl": "https://ftc-events.firstinspires.org/2026/team/18815",
+          "summary": null,
+          "record": null,
+          "qualificationRecord": null,
+          "playoffRecord": null,
+          "events": [],
+          "awards": [],
+          "notes": [
+            "No public event rows were parsed from this season page."
+          ]
         }
       }
     },
@@ -32389,7 +33017,7 @@
       "latestOrganization": "Adelson Educational Campus",
       "latestWebsite": "https://www.adelsoncampus.org",
       "latestTeamType": "school",
-      "latestLeague": null,
+      "latestLeague": "Southern Nevada",
       "latestRegion": "Nevada",
       "links": [],
       "seasons": {
@@ -33485,7 +34113,7 @@
           "state": "NV",
           "country": "USA",
           "region": "Nevada",
-          "league": null,
+          "league": "Southern Nevada",
           "rookieYear": 2020,
           "organization": "Adelson Educational Campus",
           "affiliations": [
@@ -33494,7 +34122,7 @@
               "name": "Adelson Educational Campus",
               "season": 2026,
               "source": "ftc-events-sponsors",
-              "retrievedAt": "2026-08-16T16:16:59.448Z",
+              "retrievedAt": "2026-11-09T16:09:58.114Z",
               "confidence": "high",
               "confirmationState": "unconfirmed",
               "sourceText": "Adelson Educational Campus"
@@ -33508,11 +34136,48 @@
           "record": null,
           "qualificationRecord": null,
           "playoffRecord": null,
-          "events": [],
+          "events": [
+            {
+              "code": "USNVSNM1",
+              "name": "Southern League Meet # 1S",
+              "dateRange": "October 31 to October 31, 2026",
+              "eventOrder": 4,
+              "location": "Las Vegas, NV, USA",
+              "league": "Southern Nevada",
+              "rank": "0 of 0",
+              "totalPoints": 436,
+              "matchCount": 5,
+              "rankingScore": null,
+              "leagueSeasonRank": null,
+              "leagueSeasonRankTotal": null,
+              "qualificationUrl": "https://ftc-events.firstinspires.org/2026/USNVSNM1/qualifications?team=18858",
+              "playoffUrl": null,
+              "playoffRecord": null,
+              "allianceSelection": null,
+              "sourceUrl": "https://ftc-events.firstinspires.org/2026/USNVSNM1"
+            },
+            {
+              "code": "USNVSNM2",
+              "name": "Southern League Meet # 2S",
+              "dateRange": "October 31 to October 31, 2026",
+              "eventOrder": 5,
+              "location": "Las Vegas, NV, USA",
+              "league": "Southern Nevada",
+              "rank": "0 of 0",
+              "totalPoints": 370,
+              "matchCount": 5,
+              "rankingScore": null,
+              "leagueSeasonRank": null,
+              "leagueSeasonRankTotal": null,
+              "qualificationUrl": "https://ftc-events.firstinspires.org/2026/USNVSNM2/qualifications?team=18858",
+              "playoffUrl": null,
+              "playoffRecord": null,
+              "allianceSelection": null,
+              "sourceUrl": "https://ftc-events.firstinspires.org/2026/USNVSNM2"
+            }
+          ],
           "awards": [],
-          "notes": [
-            "No public event rows were parsed from this season page."
-          ]
+          "notes": []
         }
       }
     },
@@ -33914,7 +34579,7 @@
       "latestOrganization": "Meadows School",
       "latestWebsite": null,
       "latestTeamType": "school",
-      "latestLeague": null,
+      "latestLeague": "Southern Nevada",
       "latestRegion": "Nevada",
       "links": [],
       "seasons": {
@@ -34611,7 +35276,7 @@
           "state": "NV",
           "country": "USA",
           "region": "Nevada",
-          "league": null,
+          "league": "Southern Nevada",
           "rookieYear": 2021,
           "organization": "Meadows School",
           "affiliations": [
@@ -34620,7 +35285,7 @@
               "name": "Meadows School",
               "season": 2026,
               "source": "ftc-events-sponsors",
-              "retrievedAt": "2026-08-16T16:17:00.382Z",
+              "retrievedAt": "2026-11-09T16:09:58.064Z",
               "confidence": "high",
               "confirmationState": "unconfirmed",
               "sourceText": "Meadows School"
@@ -34634,11 +35299,48 @@
           "record": null,
           "qualificationRecord": null,
           "playoffRecord": null,
-          "events": [],
+          "events": [
+            {
+              "code": "USNVSNM1",
+              "name": "Southern League Meet # 1S",
+              "dateRange": "October 31 to October 31, 2026",
+              "eventOrder": 4,
+              "location": "Las Vegas, NV, USA",
+              "league": "Southern Nevada",
+              "rank": "0 of 0",
+              "totalPoints": 373,
+              "matchCount": 5,
+              "rankingScore": null,
+              "leagueSeasonRank": null,
+              "leagueSeasonRankTotal": null,
+              "qualificationUrl": "https://ftc-events.firstinspires.org/2026/USNVSNM1/qualifications?team=19792",
+              "playoffUrl": null,
+              "playoffRecord": null,
+              "allianceSelection": null,
+              "sourceUrl": "https://ftc-events.firstinspires.org/2026/USNVSNM1"
+            },
+            {
+              "code": "USNVSNM2",
+              "name": "Southern League Meet # 2S",
+              "dateRange": "October 31 to October 31, 2026",
+              "eventOrder": 5,
+              "location": "Las Vegas, NV, USA",
+              "league": "Southern Nevada",
+              "rank": "0 of 0",
+              "totalPoints": 380,
+              "matchCount": 5,
+              "rankingScore": null,
+              "leagueSeasonRank": null,
+              "leagueSeasonRankTotal": null,
+              "qualificationUrl": "https://ftc-events.firstinspires.org/2026/USNVSNM2/qualifications?team=19792",
+              "playoffUrl": null,
+              "playoffRecord": null,
+              "allianceSelection": null,
+              "sourceUrl": "https://ftc-events.firstinspires.org/2026/USNVSNM2"
+            }
+          ],
           "awards": [],
-          "notes": [
-            "No public event rows were parsed from this season page."
-          ]
+          "notes": []
         }
       }
     },
@@ -35005,6 +35707,44 @@
               "confirmationState": "unconfirmed",
               "sourceText": "Coral Acad of Sci-Sandy Ridge"
             }
+          ]
+        },
+        "2026": {
+          "season": 2026,
+          "active": true,
+          "name": "Robophobia",
+          "location": "Henderson, NV, USA",
+          "city": "Henderson",
+          "state": "NV",
+          "country": "USA",
+          "region": "Nevada",
+          "league": "Southern Nevada",
+          "rookieYear": 2021,
+          "organization": "Coral Acad of Sci-Sandy Ridge",
+          "affiliations": [
+            {
+              "entityType": "host_organization",
+              "name": "Coral Acad of Sci-Sandy Ridge",
+              "season": 2026,
+              "source": "ftc-events-sponsors",
+              "retrievedAt": "2026-11-09T16:09:58.285Z",
+              "confidence": "medium",
+              "confirmationState": "unconfirmed",
+              "sourceText": "Coral Acad of Sci-Sandy Ridge"
+            }
+          ],
+          "teamType": "unknown",
+          "website": null,
+          "robot": null,
+          "sourceUrl": "https://ftc-events.firstinspires.org/2026/team/19808",
+          "summary": null,
+          "record": null,
+          "qualificationRecord": null,
+          "playoffRecord": null,
+          "events": [],
+          "awards": [],
+          "notes": [
+            "No public event rows were parsed from this season page."
           ]
         }
       }
@@ -35712,6 +36452,62 @@
               "sourceText": "Coral Acad of Sci-Sandy Ridge"
             }
           ]
+        },
+        "2026": {
+          "season": 2026,
+          "active": true,
+          "name": "Falcons",
+          "location": "Henderson, NV, USA",
+          "city": "Henderson",
+          "state": "NV",
+          "country": "USA",
+          "region": "Nevada",
+          "league": "Southern Nevada",
+          "rookieYear": 2021,
+          "organization": "Coral Acad of Sci-Sandy Ridge",
+          "affiliations": [
+            {
+              "entityType": "host_organization",
+              "name": "Coral Acad of Sci-Sandy Ridge",
+              "season": 2026,
+              "source": "ftc-events-sponsors",
+              "retrievedAt": "2026-11-09T16:09:58.121Z",
+              "confidence": "medium",
+              "confirmationState": "unconfirmed",
+              "sourceText": "Coral Acad of Sci-Sandy Ridge"
+            }
+          ],
+          "teamType": "unknown",
+          "website": null,
+          "robot": null,
+          "sourceUrl": "https://ftc-events.firstinspires.org/2026/team/19810",
+          "summary": null,
+          "record": null,
+          "qualificationRecord": null,
+          "playoffRecord": null,
+          "events": [
+            {
+              "code": "USNVSNM1",
+              "name": "Southern League Meet # 1S",
+              "dateRange": "October 31 to October 31, 2026",
+              "eventOrder": 4,
+              "location": "Las Vegas, NV, USA",
+              "league": "Southern Nevada",
+              "rank": "0 of 0",
+              "totalPoints": 165,
+              "matchCount": 5,
+              "rankingScore": null,
+              "leagueSeasonRank": null,
+              "leagueSeasonRankTotal": null,
+              "qualificationUrl": "https://ftc-events.firstinspires.org/2026/USNVSNM1/qualifications?team=19810",
+              "playoffUrl": null,
+              "playoffRecord": null,
+              "allianceSelection": null,
+              "sourceUrl": "https://ftc-events.firstinspires.org/2026/USNVSNM1"
+            }
+          ],
+          "awards": [],
+          "notes": []
         }
       }
     },
@@ -37011,14 +37807,14 @@
     },
     {
       "number": 20681,
-      "latestName": "Giga Bite",
+      "latestName": "GigaBite",
       "latestLocation": "South Lake Tahoe, CA, USA",
       "latestCity": "South Lake Tahoe",
       "latestState": "CA",
       "latestCountry": "USA",
       "latestRookieYear": 2021,
       "latestOrganization": "Family/Community",
-      "latestWebsite": null,
+      "latestWebsite": "https://www.gigabiterobotics.com",
       "latestTeamType": "non-school",
       "latestLeague": "Northern Nevada",
       "latestRegion": "Nevada",
@@ -37826,6 +38622,62 @@
               "sourceText": "Family/Community"
             }
           ]
+        },
+        "2026": {
+          "season": 2026,
+          "active": true,
+          "name": "GigaBite",
+          "location": "South Lake Tahoe, CA, USA",
+          "city": "South Lake Tahoe",
+          "state": "CA",
+          "country": "USA",
+          "region": "Nevada",
+          "league": "Northern Nevada",
+          "rookieYear": 2021,
+          "organization": "Family/Community",
+          "affiliations": [
+            {
+              "entityType": "team_affiliation",
+              "name": "Family/Community",
+              "season": 2026,
+              "source": "ftc-events-sponsors",
+              "retrievedAt": "2026-11-09T16:09:58.192Z",
+              "confidence": "high",
+              "confirmationState": "unconfirmed",
+              "sourceText": "Family/Community"
+            }
+          ],
+          "teamType": "non-school",
+          "website": "https://www.gigabiterobotics.com",
+          "robot": null,
+          "sourceUrl": "https://ftc-events.firstinspires.org/2026/team/20681",
+          "summary": null,
+          "record": null,
+          "qualificationRecord": null,
+          "playoffRecord": null,
+          "events": [
+            {
+              "code": "USNVNNM1",
+              "name": "Northern League Meet # 1N",
+              "dateRange": "October 31 to October 31, 2026",
+              "eventOrder": 3,
+              "location": "Reno, NV, USA",
+              "league": "Northern Nevada",
+              "rank": "0 of 0",
+              "totalPoints": 343,
+              "matchCount": 6,
+              "rankingScore": null,
+              "leagueSeasonRank": null,
+              "leagueSeasonRankTotal": null,
+              "qualificationUrl": "https://ftc-events.firstinspires.org/2026/USNVNNM1/qualifications?team=20681",
+              "playoffUrl": null,
+              "playoffRecord": null,
+              "allianceSelection": null,
+              "sourceUrl": "https://ftc-events.firstinspires.org/2026/USNVNNM1"
+            }
+          ],
+          "awards": [],
+          "notes": []
         }
       }
     },
@@ -39371,7 +40223,7 @@
       "latestOrganization": "Tesla&Helen C Cannon Middle School",
       "latestWebsite": null,
       "latestTeamType": "school",
-      "latestLeague": null,
+      "latestLeague": "Southern Nevada",
       "latestRegion": "Nevada",
       "links": [],
       "seasons": {
@@ -40044,7 +40896,7 @@
           "state": "NV",
           "country": "USA",
           "region": "Nevada",
-          "league": null,
+          "league": "Southern Nevada",
           "rookieYear": 2022,
           "organization": "Tesla&Helen C Cannon Middle School",
           "affiliations": [
@@ -40053,7 +40905,7 @@
               "name": "Tesla",
               "season": 2026,
               "source": "ftc-events-sponsors",
-              "retrievedAt": "2026-08-16T16:16:59.393Z",
+              "retrievedAt": "2026-11-09T16:09:58.425Z",
               "confidence": "high",
               "confirmationState": "unconfirmed",
               "sourceText": "Tesla&Helen C Cannon Middle School"
@@ -40063,7 +40915,7 @@
               "name": "Helen C Cannon Middle School",
               "season": 2026,
               "source": "ftc-events-sponsors",
-              "retrievedAt": "2026-08-16T16:16:59.393Z",
+              "retrievedAt": "2026-11-09T16:09:58.425Z",
               "confidence": "high",
               "confirmationState": "unconfirmed",
               "sourceText": "Tesla&Helen C Cannon Middle School"
@@ -40077,11 +40929,29 @@
           "record": null,
           "qualificationRecord": null,
           "playoffRecord": null,
-          "events": [],
+          "events": [
+            {
+              "code": "USNVSNM2",
+              "name": "Southern League Meet # 2S",
+              "dateRange": "October 31 to October 31, 2026",
+              "eventOrder": 5,
+              "location": "Las Vegas, NV, USA",
+              "league": "Southern Nevada",
+              "rank": "0 of 0",
+              "totalPoints": 289,
+              "matchCount": 5,
+              "rankingScore": null,
+              "leagueSeasonRank": null,
+              "leagueSeasonRankTotal": null,
+              "qualificationUrl": "https://ftc-events.firstinspires.org/2026/USNVSNM2/qualifications?team=21535",
+              "playoffUrl": null,
+              "playoffRecord": null,
+              "allianceSelection": null,
+              "sourceUrl": "https://ftc-events.firstinspires.org/2026/USNVSNM2"
+            }
+          ],
           "awards": [],
-          "notes": [
-            "No public event rows were parsed from this season page."
-          ]
+          "notes": []
         }
       }
     },
@@ -40330,7 +41200,7 @@
       "latestOrganization": "Central Technical Training Academy",
       "latestWebsite": null,
       "latestTeamType": "school",
-      "latestLeague": null,
+      "latestLeague": "Southern Nevada",
       "latestRegion": "Nevada",
       "links": [],
       "seasons": {
@@ -40712,7 +41582,7 @@
           "state": "NV",
           "country": "USA",
           "region": "Nevada",
-          "league": null,
+          "league": "Southern Nevada",
           "rookieYear": 2022,
           "organization": "Central Technical Training Academy",
           "affiliations": [
@@ -40721,7 +41591,7 @@
               "name": "Central Technical Training Academy",
               "season": 2026,
               "source": "ftc-events-sponsors",
-              "retrievedAt": "2026-08-16T16:17:00.365Z",
+              "retrievedAt": "2026-11-09T16:09:58.507Z",
               "confidence": "high",
               "confirmationState": "unconfirmed",
               "sourceText": "Central Technical Training Academy"
@@ -40735,11 +41605,29 @@
           "record": null,
           "qualificationRecord": null,
           "playoffRecord": null,
-          "events": [],
+          "events": [
+            {
+              "code": "USNVSNM2",
+              "name": "Southern League Meet # 2S",
+              "dateRange": "October 31 to October 31, 2026",
+              "eventOrder": 5,
+              "location": "Las Vegas, NV, USA",
+              "league": "Southern Nevada",
+              "rank": "0 of 0",
+              "totalPoints": 211,
+              "matchCount": 5,
+              "rankingScore": null,
+              "leagueSeasonRank": null,
+              "leagueSeasonRankTotal": null,
+              "qualificationUrl": "https://ftc-events.firstinspires.org/2026/USNVSNM2/qualifications?team=21629",
+              "playoffUrl": null,
+              "playoffRecord": null,
+              "allianceSelection": null,
+              "sourceUrl": "https://ftc-events.firstinspires.org/2026/USNVSNM2"
+            }
+          ],
           "awards": [],
-          "notes": [
-            "No public event rows were parsed from this season page."
-          ]
+          "notes": []
         }
       }
     },
@@ -40751,7 +41639,7 @@
       "latestState": "NV",
       "latestCountry": "USA",
       "latestRookieYear": 2022,
-      "latestOrganization": "Legends Bay Casino/Western Turf and Hardscapes&Honors Academy of Literature",
+      "latestOrganization": "Legends Bay Casino/Western Turf and Hardscapes/Tesla&Honors Academy of Literature",
       "latestWebsite": null,
       "latestTeamType": "school",
       "latestLeague": "Northern Nevada",
@@ -41392,6 +42280,92 @@
               "sourceText": "Legends Bay Casino/Western Turf and Hardscapes&Honors Academy of Literature"
             }
           ]
+        },
+        "2026": {
+          "season": 2026,
+          "active": true,
+          "name": "The Great Golden Gryphons",
+          "location": "Reno, NV, USA",
+          "city": "Reno",
+          "state": "NV",
+          "country": "USA",
+          "region": "Nevada",
+          "league": "Northern Nevada",
+          "rookieYear": 2022,
+          "organization": "Legends Bay Casino/Western Turf and Hardscapes/Tesla&Honors Academy of Literature",
+          "affiliations": [
+            {
+              "entityType": "sponsor",
+              "name": "Legends Bay Casino",
+              "season": 2026,
+              "source": "ftc-events-sponsors",
+              "retrievedAt": "2026-11-09T16:09:58.739Z",
+              "confidence": "high",
+              "confirmationState": "unconfirmed",
+              "sourceText": "Legends Bay Casino/Western Turf and Hardscapes/Tesla&Honors Academy of Literature"
+            },
+            {
+              "entityType": "sponsor",
+              "name": "Western Turf and Hardscapes",
+              "season": 2026,
+              "source": "ftc-events-sponsors",
+              "retrievedAt": "2026-11-09T16:09:58.739Z",
+              "confidence": "high",
+              "confirmationState": "unconfirmed",
+              "sourceText": "Legends Bay Casino/Western Turf and Hardscapes/Tesla&Honors Academy of Literature"
+            },
+            {
+              "entityType": "sponsor",
+              "name": "Tesla",
+              "season": 2026,
+              "source": "ftc-events-sponsors",
+              "retrievedAt": "2026-11-09T16:09:58.739Z",
+              "confidence": "high",
+              "confirmationState": "unconfirmed",
+              "sourceText": "Legends Bay Casino/Western Turf and Hardscapes/Tesla&Honors Academy of Literature"
+            },
+            {
+              "entityType": "school",
+              "name": "Honors Academy of Literature",
+              "season": 2026,
+              "source": "ftc-events-sponsors",
+              "retrievedAt": "2026-11-09T16:09:58.739Z",
+              "confidence": "high",
+              "confirmationState": "unconfirmed",
+              "sourceText": "Legends Bay Casino/Western Turf and Hardscapes/Tesla&Honors Academy of Literature"
+            }
+          ],
+          "teamType": "school",
+          "website": null,
+          "robot": null,
+          "sourceUrl": "https://ftc-events.firstinspires.org/2026/team/21632",
+          "summary": null,
+          "record": null,
+          "qualificationRecord": null,
+          "playoffRecord": null,
+          "events": [
+            {
+              "code": "USNVNNM1",
+              "name": "Northern League Meet # 1N",
+              "dateRange": "October 31 to October 31, 2026",
+              "eventOrder": 3,
+              "location": "Reno, NV, USA",
+              "league": "Northern Nevada",
+              "rank": "0 of 0",
+              "totalPoints": 356,
+              "matchCount": 6,
+              "rankingScore": null,
+              "leagueSeasonRank": null,
+              "leagueSeasonRankTotal": null,
+              "qualificationUrl": "https://ftc-events.firstinspires.org/2026/USNVNNM1/qualifications?team=21632",
+              "playoffUrl": null,
+              "playoffRecord": null,
+              "allianceSelection": null,
+              "sourceUrl": "https://ftc-events.firstinspires.org/2026/USNVNNM1"
+            }
+          ],
+          "awards": [],
+          "notes": []
         }
       }
     },
@@ -42017,6 +42991,62 @@
               "sourceText": "Bishop Manogue Catholic High School"
             }
           ]
+        },
+        "2026": {
+          "season": 2026,
+          "active": true,
+          "name": "MinerBots",
+          "location": "Reno, NV, USA",
+          "city": "Reno",
+          "state": "NV",
+          "country": "USA",
+          "region": "Nevada",
+          "league": "Northern Nevada",
+          "rookieYear": 2022,
+          "organization": "Bishop Manogue Catholic High School",
+          "affiliations": [
+            {
+              "entityType": "school",
+              "name": "Bishop Manogue Catholic High School",
+              "season": 2026,
+              "source": "ftc-events-sponsors",
+              "retrievedAt": "2026-11-09T16:09:58.533Z",
+              "confidence": "high",
+              "confirmationState": "unconfirmed",
+              "sourceText": "Bishop Manogue Catholic High School"
+            }
+          ],
+          "teamType": "school",
+          "website": null,
+          "robot": null,
+          "sourceUrl": "https://ftc-events.firstinspires.org/2026/team/21707",
+          "summary": null,
+          "record": null,
+          "qualificationRecord": null,
+          "playoffRecord": null,
+          "events": [
+            {
+              "code": "USNVNNM1",
+              "name": "Northern League Meet # 1N",
+              "dateRange": "October 31 to October 31, 2026",
+              "eventOrder": 3,
+              "location": "Reno, NV, USA",
+              "league": "Northern Nevada",
+              "rank": "0 of 0",
+              "totalPoints": 326,
+              "matchCount": 6,
+              "rankingScore": null,
+              "leagueSeasonRank": null,
+              "leagueSeasonRankTotal": null,
+              "qualificationUrl": "https://ftc-events.firstinspires.org/2026/USNVNNM1/qualifications?team=21707",
+              "playoffUrl": null,
+              "playoffRecord": null,
+              "allianceSelection": null,
+              "sourceUrl": "https://ftc-events.firstinspires.org/2026/USNVNNM1"
+            }
+          ],
+          "awards": [],
+          "notes": []
         }
       }
     },
@@ -43077,7 +44107,7 @@
       "latestOrganization": "Tesla&Meadow Valley Middle School",
       "latestWebsite": null,
       "latestTeamType": "school",
-      "latestLeague": null,
+      "latestLeague": "Southern Nevada",
       "latestRegion": "Nevada",
       "links": [],
       "seasons": {
@@ -43517,7 +44547,7 @@
           "state": "NV",
           "country": "USA",
           "region": "Nevada",
-          "league": null,
+          "league": "Southern Nevada",
           "rookieYear": 2022,
           "organization": "Tesla&Meadow Valley Middle School",
           "affiliations": [
@@ -43526,7 +44556,7 @@
               "name": "Tesla",
               "season": 2026,
               "source": "ftc-events-sponsors",
-              "retrievedAt": "2026-08-16T16:17:00.563Z",
+              "retrievedAt": "2026-11-09T16:09:58.773Z",
               "confidence": "high",
               "confirmationState": "unconfirmed",
               "sourceText": "Tesla&Meadow Valley Middle School"
@@ -43536,7 +44566,7 @@
               "name": "Meadow Valley Middle School",
               "season": 2026,
               "source": "ftc-events-sponsors",
-              "retrievedAt": "2026-08-16T16:17:00.563Z",
+              "retrievedAt": "2026-11-09T16:09:58.773Z",
               "confidence": "high",
               "confirmationState": "unconfirmed",
               "sourceText": "Tesla&Meadow Valley Middle School"
@@ -43560,7 +44590,7 @@
     },
     {
       "number": 22159,
-      "latestName": "Vulcans",
+      "latestName": "Vulcan",
       "latestLocation": "Panaca, NV, USA",
       "latestCity": "Panaca",
       "latestState": "NV",
@@ -43958,6 +44988,44 @@
               "confirmationState": "unconfirmed",
               "sourceText": "Meadow Valley Middle School"
             }
+          ]
+        },
+        "2026": {
+          "season": 2026,
+          "active": true,
+          "name": "Vulcan",
+          "location": "Panaca, NV, USA",
+          "city": "Panaca",
+          "state": "NV",
+          "country": "USA",
+          "region": "Nevada",
+          "league": "Southern Nevada",
+          "rookieYear": 2022,
+          "organization": "Meadow Valley Middle School",
+          "affiliations": [
+            {
+              "entityType": "school",
+              "name": "Meadow Valley Middle School",
+              "season": 2026,
+              "source": "ftc-events-sponsors",
+              "retrievedAt": "2026-11-09T16:09:58.681Z",
+              "confidence": "high",
+              "confirmationState": "unconfirmed",
+              "sourceText": "Meadow Valley Middle School"
+            }
+          ],
+          "teamType": "school",
+          "website": null,
+          "robot": null,
+          "sourceUrl": "https://ftc-events.firstinspires.org/2026/team/22159",
+          "summary": null,
+          "record": null,
+          "qualificationRecord": null,
+          "playoffRecord": null,
+          "events": [],
+          "awards": [],
+          "notes": [
+            "No public event rows were parsed from this season page."
           ]
         }
       }
@@ -44363,10 +45431,10 @@
       "latestState": "NV",
       "latestCountry": "USA",
       "latestRookieYear": 2022,
-      "latestOrganization": "Tesla/Gene Haas Foundation/Sensus Social/Ken and Alicia Lund, Ferrari-Lund Real Estate/Lake Buddy/Galena High School PTO&Galena High School",
+      "latestOrganization": "Tesla/Gene Haas Foundation/Sensus Social/The Lund Group, Ferrari-Lund Real Estate/Lake Buddy/Galena High School PTO&Galena High School",
       "latestWebsite": "https://ursamajorftc.org",
       "latestTeamType": "school",
-      "latestLeague": null,
+      "latestLeague": "Northern Nevada",
       "latestRegion": "Nevada",
       "links": [
         {
@@ -45211,79 +46279,79 @@
           "state": "NV",
           "country": "USA",
           "region": "Nevada",
-          "league": null,
+          "league": "Northern Nevada",
           "rookieYear": 2022,
-          "organization": "Tesla/Gene Haas Foundation/Sensus Social/Ken and Alicia Lund, Ferrari-Lund Real Estate/Lake Buddy/Galena High School PTO&Galena High School",
+          "organization": "Tesla/Gene Haas Foundation/Sensus Social/The Lund Group, Ferrari-Lund Real Estate/Lake Buddy/Galena High School PTO&Galena High School",
           "affiliations": [
             {
               "entityType": "sponsor",
               "name": "Tesla",
               "season": 2026,
               "source": "ftc-events-sponsors",
-              "retrievedAt": "2026-08-16T16:17:00.005Z",
+              "retrievedAt": "2026-11-09T16:09:58.834Z",
               "confidence": "high",
               "confirmationState": "unconfirmed",
-              "sourceText": "Tesla/Gene Haas Foundation/Sensus Social/Ken and Alicia Lund, Ferrari-Lund Real Estate/Lake Buddy/Galena High School PTO&Galena High School"
+              "sourceText": "Tesla/Gene Haas Foundation/Sensus Social/The Lund Group, Ferrari-Lund Real Estate/Lake Buddy/Galena High School PTO&Galena High School"
             },
             {
               "entityType": "sponsor",
               "name": "Gene Haas Foundation",
               "season": 2026,
               "source": "ftc-events-sponsors",
-              "retrievedAt": "2026-08-16T16:17:00.005Z",
+              "retrievedAt": "2026-11-09T16:09:58.834Z",
               "confidence": "high",
               "confirmationState": "unconfirmed",
-              "sourceText": "Tesla/Gene Haas Foundation/Sensus Social/Ken and Alicia Lund, Ferrari-Lund Real Estate/Lake Buddy/Galena High School PTO&Galena High School"
+              "sourceText": "Tesla/Gene Haas Foundation/Sensus Social/The Lund Group, Ferrari-Lund Real Estate/Lake Buddy/Galena High School PTO&Galena High School"
             },
             {
               "entityType": "sponsor",
               "name": "Sensus Social",
               "season": 2026,
               "source": "ftc-events-sponsors",
-              "retrievedAt": "2026-08-16T16:17:00.005Z",
+              "retrievedAt": "2026-11-09T16:09:58.834Z",
               "confidence": "high",
               "confirmationState": "unconfirmed",
-              "sourceText": "Tesla/Gene Haas Foundation/Sensus Social/Ken and Alicia Lund, Ferrari-Lund Real Estate/Lake Buddy/Galena High School PTO&Galena High School"
+              "sourceText": "Tesla/Gene Haas Foundation/Sensus Social/The Lund Group, Ferrari-Lund Real Estate/Lake Buddy/Galena High School PTO&Galena High School"
             },
             {
               "entityType": "sponsor",
-              "name": "Ken and Alicia Lund, Ferrari-Lund Real Estate",
+              "name": "The Lund Group, Ferrari-Lund Real Estate",
               "season": 2026,
               "source": "ftc-events-sponsors",
-              "retrievedAt": "2026-08-16T16:17:00.005Z",
+              "retrievedAt": "2026-11-09T16:09:58.834Z",
               "confidence": "high",
               "confirmationState": "unconfirmed",
-              "sourceText": "Tesla/Gene Haas Foundation/Sensus Social/Ken and Alicia Lund, Ferrari-Lund Real Estate/Lake Buddy/Galena High School PTO&Galena High School"
+              "sourceText": "Tesla/Gene Haas Foundation/Sensus Social/The Lund Group, Ferrari-Lund Real Estate/Lake Buddy/Galena High School PTO&Galena High School"
             },
             {
               "entityType": "sponsor",
               "name": "Lake Buddy",
               "season": 2026,
               "source": "ftc-events-sponsors",
-              "retrievedAt": "2026-08-16T16:17:00.005Z",
+              "retrievedAt": "2026-11-09T16:09:58.834Z",
               "confidence": "high",
               "confirmationState": "unconfirmed",
-              "sourceText": "Tesla/Gene Haas Foundation/Sensus Social/Ken and Alicia Lund, Ferrari-Lund Real Estate/Lake Buddy/Galena High School PTO&Galena High School"
+              "sourceText": "Tesla/Gene Haas Foundation/Sensus Social/The Lund Group, Ferrari-Lund Real Estate/Lake Buddy/Galena High School PTO&Galena High School"
             },
             {
               "entityType": "sponsor",
               "name": "Galena High School PTO",
               "season": 2026,
               "source": "ftc-events-sponsors",
-              "retrievedAt": "2026-08-16T16:17:00.005Z",
+              "retrievedAt": "2026-11-09T16:09:58.834Z",
               "confidence": "high",
               "confirmationState": "unconfirmed",
-              "sourceText": "Tesla/Gene Haas Foundation/Sensus Social/Ken and Alicia Lund, Ferrari-Lund Real Estate/Lake Buddy/Galena High School PTO&Galena High School"
+              "sourceText": "Tesla/Gene Haas Foundation/Sensus Social/The Lund Group, Ferrari-Lund Real Estate/Lake Buddy/Galena High School PTO&Galena High School"
             },
             {
               "entityType": "school",
               "name": "Galena High School",
               "season": 2026,
               "source": "ftc-events-sponsors",
-              "retrievedAt": "2026-08-16T16:17:00.005Z",
+              "retrievedAt": "2026-11-09T16:09:58.834Z",
               "confidence": "high",
               "confirmationState": "unconfirmed",
-              "sourceText": "Tesla/Gene Haas Foundation/Sensus Social/Ken and Alicia Lund, Ferrari-Lund Real Estate/Lake Buddy/Galena High School PTO&Galena High School"
+              "sourceText": "Tesla/Gene Haas Foundation/Sensus Social/The Lund Group, Ferrari-Lund Real Estate/Lake Buddy/Galena High School PTO&Galena High School"
             }
           ],
           "teamType": "school",
@@ -45294,11 +46362,29 @@
           "record": null,
           "qualificationRecord": null,
           "playoffRecord": null,
-          "events": [],
+          "events": [
+            {
+              "code": "USNVNNM1",
+              "name": "Northern League Meet # 1N",
+              "dateRange": "October 31 to October 31, 2026",
+              "eventOrder": 3,
+              "location": "Reno, NV, USA",
+              "league": "Northern Nevada",
+              "rank": "0 of 0",
+              "totalPoints": 231,
+              "matchCount": 6,
+              "rankingScore": null,
+              "leagueSeasonRank": null,
+              "leagueSeasonRankTotal": null,
+              "qualificationUrl": "https://ftc-events.firstinspires.org/2026/USNVNNM1/qualifications?team=22774",
+              "playoffUrl": null,
+              "playoffRecord": null,
+              "allianceSelection": null,
+              "sourceUrl": "https://ftc-events.firstinspires.org/2026/USNVNNM1"
+            }
+          ],
           "awards": [],
-          "notes": [
-            "No public event rows were parsed from this season page."
-          ]
+          "notes": []
         }
       }
     },
@@ -45313,7 +46399,7 @@
       "latestOrganization": "Tesla&Amplus Academy Durango",
       "latestWebsite": null,
       "latestTeamType": "school",
-      "latestLeague": null,
+      "latestLeague": "Southern Nevada",
       "latestRegion": "Nevada",
       "links": [],
       "seasons": {
@@ -45768,7 +46854,7 @@
           "state": "NV",
           "country": "USA",
           "region": "Nevada",
-          "league": null,
+          "league": "Southern Nevada",
           "rookieYear": 2022,
           "organization": "Tesla&Amplus Academy Durango",
           "affiliations": [
@@ -45777,7 +46863,7 @@
               "name": "Tesla",
               "season": 2026,
               "source": "ftc-events-sponsors",
-              "retrievedAt": "2026-08-16T16:17:00.638Z",
+              "retrievedAt": "2026-11-09T16:09:59.097Z",
               "confidence": "high",
               "confirmationState": "unconfirmed",
               "sourceText": "Tesla&Amplus Academy Durango"
@@ -45787,7 +46873,7 @@
               "name": "Amplus Academy Durango",
               "season": 2026,
               "source": "ftc-events-sponsors",
-              "retrievedAt": "2026-08-16T16:17:00.638Z",
+              "retrievedAt": "2026-11-09T16:09:59.097Z",
               "confidence": "high",
               "confirmationState": "unconfirmed",
               "sourceText": "Tesla&Amplus Academy Durango"
@@ -46302,6 +47388,54 @@
               "sourceText": "Mammoth Mountain Community Foundation&Mammoth High School"
             }
           ]
+        },
+        "2026": {
+          "season": 2026,
+          "active": true,
+          "name": "RoboHuskies",
+          "location": "Mammoth Lakes, CA, USA",
+          "city": "Mammoth Lakes",
+          "state": "CA",
+          "country": "USA",
+          "region": "Nevada",
+          "league": "Northern Nevada",
+          "rookieYear": 2023,
+          "organization": "Mammoth Mountain Community Foundation&Mammoth High School",
+          "affiliations": [
+            {
+              "entityType": "sponsor",
+              "name": "Mammoth Mountain Community Foundation",
+              "season": 2026,
+              "source": "ftc-events-sponsors",
+              "retrievedAt": "2026-11-09T16:09:58.935Z",
+              "confidence": "high",
+              "confirmationState": "unconfirmed",
+              "sourceText": "Mammoth Mountain Community Foundation&Mammoth High School"
+            },
+            {
+              "entityType": "school",
+              "name": "Mammoth High School",
+              "season": 2026,
+              "source": "ftc-events-sponsors",
+              "retrievedAt": "2026-11-09T16:09:58.935Z",
+              "confidence": "high",
+              "confirmationState": "unconfirmed",
+              "sourceText": "Mammoth Mountain Community Foundation&Mammoth High School"
+            }
+          ],
+          "teamType": "school",
+          "website": null,
+          "robot": null,
+          "sourceUrl": "https://ftc-events.firstinspires.org/2026/team/23316",
+          "summary": null,
+          "record": null,
+          "qualificationRecord": null,
+          "playoffRecord": null,
+          "events": [],
+          "awards": [],
+          "notes": [
+            "No public event rows were parsed from this season page."
+          ]
         }
       }
     },
@@ -46582,6 +47716,44 @@
               "confirmationState": "unconfirmed",
               "sourceText": "Equipo Academy"
             }
+          ]
+        },
+        "2026": {
+          "season": 2026,
+          "active": true,
+          "name": "Equipo Academy",
+          "location": "Las Vegas, NV, USA",
+          "city": "Las Vegas",
+          "state": "NV",
+          "country": "USA",
+          "region": "Nevada",
+          "league": "Southern Nevada",
+          "rookieYear": 2023,
+          "organization": "Equipo Academy",
+          "affiliations": [
+            {
+              "entityType": "school",
+              "name": "Equipo Academy",
+              "season": 2026,
+              "source": "ftc-events-sponsors",
+              "retrievedAt": "2026-11-09T16:09:58.974Z",
+              "confidence": "high",
+              "confirmationState": "unconfirmed",
+              "sourceText": "Equipo Academy"
+            }
+          ],
+          "teamType": "school",
+          "website": null,
+          "robot": null,
+          "sourceUrl": "https://ftc-events.firstinspires.org/2026/team/23655",
+          "summary": null,
+          "record": null,
+          "qualificationRecord": null,
+          "playoffRecord": null,
+          "events": [],
+          "awards": [],
+          "notes": [
+            "No public event rows were parsed from this season page."
           ]
         }
       }
@@ -47196,6 +48368,62 @@
               "sourceText": "Excel Christian School"
             }
           ]
+        },
+        "2026": {
+          "season": 2026,
+          "active": true,
+          "name": "The Nano Ninjas",
+          "location": "Sparks, NV, USA",
+          "city": "Sparks",
+          "state": "NV",
+          "country": "USA",
+          "region": "Nevada",
+          "league": "Northern Nevada",
+          "rookieYear": 2023,
+          "organization": "Excel Christian School",
+          "affiliations": [
+            {
+              "entityType": "school",
+              "name": "Excel Christian School",
+              "season": 2026,
+              "source": "ftc-events-sponsors",
+              "retrievedAt": "2026-11-09T16:09:59.150Z",
+              "confidence": "high",
+              "confirmationState": "unconfirmed",
+              "sourceText": "Excel Christian School"
+            }
+          ],
+          "teamType": "school",
+          "website": null,
+          "robot": null,
+          "sourceUrl": "https://ftc-events.firstinspires.org/2026/team/23667",
+          "summary": null,
+          "record": null,
+          "qualificationRecord": null,
+          "playoffRecord": null,
+          "events": [
+            {
+              "code": "USNVNNM1",
+              "name": "Northern League Meet # 1N",
+              "dateRange": "October 31 to October 31, 2026",
+              "eventOrder": 3,
+              "location": "Reno, NV, USA",
+              "league": "Northern Nevada",
+              "rank": "0 of 0",
+              "totalPoints": 385,
+              "matchCount": 6,
+              "rankingScore": null,
+              "leagueSeasonRank": null,
+              "leagueSeasonRankTotal": null,
+              "qualificationUrl": "https://ftc-events.firstinspires.org/2026/USNVNNM1/qualifications?team=23667",
+              "playoffUrl": null,
+              "playoffRecord": null,
+              "allianceSelection": null,
+              "sourceUrl": "https://ftc-events.firstinspires.org/2026/USNVNNM1"
+            }
+          ],
+          "awards": [],
+          "notes": []
         }
       }
     },
@@ -47562,6 +48790,62 @@
               "sourceText": "Pahrump Valley High School"
             }
           ]
+        },
+        "2026": {
+          "season": 2026,
+          "active": true,
+          "name": "The Trojan Horse - Pahrump Valley HS",
+          "location": "Pahrump, NV, USA",
+          "city": "Pahrump",
+          "state": "NV",
+          "country": "USA",
+          "region": "Nevada",
+          "league": "Southern Nevada",
+          "rookieYear": 2023,
+          "organization": "Pahrump Valley High School",
+          "affiliations": [
+            {
+              "entityType": "school",
+              "name": "Pahrump Valley High School",
+              "season": 2026,
+              "source": "ftc-events-sponsors",
+              "retrievedAt": "2026-11-09T16:09:59.186Z",
+              "confidence": "high",
+              "confirmationState": "unconfirmed",
+              "sourceText": "Pahrump Valley High School"
+            }
+          ],
+          "teamType": "school",
+          "website": null,
+          "robot": null,
+          "sourceUrl": "https://ftc-events.firstinspires.org/2026/team/23670",
+          "summary": null,
+          "record": null,
+          "qualificationRecord": null,
+          "playoffRecord": null,
+          "events": [
+            {
+              "code": "USNVSNM1",
+              "name": "Southern League Meet # 1S",
+              "dateRange": "October 31 to October 31, 2026",
+              "eventOrder": 4,
+              "location": "Las Vegas, NV, USA",
+              "league": "Southern Nevada",
+              "rank": "0 of 0",
+              "totalPoints": 264,
+              "matchCount": 6,
+              "rankingScore": null,
+              "leagueSeasonRank": null,
+              "leagueSeasonRankTotal": null,
+              "qualificationUrl": "https://ftc-events.firstinspires.org/2026/USNVSNM1/qualifications?team=23670",
+              "playoffUrl": null,
+              "playoffRecord": null,
+              "allianceSelection": null,
+              "sourceUrl": "https://ftc-events.firstinspires.org/2026/USNVSNM1"
+            }
+          ],
+          "awards": [],
+          "notes": []
         }
       }
     },
@@ -48774,6 +50058,62 @@
               "sourceText": "Family/Community"
             }
           ]
+        },
+        "2026": {
+          "season": 2026,
+          "active": true,
+          "name": "ALT-F4",
+          "location": "Reno, NV, USA",
+          "city": "Reno",
+          "state": "NV",
+          "country": "USA",
+          "region": "Nevada",
+          "league": "Northern Nevada",
+          "rookieYear": 2024,
+          "organization": "Family/Community",
+          "affiliations": [
+            {
+              "entityType": "team_affiliation",
+              "name": "Family/Community",
+              "season": 2026,
+              "source": "ftc-events-sponsors",
+              "retrievedAt": "2026-11-09T16:09:59.400Z",
+              "confidence": "high",
+              "confirmationState": "unconfirmed",
+              "sourceText": "Family/Community"
+            }
+          ],
+          "teamType": "non-school",
+          "website": null,
+          "robot": "Alty",
+          "sourceUrl": "https://ftc-events.firstinspires.org/2026/team/25913",
+          "summary": null,
+          "record": null,
+          "qualificationRecord": null,
+          "playoffRecord": null,
+          "events": [
+            {
+              "code": "USNVNNM1",
+              "name": "Northern League Meet # 1N",
+              "dateRange": "October 31 to October 31, 2026",
+              "eventOrder": 3,
+              "location": "Reno, NV, USA",
+              "league": "Northern Nevada",
+              "rank": "0 of 0",
+              "totalPoints": 340,
+              "matchCount": 6,
+              "rankingScore": null,
+              "leagueSeasonRank": null,
+              "leagueSeasonRankTotal": null,
+              "qualificationUrl": "https://ftc-events.firstinspires.org/2026/USNVNNM1/qualifications?team=25913",
+              "playoffUrl": null,
+              "playoffRecord": null,
+              "allianceSelection": null,
+              "sourceUrl": "https://ftc-events.firstinspires.org/2026/USNVNNM1"
+            }
+          ],
+          "awards": [],
+          "notes": []
         }
       }
     },
@@ -49074,6 +50414,62 @@
               "sourceText": "Coral Academy High School"
             }
           ]
+        },
+        "2026": {
+          "season": 2026,
+          "active": true,
+          "name": "FalconX",
+          "location": "Reno, NV, USA",
+          "city": "Reno",
+          "state": "NV",
+          "country": "USA",
+          "region": "Nevada",
+          "league": "Northern Nevada",
+          "rookieYear": 2024,
+          "organization": "Coral Academy High School",
+          "affiliations": [
+            {
+              "entityType": "school",
+              "name": "Coral Academy High School",
+              "season": 2026,
+              "source": "ftc-events-sponsors",
+              "retrievedAt": "2026-11-09T16:09:59.192Z",
+              "confidence": "high",
+              "confirmationState": "unconfirmed",
+              "sourceText": "Coral Academy High School"
+            }
+          ],
+          "teamType": "school",
+          "website": null,
+          "robot": null,
+          "sourceUrl": "https://ftc-events.firstinspires.org/2026/team/26019",
+          "summary": null,
+          "record": null,
+          "qualificationRecord": null,
+          "playoffRecord": null,
+          "events": [
+            {
+              "code": "USNVNNM1",
+              "name": "Northern League Meet # 1N",
+              "dateRange": "October 31 to October 31, 2026",
+              "eventOrder": 3,
+              "location": "Reno, NV, USA",
+              "league": "Northern Nevada",
+              "rank": "0 of 0",
+              "totalPoints": 351,
+              "matchCount": 6,
+              "rankingScore": null,
+              "leagueSeasonRank": null,
+              "leagueSeasonRankTotal": null,
+              "qualificationUrl": "https://ftc-events.firstinspires.org/2026/USNVNNM1/qualifications?team=26019",
+              "playoffUrl": null,
+              "playoffRecord": null,
+              "allianceSelection": null,
+              "sourceUrl": "https://ftc-events.firstinspires.org/2026/USNVNNM1"
+            }
+          ],
+          "awards": [],
+          "notes": []
         }
       }
     },
@@ -49299,6 +50695,44 @@
               "sourceText": "Northwest Career-Technical Academy High School"
             }
           ]
+        },
+        "2026": {
+          "season": 2026,
+          "active": true,
+          "name": "Raging Hawk Robotics",
+          "location": "Las Vegas, NV, USA",
+          "city": "Las Vegas",
+          "state": "NV",
+          "country": "USA",
+          "region": "Nevada",
+          "league": "Southern Nevada",
+          "rookieYear": 2024,
+          "organization": "Northwest Career-Technical Academy High School",
+          "affiliations": [
+            {
+              "entityType": "school",
+              "name": "Northwest Career-Technical Academy High School",
+              "season": 2026,
+              "source": "ftc-events-sponsors",
+              "retrievedAt": "2026-11-09T16:09:59.276Z",
+              "confidence": "high",
+              "confirmationState": "unconfirmed",
+              "sourceText": "Northwest Career-Technical Academy High School"
+            }
+          ],
+          "teamType": "school",
+          "website": null,
+          "robot": null,
+          "sourceUrl": "https://ftc-events.firstinspires.org/2026/team/26705",
+          "summary": null,
+          "record": null,
+          "qualificationRecord": null,
+          "playoffRecord": null,
+          "events": [],
+          "awards": [],
+          "notes": [
+            "No public event rows were parsed from this season page."
+          ]
         }
       }
     },
@@ -49368,7 +50802,7 @@
       "latestOrganization": "Nasri Academy for Gifted Children",
       "latestWebsite": "https://nasriacademy.com",
       "latestTeamType": "school",
-      "latestLeague": null,
+      "latestLeague": "Southern Nevada",
       "latestRegion": "Nevada",
       "links": [],
       "seasons": {
@@ -49783,7 +51217,7 @@
           "state": "NV",
           "country": "USA",
           "region": "Nevada",
-          "league": null,
+          "league": "Southern Nevada",
           "rookieYear": 2024,
           "organization": "Nasri Academy for Gifted Children",
           "affiliations": [
@@ -49792,7 +51226,7 @@
               "name": "Nasri Academy for Gifted Children",
               "season": 2026,
               "source": "ftc-events-sponsors",
-              "retrievedAt": "2026-08-16T16:17:00.698Z",
+              "retrievedAt": "2026-11-09T16:09:59.550Z",
               "confidence": "high",
               "confirmationState": "unconfirmed",
               "sourceText": "Nasri Academy for Gifted Children"
@@ -49806,11 +51240,29 @@
           "record": null,
           "qualificationRecord": null,
           "playoffRecord": null,
-          "events": [],
+          "events": [
+            {
+              "code": "USNVSNM2",
+              "name": "Southern League Meet # 2S",
+              "dateRange": "October 31 to October 31, 2026",
+              "eventOrder": 5,
+              "location": "Las Vegas, NV, USA",
+              "league": "Southern Nevada",
+              "rank": "0 of 0",
+              "totalPoints": 219,
+              "matchCount": 5,
+              "rankingScore": null,
+              "leagueSeasonRank": null,
+              "leagueSeasonRankTotal": null,
+              "qualificationUrl": "https://ftc-events.firstinspires.org/2026/USNVSNM2/qualifications?team=27105",
+              "playoffUrl": null,
+              "playoffRecord": null,
+              "allianceSelection": null,
+              "sourceUrl": "https://ftc-events.firstinspires.org/2026/USNVSNM2"
+            }
+          ],
           "awards": [],
-          "notes": [
-            "No public event rows were parsed from this season page."
-          ]
+          "notes": []
         }
       }
     },
@@ -49956,7 +51408,7 @@
     },
     {
       "number": 27695,
-      "latestName": "Fortnight BattleBots",
+      "latestName": "La Peace",
       "latestLocation": "North Las Vegas, NV, USA",
       "latestCity": "North Las Vegas",
       "latestState": "NV",
@@ -50053,6 +51505,44 @@
               "sourceText": "Smith J D MS"
             }
           ]
+        },
+        "2026": {
+          "season": 2026,
+          "active": true,
+          "name": "La Peace",
+          "location": "North Las Vegas, NV, USA",
+          "city": "North Las Vegas",
+          "state": "NV",
+          "country": "USA",
+          "region": "Nevada",
+          "league": "Southern Nevada",
+          "rookieYear": 2024,
+          "organization": "Smith J D MS",
+          "affiliations": [
+            {
+              "entityType": "school",
+              "name": "Smith J D MS",
+              "season": 2026,
+              "source": "ftc-events-sponsors",
+              "retrievedAt": "2026-11-09T16:09:59.401Z",
+              "confidence": "high",
+              "confirmationState": "unconfirmed",
+              "sourceText": "Smith J D MS"
+            }
+          ],
+          "teamType": "school",
+          "website": null,
+          "robot": null,
+          "sourceUrl": "https://ftc-events.firstinspires.org/2026/team/27695",
+          "summary": null,
+          "record": null,
+          "qualificationRecord": null,
+          "playoffRecord": null,
+          "events": [],
+          "awards": [],
+          "notes": [
+            "No public event rows were parsed from this season page."
+          ]
         }
       }
     },
@@ -50064,7 +51554,7 @@
       "latestState": "NV",
       "latestCountry": "USA",
       "latestRookieYear": 2025,
-      "latestOrganization": "Frank and Victoria Fertitta Foundation&Family/Community",
+      "latestOrganization": "Frank and Victoria Fertitta Foundation/Craft Kitchen&Family/Community",
       "latestWebsite": null,
       "latestTeamType": "non-school",
       "latestLeague": "Southern Nevada",
@@ -50277,18 +51767,94 @@
               "sourceText": "Frank and Victoria Fertitta Foundation&Family/Community"
             }
           ]
+        },
+        "2026": {
+          "season": 2026,
+          "active": true,
+          "name": "Symbiotic",
+          "location": "Las Vegas, NV, USA",
+          "city": "Las Vegas",
+          "state": "NV",
+          "country": "USA",
+          "region": "Nevada",
+          "league": "Southern Nevada",
+          "rookieYear": 2025,
+          "organization": "Frank and Victoria Fertitta Foundation/Craft Kitchen&Family/Community",
+          "affiliations": [
+            {
+              "entityType": "sponsor",
+              "name": "Frank and Victoria Fertitta Foundation",
+              "season": 2026,
+              "source": "ftc-events-sponsors",
+              "retrievedAt": "2026-11-09T16:09:59.721Z",
+              "confidence": "high",
+              "confirmationState": "unconfirmed",
+              "sourceText": "Frank and Victoria Fertitta Foundation/Craft Kitchen&Family/Community"
+            },
+            {
+              "entityType": "sponsor",
+              "name": "Craft Kitchen",
+              "season": 2026,
+              "source": "ftc-events-sponsors",
+              "retrievedAt": "2026-11-09T16:09:59.721Z",
+              "confidence": "high",
+              "confirmationState": "unconfirmed",
+              "sourceText": "Frank and Victoria Fertitta Foundation/Craft Kitchen&Family/Community"
+            },
+            {
+              "entityType": "team_affiliation",
+              "name": "Family/Community",
+              "season": 2026,
+              "source": "ftc-events-sponsors",
+              "retrievedAt": "2026-11-09T16:09:59.721Z",
+              "confidence": "high",
+              "confirmationState": "unconfirmed",
+              "sourceText": "Frank and Victoria Fertitta Foundation/Craft Kitchen&Family/Community"
+            }
+          ],
+          "teamType": "non-school",
+          "website": null,
+          "robot": null,
+          "sourceUrl": "https://ftc-events.firstinspires.org/2026/team/30408",
+          "summary": null,
+          "record": null,
+          "qualificationRecord": null,
+          "playoffRecord": null,
+          "events": [
+            {
+              "code": "USNVSNM1",
+              "name": "Southern League Meet # 1S",
+              "dateRange": "October 31 to October 31, 2026",
+              "eventOrder": 4,
+              "location": "Las Vegas, NV, USA",
+              "league": "Southern Nevada",
+              "rank": "0 of 0",
+              "totalPoints": 151,
+              "matchCount": 5,
+              "rankingScore": null,
+              "leagueSeasonRank": null,
+              "leagueSeasonRankTotal": null,
+              "qualificationUrl": "https://ftc-events.firstinspires.org/2026/USNVSNM1/qualifications?team=30408",
+              "playoffUrl": null,
+              "playoffRecord": null,
+              "allianceSelection": null,
+              "sourceUrl": "https://ftc-events.firstinspires.org/2026/USNVSNM1"
+            }
+          ],
+          "awards": [],
+          "notes": []
         }
       }
     },
     {
       "number": 30770,
-      "latestName": "Legacy Robotics A",
+      "latestName": "TechWings",
       "latestLocation": "North Las Vegas, NV, USA",
       "latestCity": "North Las Vegas",
       "latestState": "NV",
       "latestCountry": "USA",
       "latestRookieYear": 2025,
-      "latestOrganization": "Legacy High School",
+      "latestOrganization": "Legacy High School&Legacy High School",
       "latestWebsite": null,
       "latestTeamType": "school",
       "latestLeague": "Southern Nevada",
@@ -50417,12 +51983,78 @@
               "sourceText": "Legacy High School"
             }
           ]
+        },
+        "2026": {
+          "season": 2026,
+          "active": true,
+          "name": "TechWings",
+          "location": "North Las Vegas, NV, USA",
+          "city": "North Las Vegas",
+          "state": "NV",
+          "country": "USA",
+          "region": "Nevada",
+          "league": "Southern Nevada",
+          "rookieYear": 2025,
+          "organization": "Legacy High School&Legacy High School",
+          "affiliations": [
+            {
+              "entityType": "school",
+              "name": "Legacy High School",
+              "season": 2026,
+              "source": "ftc-events-sponsors",
+              "retrievedAt": "2026-11-09T16:09:59.592Z",
+              "confidence": "low",
+              "confirmationState": "unconfirmed",
+              "sourceText": "Legacy High School&Legacy High School"
+            },
+            {
+              "entityType": "school",
+              "name": "Legacy High School",
+              "season": 2026,
+              "source": "ftc-events-sponsors",
+              "retrievedAt": "2026-11-09T16:09:59.592Z",
+              "confidence": "low",
+              "confirmationState": "unconfirmed",
+              "sourceText": "Legacy High School&Legacy High School"
+            }
+          ],
+          "teamType": "school",
+          "website": null,
+          "robot": null,
+          "sourceUrl": "https://ftc-events.firstinspires.org/2026/team/30770",
+          "summary": null,
+          "record": null,
+          "qualificationRecord": null,
+          "playoffRecord": null,
+          "events": [
+            {
+              "code": "USNVSNM1",
+              "name": "Southern League Meet # 1S",
+              "dateRange": "October 31 to October 31, 2026",
+              "eventOrder": 4,
+              "location": "Las Vegas, NV, USA",
+              "league": "Southern Nevada",
+              "rank": "0 of 0",
+              "totalPoints": 101,
+              "matchCount": 5,
+              "rankingScore": null,
+              "leagueSeasonRank": null,
+              "leagueSeasonRankTotal": null,
+              "qualificationUrl": "https://ftc-events.firstinspires.org/2026/USNVSNM1/qualifications?team=30770",
+              "playoffUrl": null,
+              "playoffRecord": null,
+              "allianceSelection": null,
+              "sourceUrl": "https://ftc-events.firstinspires.org/2026/USNVSNM1"
+            }
+          ],
+          "awards": [],
+          "notes": []
         }
       }
     },
     {
       "number": 31733,
-      "latestName": "The Little G-Bots",
+      "latestName": "The Little G's",
       "latestLocation": "Las Vegas, NV, USA",
       "latestCity": "Las Vegas",
       "latestState": "NV",
@@ -50641,6 +52273,91 @@
               "sourceText": "Gene Haas Foundation&Word of Life Christian Academy"
             }
           ]
+        },
+        "2026": {
+          "season": 2026,
+          "active": true,
+          "name": "The Little G's",
+          "location": "Las Vegas, NV, USA",
+          "city": "Las Vegas",
+          "state": "NV",
+          "country": "USA",
+          "region": "Nevada",
+          "league": "Southern Nevada",
+          "rookieYear": 2025,
+          "organization": "Gene Haas Foundation&Word of Life Christian Academy",
+          "affiliations": [
+            {
+              "entityType": "sponsor",
+              "name": "Gene Haas Foundation",
+              "season": 2026,
+              "source": "ftc-events-sponsors",
+              "retrievedAt": "2026-11-09T16:09:59.748Z",
+              "confidence": "high",
+              "confirmationState": "unconfirmed",
+              "sourceText": "Gene Haas Foundation&Word of Life Christian Academy"
+            },
+            {
+              "entityType": "school",
+              "name": "Word of Life Christian Academy",
+              "season": 2026,
+              "source": "ftc-events-sponsors",
+              "retrievedAt": "2026-11-09T16:09:59.748Z",
+              "confidence": "high",
+              "confirmationState": "unconfirmed",
+              "sourceText": "Gene Haas Foundation&Word of Life Christian Academy"
+            }
+          ],
+          "teamType": "school",
+          "website": null,
+          "robot": null,
+          "sourceUrl": "https://ftc-events.firstinspires.org/2026/team/31733",
+          "summary": null,
+          "record": null,
+          "qualificationRecord": null,
+          "playoffRecord": null,
+          "events": [
+            {
+              "code": "USNVSNM1",
+              "name": "Southern League Meet # 1S",
+              "dateRange": "October 31 to October 31, 2026",
+              "eventOrder": 4,
+              "location": "Las Vegas, NV, USA",
+              "league": "Southern Nevada",
+              "rank": "0 of 0",
+              "totalPoints": 229,
+              "matchCount": 5,
+              "rankingScore": null,
+              "leagueSeasonRank": null,
+              "leagueSeasonRankTotal": null,
+              "qualificationUrl": "https://ftc-events.firstinspires.org/2026/USNVSNM1/qualifications?team=31733",
+              "playoffUrl": null,
+              "playoffRecord": null,
+              "allianceSelection": null,
+              "sourceUrl": "https://ftc-events.firstinspires.org/2026/USNVSNM1"
+            },
+            {
+              "code": "USNVSNM2",
+              "name": "Southern League Meet # 2S",
+              "dateRange": "October 31 to October 31, 2026",
+              "eventOrder": 5,
+              "location": "Las Vegas, NV, USA",
+              "league": "Southern Nevada",
+              "rank": "0 of 0",
+              "totalPoints": 222,
+              "matchCount": 5,
+              "rankingScore": null,
+              "leagueSeasonRank": null,
+              "leagueSeasonRankTotal": null,
+              "qualificationUrl": "https://ftc-events.firstinspires.org/2026/USNVSNM2/qualifications?team=31733",
+              "playoffUrl": null,
+              "playoffRecord": null,
+              "allianceSelection": null,
+              "sourceUrl": "https://ftc-events.firstinspires.org/2026/USNVSNM2"
+            }
+          ],
+          "awards": [],
+          "notes": []
         }
       }
     },
@@ -50805,13 +52522,13 @@
     },
     {
       "number": 31993,
-      "latestName": "Legacy Robotics B",
+      "latestName": "Poultry in Motion",
       "latestLocation": "North Las Vegas, NV, USA",
       "latestCity": "North Las Vegas",
       "latestState": "NV",
       "latestCountry": "USA",
       "latestRookieYear": 2025,
-      "latestOrganization": "Legacy High School",
+      "latestOrganization": "Legacy High School/Limelight/Gene Haas Foundation/FIRST Nevada&Legacy High School",
       "latestWebsite": null,
       "latestTeamType": "school",
       "latestLeague": "Southern Nevada",
@@ -50940,6 +52657,102 @@
               "sourceText": "Legacy High School"
             }
           ]
+        },
+        "2026": {
+          "season": 2026,
+          "active": true,
+          "name": "Poultry in Motion",
+          "location": "North Las Vegas, NV, USA",
+          "city": "North Las Vegas",
+          "state": "NV",
+          "country": "USA",
+          "region": "Nevada",
+          "league": "Southern Nevada",
+          "rookieYear": 2025,
+          "organization": "Legacy High School/Limelight/Gene Haas Foundation/FIRST Nevada&Legacy High School",
+          "affiliations": [
+            {
+              "entityType": "sponsor",
+              "name": "Legacy High School",
+              "season": 2026,
+              "source": "ftc-events-sponsors",
+              "retrievedAt": "2026-11-09T16:09:59.676Z",
+              "confidence": "high",
+              "confirmationState": "unconfirmed",
+              "sourceText": "Legacy High School/Limelight/Gene Haas Foundation/FIRST Nevada&Legacy High School"
+            },
+            {
+              "entityType": "sponsor",
+              "name": "Limelight",
+              "season": 2026,
+              "source": "ftc-events-sponsors",
+              "retrievedAt": "2026-11-09T16:09:59.676Z",
+              "confidence": "high",
+              "confirmationState": "unconfirmed",
+              "sourceText": "Legacy High School/Limelight/Gene Haas Foundation/FIRST Nevada&Legacy High School"
+            },
+            {
+              "entityType": "sponsor",
+              "name": "Gene Haas Foundation",
+              "season": 2026,
+              "source": "ftc-events-sponsors",
+              "retrievedAt": "2026-11-09T16:09:59.676Z",
+              "confidence": "high",
+              "confirmationState": "unconfirmed",
+              "sourceText": "Legacy High School/Limelight/Gene Haas Foundation/FIRST Nevada&Legacy High School"
+            },
+            {
+              "entityType": "sponsor",
+              "name": "FIRST Nevada",
+              "season": 2026,
+              "source": "ftc-events-sponsors",
+              "retrievedAt": "2026-11-09T16:09:59.676Z",
+              "confidence": "high",
+              "confirmationState": "unconfirmed",
+              "sourceText": "Legacy High School/Limelight/Gene Haas Foundation/FIRST Nevada&Legacy High School"
+            },
+            {
+              "entityType": "school",
+              "name": "Legacy High School",
+              "season": 2026,
+              "source": "ftc-events-sponsors",
+              "retrievedAt": "2026-11-09T16:09:59.676Z",
+              "confidence": "high",
+              "confirmationState": "unconfirmed",
+              "sourceText": "Legacy High School/Limelight/Gene Haas Foundation/FIRST Nevada&Legacy High School"
+            }
+          ],
+          "teamType": "school",
+          "website": null,
+          "robot": null,
+          "sourceUrl": "https://ftc-events.firstinspires.org/2026/team/31993",
+          "summary": null,
+          "record": null,
+          "qualificationRecord": null,
+          "playoffRecord": null,
+          "events": [
+            {
+              "code": "USNVSNM1",
+              "name": "Southern League Meet # 1S",
+              "dateRange": "October 31 to October 31, 2026",
+              "eventOrder": 4,
+              "location": "Las Vegas, NV, USA",
+              "league": "Southern Nevada",
+              "rank": "0 of 0",
+              "totalPoints": 239,
+              "matchCount": 5,
+              "rankingScore": null,
+              "leagueSeasonRank": null,
+              "leagueSeasonRankTotal": null,
+              "qualificationUrl": "https://ftc-events.firstinspires.org/2026/USNVSNM1/qualifications?team=31993",
+              "playoffUrl": null,
+              "playoffRecord": null,
+              "allianceSelection": null,
+              "sourceUrl": "https://ftc-events.firstinspires.org/2026/USNVSNM1"
+            }
+          ],
+          "awards": [],
+          "notes": []
         }
       }
     },
@@ -50954,7 +52767,7 @@
       "latestOrganization": "Harney Kathleen & Tim MS",
       "latestWebsite": null,
       "latestTeamType": "school",
-      "latestLeague": "Southern Nevada",
+      "latestLeague": null,
       "latestRegion": "Nevada",
       "links": [],
       "seasons": {
@@ -51090,6 +52903,72 @@
               "sourceText": "Harney Kathleen & Tim MS"
             }
           ]
+        },
+        "2026": {
+          "season": 2026,
+          "active": true,
+          "name": "Robo Cats",
+          "location": "Las Vegas, NV, USA",
+          "city": "Las Vegas",
+          "state": "NV",
+          "country": "USA",
+          "region": "Nevada",
+          "league": null,
+          "rookieYear": 2025,
+          "organization": "Harney Kathleen & Tim MS",
+          "affiliations": [
+            {
+              "entityType": "sponsor",
+              "name": "Harney Kathleen",
+              "season": 2026,
+              "source": "ftc-events-sponsors",
+              "retrievedAt": "2026-11-09T16:09:59.836Z",
+              "confidence": "high",
+              "confirmationState": "unconfirmed",
+              "sourceText": "Harney Kathleen & Tim MS"
+            },
+            {
+              "entityType": "school",
+              "name": "Tim MS",
+              "season": 2026,
+              "source": "ftc-events-sponsors",
+              "retrievedAt": "2026-11-09T16:09:59.836Z",
+              "confidence": "high",
+              "confirmationState": "unconfirmed",
+              "sourceText": "Harney Kathleen & Tim MS"
+            }
+          ],
+          "teamType": "school",
+          "website": null,
+          "robot": null,
+          "sourceUrl": "https://ftc-events.firstinspires.org/2026/team/32006",
+          "summary": null,
+          "record": null,
+          "qualificationRecord": null,
+          "playoffRecord": null,
+          "events": [
+            {
+              "code": "USNVSNM1",
+              "name": "Southern League Meet # 1S",
+              "dateRange": "October 31 to October 31, 2026",
+              "eventOrder": 4,
+              "location": "Las Vegas, NV, USA",
+              "league": "Southern Nevada",
+              "rank": "0 of 0",
+              "totalPoints": 194,
+              "matchCount": 5,
+              "rankingScore": null,
+              "leagueSeasonRank": null,
+              "leagueSeasonRankTotal": null,
+              "qualificationUrl": "https://ftc-events.firstinspires.org/2026/USNVSNM1/qualifications?team=32006",
+              "playoffUrl": null,
+              "playoffRecord": null,
+              "allianceSelection": null,
+              "sourceUrl": "https://ftc-events.firstinspires.org/2026/USNVSNM1"
+            }
+          ],
+          "awards": [],
+          "notes": []
         }
       }
     },
@@ -51362,8 +53241,8 @@
       "latestState": "CA",
       "latestCountry": "USA",
       "latestRookieYear": 2025,
-      "latestOrganization": "Tahoe Truckee High",
-      "latestWebsite": null,
+      "latestOrganization": "West Orthodontics&Tahoe Truckee High",
+      "latestWebsite": "https://snowbotics.org",
       "latestTeamType": "school",
       "latestLeague": "Northern Nevada",
       "latestRegion": "Nevada",
@@ -51491,6 +53370,72 @@
               "sourceText": "Tahoe Truckee High"
             }
           ]
+        },
+        "2026": {
+          "season": 2026,
+          "active": true,
+          "name": "Truckee Snowbotics",
+          "location": "Truckee, CA, USA",
+          "city": "Truckee",
+          "state": "CA",
+          "country": "USA",
+          "region": "Nevada",
+          "league": "Northern Nevada",
+          "rookieYear": 2025,
+          "organization": "West Orthodontics&Tahoe Truckee High",
+          "affiliations": [
+            {
+              "entityType": "sponsor",
+              "name": "West Orthodontics",
+              "season": 2026,
+              "source": "ftc-events-sponsors",
+              "retrievedAt": "2026-11-09T16:10:00.624Z",
+              "confidence": "high",
+              "confirmationState": "unconfirmed",
+              "sourceText": "West Orthodontics&Tahoe Truckee High"
+            },
+            {
+              "entityType": "host_organization",
+              "name": "Tahoe Truckee High",
+              "season": 2026,
+              "source": "ftc-events-sponsors",
+              "retrievedAt": "2026-11-09T16:10:00.624Z",
+              "confidence": "medium",
+              "confirmationState": "unconfirmed",
+              "sourceText": "West Orthodontics&Tahoe Truckee High"
+            }
+          ],
+          "teamType": "school",
+          "website": "https://snowbotics.org",
+          "robot": null,
+          "sourceUrl": "https://ftc-events.firstinspires.org/2026/team/32587",
+          "summary": null,
+          "record": null,
+          "qualificationRecord": null,
+          "playoffRecord": null,
+          "events": [
+            {
+              "code": "USNVNNM1",
+              "name": "Northern League Meet # 1N",
+              "dateRange": "October 31 to October 31, 2026",
+              "eventOrder": 3,
+              "location": "Reno, NV, USA",
+              "league": "Northern Nevada",
+              "rank": "0 of 0",
+              "totalPoints": 354,
+              "matchCount": 6,
+              "rankingScore": null,
+              "leagueSeasonRank": null,
+              "leagueSeasonRankTotal": null,
+              "qualificationUrl": "https://ftc-events.firstinspires.org/2026/USNVNNM1/qualifications?team=32587",
+              "playoffUrl": null,
+              "playoffRecord": null,
+              "allianceSelection": null,
+              "sourceUrl": "https://ftc-events.firstinspires.org/2026/USNVNNM1"
+            }
+          ],
+          "awards": [],
+          "notes": []
         }
       }
     },
@@ -51502,8 +53447,8 @@
       "latestState": "NV",
       "latestCountry": "USA",
       "latestRookieYear": 2025,
-      "latestOrganization": "Innovations High School",
-      "latestWebsite": null,
+      "latestOrganization": "Galena Tech Institute&Innovations High School",
+      "latestWebsite": "https://www.renoinnovators.org",
       "latestTeamType": "school",
       "latestLeague": "Northern Nevada",
       "latestRegion": "Nevada",
@@ -51545,6 +53490,537 @@
               "confirmationState": "unconfirmed",
               "sourceText": "Innovations High School"
             }
+          ]
+        },
+        "2026": {
+          "season": 2026,
+          "active": true,
+          "name": "Innovators",
+          "location": "Reno, NV, USA",
+          "city": "Reno",
+          "state": "NV",
+          "country": "USA",
+          "region": "Nevada",
+          "league": "Northern Nevada",
+          "rookieYear": 2025,
+          "organization": "Galena Tech Institute&Innovations High School",
+          "affiliations": [
+            {
+              "entityType": "sponsor",
+              "name": "Galena Tech Institute",
+              "season": 2026,
+              "source": "ftc-events-sponsors",
+              "retrievedAt": "2026-11-09T16:09:59.928Z",
+              "confidence": "high",
+              "confirmationState": "unconfirmed",
+              "sourceText": "Galena Tech Institute&Innovations High School"
+            },
+            {
+              "entityType": "school",
+              "name": "Innovations High School",
+              "season": 2026,
+              "source": "ftc-events-sponsors",
+              "retrievedAt": "2026-11-09T16:09:59.928Z",
+              "confidence": "high",
+              "confirmationState": "unconfirmed",
+              "sourceText": "Galena Tech Institute&Innovations High School"
+            }
+          ],
+          "teamType": "school",
+          "website": "https://www.renoinnovators.org",
+          "robot": null,
+          "sourceUrl": "https://ftc-events.firstinspires.org/2026/team/32735",
+          "summary": null,
+          "record": null,
+          "qualificationRecord": null,
+          "playoffRecord": null,
+          "events": [],
+          "awards": [],
+          "notes": [
+            "No public event rows were parsed from this season page."
+          ]
+        }
+      }
+    },
+    {
+      "number": 36117,
+      "latestName": "The Allsparks",
+      "latestLocation": "Las Vegas, NV, USA",
+      "latestCity": "Las Vegas",
+      "latestState": "NV",
+      "latestCountry": "USA",
+      "latestRookieYear": 2026,
+      "latestOrganization": "The Bosch Community Fund/The Timken Company/Jabil Cares Foundation/Intuitive Foundation/NACA/Actuonix Motion Devices &Family/Community",
+      "latestWebsite": "https://www.theallsparks.org",
+      "latestTeamType": "non-school",
+      "latestLeague": "Southern Nevada",
+      "latestRegion": "Nevada",
+      "links": [],
+      "seasons": {
+        "2026": {
+          "season": 2026,
+          "active": true,
+          "name": "The Allsparks",
+          "location": "Las Vegas, NV, USA",
+          "city": "Las Vegas",
+          "state": "NV",
+          "country": "USA",
+          "region": "Nevada",
+          "league": "Southern Nevada",
+          "rookieYear": 2026,
+          "organization": "The Bosch Community Fund/The Timken Company/Jabil Cares Foundation/Intuitive Foundation/NACA/Actuonix Motion Devices &Family/Community",
+          "affiliations": [
+            {
+              "entityType": "sponsor",
+              "name": "The Bosch Community Fund",
+              "season": 2026,
+              "source": "ftc-events-sponsors",
+              "retrievedAt": "2026-11-09T16:10:00.020Z",
+              "confidence": "high",
+              "confirmationState": "unconfirmed",
+              "sourceText": "The Bosch Community Fund/The Timken Company/Jabil Cares Foundation/Intuitive Foundation/NACA/Actuonix Motion Devices &Family/Community"
+            },
+            {
+              "entityType": "sponsor",
+              "name": "The Timken Company",
+              "season": 2026,
+              "source": "ftc-events-sponsors",
+              "retrievedAt": "2026-11-09T16:10:00.020Z",
+              "confidence": "high",
+              "confirmationState": "unconfirmed",
+              "sourceText": "The Bosch Community Fund/The Timken Company/Jabil Cares Foundation/Intuitive Foundation/NACA/Actuonix Motion Devices &Family/Community"
+            },
+            {
+              "entityType": "sponsor",
+              "name": "Jabil Cares Foundation",
+              "season": 2026,
+              "source": "ftc-events-sponsors",
+              "retrievedAt": "2026-11-09T16:10:00.020Z",
+              "confidence": "high",
+              "confirmationState": "unconfirmed",
+              "sourceText": "The Bosch Community Fund/The Timken Company/Jabil Cares Foundation/Intuitive Foundation/NACA/Actuonix Motion Devices &Family/Community"
+            },
+            {
+              "entityType": "sponsor",
+              "name": "Intuitive Foundation",
+              "season": 2026,
+              "source": "ftc-events-sponsors",
+              "retrievedAt": "2026-11-09T16:10:00.020Z",
+              "confidence": "high",
+              "confirmationState": "unconfirmed",
+              "sourceText": "The Bosch Community Fund/The Timken Company/Jabil Cares Foundation/Intuitive Foundation/NACA/Actuonix Motion Devices &Family/Community"
+            },
+            {
+              "entityType": "sponsor",
+              "name": "NACA",
+              "season": 2026,
+              "source": "ftc-events-sponsors",
+              "retrievedAt": "2026-11-09T16:10:00.020Z",
+              "confidence": "high",
+              "confirmationState": "unconfirmed",
+              "sourceText": "The Bosch Community Fund/The Timken Company/Jabil Cares Foundation/Intuitive Foundation/NACA/Actuonix Motion Devices &Family/Community"
+            },
+            {
+              "entityType": "sponsor",
+              "name": "Actuonix Motion Devices",
+              "season": 2026,
+              "source": "ftc-events-sponsors",
+              "retrievedAt": "2026-11-09T16:10:00.020Z",
+              "confidence": "high",
+              "confirmationState": "unconfirmed",
+              "sourceText": "The Bosch Community Fund/The Timken Company/Jabil Cares Foundation/Intuitive Foundation/NACA/Actuonix Motion Devices &Family/Community"
+            },
+            {
+              "entityType": "team_affiliation",
+              "name": "Family/Community",
+              "season": 2026,
+              "source": "ftc-events-sponsors",
+              "retrievedAt": "2026-11-09T16:10:00.020Z",
+              "confidence": "high",
+              "confirmationState": "unconfirmed",
+              "sourceText": "The Bosch Community Fund/The Timken Company/Jabil Cares Foundation/Intuitive Foundation/NACA/Actuonix Motion Devices &Family/Community"
+            }
+          ],
+          "teamType": "non-school",
+          "website": "https://www.theallsparks.org",
+          "robot": "B-127",
+          "sourceUrl": "https://ftc-events.firstinspires.org/2026/team/36117",
+          "summary": null,
+          "record": null,
+          "qualificationRecord": null,
+          "playoffRecord": null,
+          "events": [
+            {
+              "code": "USNVSNM1",
+              "name": "Southern League Meet # 1S",
+              "dateRange": "October 31 to October 31, 2026",
+              "eventOrder": 4,
+              "location": "Las Vegas, NV, USA",
+              "league": "Southern Nevada",
+              "rank": "0 of 0",
+              "totalPoints": 228,
+              "matchCount": 5,
+              "rankingScore": null,
+              "leagueSeasonRank": null,
+              "leagueSeasonRankTotal": null,
+              "qualificationUrl": "https://ftc-events.firstinspires.org/2026/USNVSNM1/qualifications?team=36117",
+              "playoffUrl": null,
+              "playoffRecord": null,
+              "allianceSelection": null,
+              "sourceUrl": "https://ftc-events.firstinspires.org/2026/USNVSNM1"
+            },
+            {
+              "code": "USNVSNM2",
+              "name": "Southern League Meet # 2S",
+              "dateRange": "October 31 to October 31, 2026",
+              "eventOrder": 5,
+              "location": "Las Vegas, NV, USA",
+              "league": "Southern Nevada",
+              "rank": "0 of 0",
+              "totalPoints": 355,
+              "matchCount": 5,
+              "rankingScore": null,
+              "leagueSeasonRank": null,
+              "leagueSeasonRankTotal": null,
+              "qualificationUrl": "https://ftc-events.firstinspires.org/2026/USNVSNM2/qualifications?team=36117",
+              "playoffUrl": null,
+              "playoffRecord": null,
+              "allianceSelection": null,
+              "sourceUrl": "https://ftc-events.firstinspires.org/2026/USNVSNM2"
+            }
+          ],
+          "awards": [],
+          "notes": []
+        }
+      }
+    },
+    {
+      "number": 37373,
+      "latestName": "Western Robotic (The Batz)",
+      "latestLocation": "Las Vegas, NV, USA",
+      "latestCity": "Las Vegas",
+      "latestState": "NV",
+      "latestCountry": "USA",
+      "latestRookieYear": 2026,
+      "latestOrganization": "Western High School",
+      "latestWebsite": null,
+      "latestTeamType": "school",
+      "latestLeague": "Southern Nevada",
+      "latestRegion": "Nevada",
+      "links": [],
+      "seasons": {
+        "2026": {
+          "season": 2026,
+          "active": true,
+          "name": "Western Robotic (The Batz)",
+          "location": "Las Vegas, NV, USA",
+          "city": "Las Vegas",
+          "state": "NV",
+          "country": "USA",
+          "region": "Nevada",
+          "league": "Southern Nevada",
+          "rookieYear": 2026,
+          "organization": "Western High School",
+          "affiliations": [
+            {
+              "entityType": "school",
+              "name": "Western High School",
+              "season": 2026,
+              "source": "ftc-events-sponsors",
+              "retrievedAt": "2026-11-09T16:10:00.290Z",
+              "confidence": "high",
+              "confirmationState": "unconfirmed",
+              "sourceText": "Western High School"
+            }
+          ],
+          "teamType": "school",
+          "website": null,
+          "robot": null,
+          "sourceUrl": "https://ftc-events.firstinspires.org/2026/team/37373",
+          "summary": null,
+          "record": null,
+          "qualificationRecord": null,
+          "playoffRecord": null,
+          "events": [
+            {
+              "code": "USNVSNM2",
+              "name": "Southern League Meet # 2S",
+              "dateRange": "October 31 to October 31, 2026",
+              "eventOrder": 5,
+              "location": "Las Vegas, NV, USA",
+              "league": "Southern Nevada",
+              "rank": "0 of 0",
+              "totalPoints": 318,
+              "matchCount": 5,
+              "rankingScore": null,
+              "leagueSeasonRank": null,
+              "leagueSeasonRankTotal": null,
+              "qualificationUrl": "https://ftc-events.firstinspires.org/2026/USNVSNM2/qualifications?team=37373",
+              "playoffUrl": null,
+              "playoffRecord": null,
+              "allianceSelection": null,
+              "sourceUrl": "https://ftc-events.firstinspires.org/2026/USNVSNM2"
+            }
+          ],
+          "awards": [],
+          "notes": []
+        }
+      }
+    },
+    {
+      "number": 37434,
+      "latestName": "Reno Rovers",
+      "latestLocation": "Reno, NV, USA",
+      "latestCity": "Reno",
+      "latestState": "NV",
+      "latestCountry": "USA",
+      "latestRookieYear": 2026,
+      "latestOrganization": "Reno Rovers&Family/Community",
+      "latestWebsite": null,
+      "latestTeamType": "non-school",
+      "latestLeague": "Northern Nevada",
+      "latestRegion": "Nevada",
+      "links": [],
+      "seasons": {
+        "2026": {
+          "season": 2026,
+          "active": true,
+          "name": "Reno Rovers",
+          "location": "Reno, NV, USA",
+          "city": "Reno",
+          "state": "NV",
+          "country": "USA",
+          "region": "Nevada",
+          "league": "Northern Nevada",
+          "rookieYear": 2026,
+          "organization": "Reno Rovers&Family/Community",
+          "affiliations": [
+            {
+              "entityType": "sponsor",
+              "name": "Reno Rovers",
+              "season": 2026,
+              "source": "ftc-events-sponsors",
+              "retrievedAt": "2026-11-09T16:10:00.230Z",
+              "confidence": "high",
+              "confirmationState": "unconfirmed",
+              "sourceText": "Reno Rovers&Family/Community"
+            },
+            {
+              "entityType": "team_affiliation",
+              "name": "Family/Community",
+              "season": 2026,
+              "source": "ftc-events-sponsors",
+              "retrievedAt": "2026-11-09T16:10:00.230Z",
+              "confidence": "high",
+              "confirmationState": "unconfirmed",
+              "sourceText": "Reno Rovers&Family/Community"
+            }
+          ],
+          "teamType": "non-school",
+          "website": null,
+          "robot": null,
+          "sourceUrl": "https://ftc-events.firstinspires.org/2026/team/37434",
+          "summary": null,
+          "record": null,
+          "qualificationRecord": null,
+          "playoffRecord": null,
+          "events": [
+            {
+              "code": "USNVNNM1",
+              "name": "Northern League Meet # 1N",
+              "dateRange": "October 31 to October 31, 2026",
+              "eventOrder": 3,
+              "location": "Reno, NV, USA",
+              "league": "Northern Nevada",
+              "rank": "0 of 0",
+              "totalPoints": 290,
+              "matchCount": 6,
+              "rankingScore": null,
+              "leagueSeasonRank": null,
+              "leagueSeasonRankTotal": null,
+              "qualificationUrl": "https://ftc-events.firstinspires.org/2026/USNVNNM1/qualifications?team=37434",
+              "playoffUrl": null,
+              "playoffRecord": null,
+              "allianceSelection": null,
+              "sourceUrl": "https://ftc-events.firstinspires.org/2026/USNVNNM1"
+            }
+          ],
+          "awards": [],
+          "notes": []
+        }
+      }
+    },
+    {
+      "number": 37595,
+      "latestName": "Autobots",
+      "latestLocation": "Saint George, UT, USA",
+      "latestCity": "Saint George",
+      "latestState": "UT",
+      "latestCountry": "USA",
+      "latestRookieYear": 2026,
+      "latestOrganization": "Career Technical High School",
+      "latestWebsite": null,
+      "latestTeamType": "school",
+      "latestLeague": "Southern Nevada",
+      "latestRegion": "Nevada",
+      "links": [],
+      "seasons": {
+        "2026": {
+          "season": 2026,
+          "active": true,
+          "name": "Autobots",
+          "location": "Saint George, UT, USA",
+          "city": "Saint George",
+          "state": "UT",
+          "country": "USA",
+          "region": "Nevada",
+          "league": "Southern Nevada",
+          "rookieYear": 2026,
+          "organization": "Career Technical High School",
+          "affiliations": [
+            {
+              "entityType": "school",
+              "name": "Career Technical High School",
+              "season": 2026,
+              "source": "ftc-events-sponsors",
+              "retrievedAt": "2026-11-09T16:10:00.626Z",
+              "confidence": "high",
+              "confirmationState": "unconfirmed",
+              "sourceText": "Career Technical High School"
+            }
+          ],
+          "teamType": "school",
+          "website": null,
+          "robot": null,
+          "sourceUrl": "https://ftc-events.firstinspires.org/2026/team/37595",
+          "summary": null,
+          "record": null,
+          "qualificationRecord": null,
+          "playoffRecord": null,
+          "events": [],
+          "awards": [],
+          "notes": [
+            "No public event rows were parsed from this season page."
+          ]
+        }
+      }
+    },
+    {
+      "number": 38476,
+      "latestName": "Vaqueros Robotics",
+      "latestLocation": "Fernley, NV, USA",
+      "latestCity": "Fernley",
+      "latestState": "NV",
+      "latestCountry": "USA",
+      "latestRookieYear": 2026,
+      "latestOrganization": "Fernley Vaqueros Boosters&Fernley High School",
+      "latestWebsite": null,
+      "latestTeamType": "school",
+      "latestLeague": "Northern Nevada",
+      "latestRegion": "Nevada",
+      "links": [],
+      "seasons": {
+        "2026": {
+          "season": 2026,
+          "active": true,
+          "name": "Vaqueros Robotics",
+          "location": "Fernley, NV, USA",
+          "city": "Fernley",
+          "state": "NV",
+          "country": "USA",
+          "region": "Nevada",
+          "league": "Northern Nevada",
+          "rookieYear": 2026,
+          "organization": "Fernley Vaqueros Boosters&Fernley High School",
+          "affiliations": [
+            {
+              "entityType": "sponsor",
+              "name": "Fernley Vaqueros Boosters",
+              "season": 2026,
+              "source": "ftc-events-sponsors",
+              "retrievedAt": "2026-11-09T16:10:00.576Z",
+              "confidence": "high",
+              "confirmationState": "unconfirmed",
+              "sourceText": "Fernley Vaqueros Boosters&Fernley High School"
+            },
+            {
+              "entityType": "school",
+              "name": "Fernley High School",
+              "season": 2026,
+              "source": "ftc-events-sponsors",
+              "retrievedAt": "2026-11-09T16:10:00.576Z",
+              "confidence": "high",
+              "confirmationState": "unconfirmed",
+              "sourceText": "Fernley Vaqueros Boosters&Fernley High School"
+            }
+          ],
+          "teamType": "school",
+          "website": null,
+          "robot": "Scarab",
+          "sourceUrl": "https://ftc-events.firstinspires.org/2026/team/38476",
+          "summary": null,
+          "record": null,
+          "qualificationRecord": null,
+          "playoffRecord": null,
+          "events": [],
+          "awards": [],
+          "notes": [
+            "No public event rows were parsed from this season page."
+          ]
+        }
+      }
+    },
+    {
+      "number": 38856,
+      "latestName": "Dark Mater",
+      "latestLocation": "Las Vegas, NV, USA",
+      "latestCity": "Las Vegas",
+      "latestState": "NV",
+      "latestCountry": "USA",
+      "latestRookieYear": 2026,
+      "latestOrganization": "Mater Academy East",
+      "latestWebsite": null,
+      "latestTeamType": "school",
+      "latestLeague": null,
+      "latestRegion": "Nevada",
+      "links": [],
+      "seasons": {
+        "2026": {
+          "season": 2026,
+          "active": true,
+          "name": "Dark Mater",
+          "location": "Las Vegas, NV, USA",
+          "city": "Las Vegas",
+          "state": "NV",
+          "country": "USA",
+          "region": "Nevada",
+          "league": null,
+          "rookieYear": 2026,
+          "organization": "Mater Academy East",
+          "affiliations": [
+            {
+              "entityType": "school",
+              "name": "Mater Academy East",
+              "season": 2026,
+              "source": "ftc-events-sponsors",
+              "retrievedAt": "2026-11-09T16:10:00.639Z",
+              "confidence": "high",
+              "confirmationState": "unconfirmed",
+              "sourceText": "Mater Academy East"
+            }
+          ],
+          "teamType": "school",
+          "website": null,
+          "robot": null,
+          "sourceUrl": "https://ftc-events.firstinspires.org/2026/team/38856",
+          "summary": null,
+          "record": null,
+          "qualificationRecord": null,
+          "playoffRecord": null,
+          "events": [],
+          "awards": [],
+          "notes": [
+            "No public event rows were parsed from this season page."
           ]
         }
       }
@@ -52702,30 +55178,30 @@
     {
       "label": "FTC Events region USNV 2026",
       "url": "https://ftc-events.firstinspires.org/2026/region/USNV",
-      "checkedAt": "2026-08-16T16:16:57.579Z",
+      "checkedAt": "2026-11-09T16:09:55.619Z",
       "ok": true,
-      "detail": "13 teams, 14 events, 2 leagues"
+      "detail": "48 teams, 14 events, 2 leagues"
     },
     {
       "label": "League rankings 2026 Northern Nevada",
       "url": "https://ftc-events.firstinspires.org/2026/region/USNV/league/NN",
-      "checkedAt": "2026-08-16T16:16:58.091Z",
+      "checkedAt": "2026-11-09T16:09:56.299Z",
       "ok": true,
       "detail": "0 rankings"
     },
     {
       "label": "League rankings 2026 Southern Nevada",
       "url": "https://ftc-events.firstinspires.org/2026/region/USNV/league/SN",
-      "checkedAt": "2026-08-16T16:16:58.422Z",
+      "checkedAt": "2026-11-09T16:09:56.550Z",
       "ok": true,
       "detail": "0 rankings"
     },
     {
       "label": "FTC Events public team pages",
       "url": "https://ftc-events.firstinspires.org/2026/team/16158",
-      "checkedAt": "2026-08-16T16:17:01.259Z",
+      "checkedAt": "2026-11-09T16:10:00.639Z",
       "ok": true,
-      "detail": "Fetched 13 team pages"
+      "detail": "Fetched 48 team pages"
     }
   ]
 }
